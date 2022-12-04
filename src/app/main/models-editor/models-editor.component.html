@@ -1,0 +1,37 @@
+<div class="models-editor-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="accent" class="example-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+            <h1 class="example-app-name">Редактор форм</h1>
+        </div>
+
+        <div fxLayout="column">
+            <div class="search-wrapper mt-sm-0">
+                <!--div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon color="primary">search</mat-icon>
+                    <input [formControl]="searchControl" matTooltip="Выполняет поиск по текстовым полям" placeholder="Поиск по слову">
+                    <mat-icon *ngIf="searchControl.value !== ''" class="search__clear" color="primary" matSuffix (click)="clear_search_text()">close</mat-icon>
+                </div-->
+            </div>
+        </div>
+
+        <div class="save-button-wrapper">
+            <button mat-raised-button color="indigo" (click)="save(null)" *ngIf="saveButton"><mat-icon>save</mat-icon> Сохранить</button>
+        </div>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav class="mat-sidenav" #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                     [opened]="mobileQuery.matches ? false : true"
+                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <model-list class=""></model-list>
+
+
+        </mat-sidenav>
+
+        <mat-sidenav-content class="mat-sidenav-content">
+            <model-details [model]="_modelsEditorService.getCurrentModel()"></model-details>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+

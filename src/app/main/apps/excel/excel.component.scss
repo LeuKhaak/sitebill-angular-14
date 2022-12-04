@@ -1,0 +1,25 @@
+@import 'src/@fuse/scss/fuse';
+
+
+.excel-apps {
+    .form-item {
+        width: 100%;
+    }
+    .table-height {
+        max-height: calc(55vh);
+        @include media-breakpoint('lt-sm') {
+            max-height: calc(45vh);
+        }
+    }
+
+    ng-select {
+        min-width: 101px;
+        .ng-select.ng-select-container {
+            width: auto !important;
+        }
+        .ng-dropdown-panel.select_options {
+            width: auto !important;
+        }
+    }
+}
+

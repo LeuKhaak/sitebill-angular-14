@@ -1,0 +1,16 @@
+<div class="p-12" fxLayout="column" fxLayoutAlign="space-between center" *ngIf="state === WhatsappStateTypes.wait_qr">
+    <h1>Подождите идет загрузка QR-кода</h1>
+    <mat-progress-bar mode="determinate" value="{{getProgressInPercent()}}"></mat-progress-bar>
+</div>
+<div class="p-12"  fxLayout="column" fxLayoutAlign="space-between center" *ngIf="state === WhatsappStateTypes.draw_qr">
+    <h1>Откройте, пожалуйста, Whatsapp и просканируйте QR-код для активации отправки сообщений через ваш телефон</h1>
+    <img [src]="qr_image">
+    <div class="p-12">
+        <button mat-raised-button class="red-200-bg" (click)="drawChat(sendCallbackBundle)">
+            <mat-icon>update</mat-icon>
+            Нажмите когда просканируете код
+        </button>
+    </div>
+</div>
+<chat-dialog *ngIf="state === WhatsappStateTypes.chat" [dialog]="dialog" [sendCallbackBundle]="sendCallbackBundle" (onChange)="update_chat($event)"></chat-dialog>
+

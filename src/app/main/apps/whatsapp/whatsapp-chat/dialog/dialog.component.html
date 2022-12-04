@@ -1,0 +1,99 @@
+<!-- CHAT -->
+<div class="dialog" fxLayout="column">
+
+    <!-- CHAT CONTENT -->
+    <div id="chat-content" #scrollMe>
+
+        <!-- CHAT MESSAGES -->
+        <div class="chat-messages">
+            <whatsapp-contacts-list *ngIf="show_mailing_list()" [sendCallbackBundle]="sendCallbackBundle" #whatsappContactsList></whatsapp-contacts-list>
+
+            <ng-container *ngIf="dialog">
+                <!-- MESSAGE -->
+                <div fxLayout="row" *ngFor="let message of dialog" class="message-row"
+                     [ngClass]="{'user' :message.fromMe}">
+                    <img
+                        src="{{message.sender.profilePicThumbObj.eurl}}"
+                        class="avatar"
+                        matTooltip="{{message.sender.formattedName}}"
+                        alt="{{message.sender.formattedName}}" />
+                    <div class="bubble">
+                        <div class="message" *ngIf="message.filename">
+                            {{message.filename}}
+                        </div>
+                        <div class="message" *ngIf="message.type === 'chat'">
+                            {{message.content}}
+                        </div>
+                        <div class="message" *ngIf="message.type === 'image'"><img [src]="_sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
+                 + message.content)"></div>
+                        <div class="time secondary-text">{{message.timestamp*1000 | date:'d.MM.yy HH:mm'}}</div>
+                    </div>
+                </div>
+                <!-- / MESSAGE -->
+            </ng-container>
+
+            <!-- MESSAGE -->
+            <!--div fxLayout="row" *ngFor="let message of dialog" class="message-row">
+
+
+                <div class="bubble">
+                    <div class="message">{{message.comment_text.value}}</div>
+                    <div class="time secondary-text">{{message.comment_date.value | date:'medium'}}</div>
+                </div>
+
+            </div-->
+            <!-- / MESSAGE -->
+            <div class="p-12" *ngIf="show_gallery">
+                <gallery-component
+                    [entity]="files_entity"
+                    [image_field]="files_field"
+                    [disable_gallery_controls]="true"
+                >
+                </gallery-component>
+            </div>
+
+            <div class="p-12" *ngIf="show_mailing_attach_list()">
+                Прикреплено объектов: {{whatsAppService.getMailingAttachList().length}}
+                <button mat-icon-button aria-label="Убрать" [matTooltip]="'Убрать'" (click)="clear_mailing_attach_list()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+
+            </div>
+        </div>
+        <!-- CHAT MESSAGES -->
+        <!-- / REPLY FORM -->
+
+    </div>
+    <!-- / CHAT CONTENT -->
+
+
+    <!-- CHAT FOOTER -->
+    <div class="chat-footer" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="center center">
+        <!-- REPLY FORM -->
+        <form [formGroup]="form"
+              (ngSubmit)="reply()"
+              (keyup.enter)="reply()"
+              fxFlex class="reply-form"
+              fxLayout="row"
+              fxLayoutAlign="start center">
+            <button mat-icon-button aria-label="Прикрепить файл" [matTooltip]="'Прикрепить объект'" (click)="attach_entity_modal()">
+                <mat-icon>business</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="Прикрепить файл" [matTooltip]="'Прикрепить файл'" (click)="attach_modal()">
+                <mat-icon>attach_file</mat-icon>
+            </button>
+
+            <mat-form-field fxFlex floatLabel="never">
+                <textarea matInput placeholder="Сообщение"
+                          formControlName="message"></textarea>
+            </mat-form-field>
+
+            <button mat-fab type="submit" aria-label="Отправить" [disabled]="!can_send">
+                <mat-icon>send</mat-icon>
+            </button>
+
+        </form>
+    </div>
+    <!-- / CHAT FOOTER-->
+</div>
+<!-- / CHAT -->

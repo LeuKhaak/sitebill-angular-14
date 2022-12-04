@@ -1,0 +1,135 @@
+<div id="course-dialog" class="example-container dialog-content-wrapper">
+    <mat-toolbar *ngIf="!disable_toolbar">
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{form_title|slice:0:25}}</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-12 m-0 modal-content" [style.height]="height">
+        <ng-template #loggedOut>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+
+        <ng-container *ngIf="rows; else loggedOut">
+            <div class="modal-content__data">
+                <form class="example-container" [formGroup]="form" (ngSubmit)="save()">
+                    <ng-container *ngIf="tabs_keys.length > 1">
+                        <mat-tab-group dynamicHeight *ngIf="tabs_keys && form_inited">
+                            <mat-tab *ngFor="let tab of tabs_keys" label="{{tab}}">
+                                <div class="simple clickable data-table">
+                                    <div class="data-table__row" *ngFor="let x of tabs[tab]">
+                                        <ng-container [ngTemplateOutlet]="viewRow" [ngTemplateOutletContext]="{x:x}"></ng-container>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </ng-container>
+
+                    <ng-container *ngIf="tabs_keys.length == 1 && tabs_keys && form_inited">
+                            <ng-container *ngFor="let tab of tabs_keys">
+                                <div class="simple clickable data-table">
+                                    <div class="data-table__row" *ngFor="let x of tabs[tab]">
+                                        <ng-container [ngTemplateOutlet]="viewRow" [ngTemplateOutletContext]="{x:x}"></ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                    </ng-container>
+
+                </form>
+            </div>
+            <div class="modal-content__comments" *ngIf="_data.is_enable_comment() && this.modelService.get_access('comment', 'access')">
+                <comments-apps></comments-apps>
+            </div>
+
+        </ng-container>
+    </div>
+
+</div>
+
+<ng-template #viewRow let-x="x">
+    <ng-container *ngIf="!records[x].hidden && records[x].type != 'password' && records[x].name != 'currency_id'">
+        <div class="primary-50-bg data-table__cell data-table__cell_label" *ngIf="get_colspan(records[x].type, records[x].name) < 2">{{records[x].title}}</div>
+        <div class="data-table__cell" [ngClass]="{'data-table__cell_fullwidth': get_colspan(records[x].type, records[x].name) > 1, 'text-left': get_colspan(records[x].type, records[x].name) === 1}">
+            <ng-container *ngIf="records[x].value_string != '' && records[x].value_string != null">{{records[x].value_string}}</ng-container>
+            <ng-container *ngIf="records[x].value_string == '' || records[x].value_string == null">
+                <ng-container [ngSwitch]="records[x].type">
+                    <ng-container *ngSwitchCase="'checkbox'">
+                        <mat-icon *ngIf="records[x].value == 1" class="active-icon green-600 s-16">check</mat-icon>
+                        <mat-icon *ngIf="records[x].value == 0" class="active-icon red-500 s-16">close</mat-icon>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'uploads'">
+                        {{records[x].title}}
+                        <gallery-component *ngIf="galleryImages[records[x].name].length > 0" [galleryImages]="galleryImages" [entity]="_data" [image_field]="records[x].name"></gallery-component>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'photo'">
+                        <img *ngIf="records[x].value != null && records[x].value != ''" src="{{modelService.get_api_url() + '/img/data/user/' + records[x].value}}">
+                    </ng-container>
+
+
+                    <ng-container *ngSwitchCase="'textarea_editor'">
+                        <div class="data-table__cell-value data-table__cell-value_overflow text-left">
+                            {{records[x].title}}
+                            <div [innerHTML]="records[x].value|safehtml"></div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'geodata'">
+                        {{records[x].title}} {{lat}},{{lng}}
+                        <agm-map [latitude]="lat_center" [longitude]="lng_center">
+                            <ng-container *ngIf="lat != '' && lng != ''">
+                                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                            </ng-container>
+                        </agm-map>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'docuploads'">
+                        <ng-container *ngIf="records[x].value.length > 0">
+                            <span *ngFor="let doc of records[x].value">
+                                <a href="{{doc.normal_url}}" target="_blank">{{doc.normal}}</a> |
+                            </span>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'injector'">
+                        <user-profile *ngIf="records[x].name === 'user_profile'" [user_id]="records['user_id'].value"></user-profile>
+                        <contact-injector *ngIf="records[x].name === 'contact_id'" [contact_id]="records[x].value"></contact-injector>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'mobilephone'">
+                        <a href="tel:{{records[x].value}}">{{records[x].value}}</a>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'price'">
+                        {{records[x].value}}
+                        <ng-container *ngIf="records[x].value != null">
+                            <span *ngIf="records[x].currency_id != null">{{records[x].currency_id.value_string}}</span>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngSwitchDefault>
+                        <ng-container [ngSwitch]="records[x].name">
+                            <ng-container  *ngSwitchCase="'youtube'">
+                                {{records[x].title}}
+                                <div [innerHTML]="get_youtube_code(records[x].value)|safehtml"></div>
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                                <ng-container *ngIf="valid_link(records[x].value); else simpleText">
+                                    <div><a href="{{records[x].value}}" target="_blank" matTooltip="{{records[x].value}}">{{records[x].value}}</a></div>
+                                </ng-container>
+                                <ng-template #simpleText>
+                                    <div>{{records[x].value}}</div>
+                                </ng-template>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+
+    </ng-container>
+</ng-template>

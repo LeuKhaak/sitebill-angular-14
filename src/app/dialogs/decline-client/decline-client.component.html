@@ -1,0 +1,31 @@
+<div id="client-decline" class="dialog-content-wrapper">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Почему хотите отказаться от заявки?</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                    <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-24 m-0">
+        <form class="example-form" [formGroup]="declineForm">
+
+            <mat-form-field class="example-full-width">
+                <textarea matInput placeholder="Укажите причину отказа" formControlName="comment" required></textarea>
+                <mat-error *ngIf="declineFormErrors.comment.required">
+                    Необходимо указать причину
+                </mat-error>
+
+            </mat-form-field>
+
+            <button mat-raised-button matStepperNext type="button" color="accent" (click)="decline()" *ngIf="declineForm.controls.comment.value != '' && !declinePressed">
+                Отказаться
+            </button>
+            <mat-spinner [diameter]="40" *ngIf="declineProcessing"></mat-spinner>
+        </form>
+
+    </div>
+
+</div>

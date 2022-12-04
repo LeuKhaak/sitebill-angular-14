@@ -1,0 +1,16 @@
+<div fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">WhatsApp</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="row" class="width-100">
+        <div class="width-100-box">
+            <whatsapp-chat [sendCallbackBundle]="sendCallbackBundle"></whatsapp-chat>
+        </div>
+    </div>
+</div>
+

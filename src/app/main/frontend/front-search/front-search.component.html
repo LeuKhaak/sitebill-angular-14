@@ -1,0 +1,29 @@
+<div class="page-layout simple fullwidth">
+    <div class=" header-banner" fxLayout="row" fxLayoutAlign="center">
+        <h1>КУБАНЬСИТИ</h1>
+    </div>
+
+    <div class="header p-16 p-md-24 accent" fxLayout="column">
+
+        <div class="header-content" fxLayout="row wrap" fxLayoutAlign="center" fxFlex="1 0 auto">
+            <div fxLayout="column" class="search_column">
+                <div class="search-wrapper mt-sm-0">
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                        <input [formControl]="searchInput" matTooltip="Выполняет поиск по текстовым полям" placeholder="Поиск по слову">
+                        <mat-icon *ngIf="this.searchInput.value !== ''" class="search__clear" color="primary" matSuffix (click)="clear_search_text()">close</mat-icon>
+                    </div>
+                </div>
+                <ng-container *ngIf="entity.get_app_name()">
+                    <search-string-parser [search_string]="this.searchInput.value" [entity]="entity"></search-string-parser>
+                </ng-container>
+            </div>
+            <button  mat-icon-button (click)="search()"
+                    aria-label="Найти" matTooltip="Найти" class="mb-4">
+                <mat-icon>search</mat-icon>
+            </button>
+
+        </div>
+    </div>
+
+
+</div>

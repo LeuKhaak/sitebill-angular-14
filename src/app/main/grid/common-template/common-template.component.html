@@ -1,0 +1,204 @@
+<ng-template #controlTmpl let-row="row" let-value="value">
+	<mat-icon class="status_icon {{get_status_class(row)}}"></mat-icon>
+	<div class="control_hover">
+		<button mat-icon-button *ngIf="entity.is_enable_collections()">
+			<mat-icon *ngIf="row[entity.get_primary_key()].collections > 0" (click)="toggle_collection(row, value)"
+				aria-label="Удалить из подборки" matTooltip="Удалить из подборки">
+				remove_circle
+			</mat-icon>
+			<mat-icon *ngIf="row[entity.get_primary_key()].collections == null" (click)="toggle_collection(row, value)"
+				aria-label="Добавить в подборку" matTooltip="Добавить в подборку">playlist_add</mat-icon>
+		</button>
+
+		<button mat-icon-button *ngIf="!disable_view_button">
+			<mat-icon (click)="view(value)" aria-label="Просмотр" matTooltip="Просмотреть запись">pageview</mat-icon>
+		</button>
+		<span *ngIf="row.active && !disable_activation_button && get_permission(row, 'U')">
+			<button mat-icon-button *ngIf="row.active.value == '0'" color="accent">
+				<mat-icon (click)="toggle_active(row, value)" aria-label="Включить" matTooltip="Включить">power_settings_new
+				</mat-icon>
+			</button>
+			<button mat-icon-button *ngIf="row.active.value == '1'" color="warn">
+				<mat-icon (click)="toggle_active(row, value)" aria-label="Выключить" matTooltip="Выключить">power_settings_new
+				</mat-icon>
+			</button>
+		</span>
+
+		<button mat-icon-button *ngIf="!disable_edit_button && get_permission(row, 'U')">
+			<mat-icon (click)="edit_form(value)" aria-label="Редактировать" matTooltip="Редактировать запись">edit</mat-icon>
+		</button>
+
+		<button mat-icon-button color="warn" *ngIf="!disable_delete_button && get_permission(row, 'D')">
+			<mat-icon (click)="delete(value)" aria-label="Удалить" matTooltip="Удалить запись">delete</mat-icon>
+		</button>
+		<button mat-icon-button *ngIf="complaint_mode">
+			<mat-icon (click)="report(value)" aria-label="Пожаловаться" matTooltip="Пожаловаться">report</mat-icon>
+		</button>
+		<button mat-icon-button
+			*ngIf="enable_coworker_button && modelService.getConfigValue('enable_coworker_mode') && get_permission(row, 'U')">
+			<mat-icon (click)="coworkers(value)" aria-label="Ко-воркеры" matTooltip="Ко-воркеры">group</mat-icon>
+		</button>
+		<button mat-icon-button *ngIf="enable_testimonials_button && get_permission(row, 'U')">
+			<mat-icon (click)="testimonials(value)" aria-label="Отзывы" matTooltip="Отзывы">rate_review</mat-icon>
+		</button>
+		<button mat-icon-button *ngIf="enable_building_blocks_button && get_permission(row, 'U')">
+			<mat-icon (click)="building_blocks(value)" aria-label="Строения" matTooltip="Строения">business</mat-icon>
+		</button>
+
+	</div>
+</ng-template>
+
+<ng-template #controlHdrTmpl let-column="column">
+</ng-template>
+
+<ng-template #hdrTpl let-column="column">
+	<filter-comp class="datatable-header__filter" [columnObject]=column [entity]="entity"></filter-comp>
+</ng-template>
+
+<ng-template #gridCheckboxHdrTmpl ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+	let-selectFn="selectFn">
+	<mat-checkbox [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"></mat-checkbox>
+</ng-template>
+
+<ng-template #gridCheckboxTmpl ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+	let-onCheckboxChangeFn="onCheckboxChangeFn">
+	<mat-checkbox [checked]="isSelected" (change)="onCheckboxChangeFn($event)"></mat-checkbox>
+</ng-template>
+
+<ng-template #imageTmpl let-column="column" let-row="row" let-value="value">
+	<button mat-icon-button (click)="view_gallery(row, column, value, !get_permission(row, 'D'))">
+		<div matBadge="{{value.length}}" matBadgeColor="accent" matBadgeOverlap="true" *ngIf="value.length > 0">
+
+			<img *ngIf="value[0].remote === 'true'" width="50" src="{{value[0].preview}}" />
+
+			<img *ngIf="value[0].remote !== 'true'" width="50" src="{{api_url}}/img/data/{{value[0].preview}}" />
+		</div>
+		<mat-icon aria-label="Добавить фото" matTooltip="Добавить фото"
+			*ngIf="value.length == 0 && !disable_gallery_controls &&  get_permission(row, 'D')">image_search</mat-icon>
+	</button>
+</ng-template>
+
+<ng-template #select_by_query_multi_Tmpl let-column="column" let-row="row" let-value="value">
+	{{row[column['model_name']] ? row[column['model_name']].value_string_implod : '****'}}
+</ng-template>
+
+<!--.value_string_implode-->
+
+<ng-template #photoTmpl let-column="column" let-row="row" let-value="value">
+	<button mat-icon-button (click)="view_gallery(row, column, value, disable_gallery_controls)">
+		<ng-container *ngIf="value != ''">
+			<img width="50" src="{{api_url}}/img/data/user/{{value}}" />
+		</ng-container>
+		<mat-icon aria-label="Добавить фото" matTooltip="Добавить фото"
+			*ngIf="value.length == 0 && !disable_gallery_controls">image_search</mat-icon>
+	</button>
+</ng-template>
+
+<ng-template #whatsAppTmpl let-column="column" let-row="row" let-value="value">
+	<button mat-button (click)="view_whatsapp(row, column, value)">
+		<mat-icon *ngIf="isWhatsAppAvailable(value)">message</mat-icon>
+		<span class="p-4">{{value}}</span>
+	</button>
+	<ng-container *ngIf="row['phone'] && row['phone'].whatsapp_history > 0 && column.model_name !== 'address'">
+		<button mat-button (click)="view_whatsapp(row, column, value, true)" color="primary"
+			matBadge="{{row['phone'].whatsapp_history}}" matBadgePosition="after" matBadgeSize="small" matBadgeColor="accent">
+			<mat-icon>contact_mail</mat-icon>
+		</button>
+	</ng-container>
+</ng-template>
+
+<ng-template #textTmpl let-row="row" let-value="value">
+	<ng-container *ngIf="valid_link(value); else defaultTextBlock">
+		<div><a href="{{value}}" target="_blank" matTooltip="{{value}}">{{value|replace:'(https://www.|https://)':'
+				'|slice:0:15}}</a></div>
+	</ng-container>
+	<ng-template #defaultTextBlock>
+		<div [innerHTML]="value|replace:'(<([^>]+)>)':' '|slice:0:70"
+			matTooltip="{{value|replace:'(<([^>]+)>)':' '|replace:'htmlEntities'}}" [matTooltipShowDelay]="1000"></div>
+	</ng-template>
+</ng-template>
+
+<ng-template #checkboxTmpl let-row="row" let-value="value">
+	<a>
+		<mat-icon aria-label="Да" *ngIf="value == 1">check_box</mat-icon>
+		<mat-icon aria-label="Нет" *ngIf="value == 0">check_box_outline_blank</mat-icon>
+	</a>
+</ng-template>
+<ng-template #dtdatetimeTmpl let-row="row" let-value="value">
+	<ng-container *ngIf="value != '0000-00-00 00:00:00'">
+		{{value|date:'dd.LL.yyyy HH:mm:ss'}}
+	</ng-container>
+</ng-template>
+
+<ng-template #dtdateTmpl let-row="row" let-value="value">
+	<ng-container *ngIf="value != '0000-00-00 00:00:00'">
+		{{value|date:'dd.LL.yyyy'}}
+	</ng-container>
+</ng-template>
+
+<ng-template #dttimeTmpl let-row="row" let-value="value">
+	<ng-container *ngIf="value != '0000-00-00 00:00:00'">
+		{{value|slice:10:16}}
+	</ng-container>
+</ng-template>
+
+<ng-template #geoTmpl let-row="row" let-value="value">
+	<mat-icon *ngIf="value != ''">location_on</mat-icon>
+</ng-template>
+
+<ng-template #priceTmpl let-row="row" let-value="value">
+	{{value}}
+	<ng-container *ngIf="row.price != null">
+		<span *ngIf="row.price.currency_id != null">{{row.price.currency_id.value_string}}</span>
+	</ng-container>
+</ng-template>
+
+<ng-template #clientControlTmpl let-row="row" let-value="value">
+	<div class="actions" fxLayout="row" fxLayoutAlign="start center">
+		<button *ngIf="value == ''" mat-icon-button matTooltip="Взять заявку" (click)="toggleUserGet(row)"
+			aria-label="Toggle important">
+			<mat-icon class="green-fg">attach_money</mat-icon>
+		</button>
+		<button *ngIf="value != ''" mat-icon-button matTooltip="Отказаться от заявки" (click)="declineClient(row)"
+			aria-label="Toggle important">
+			<mat-icon class="red-fg">close</mat-icon> {{value}}
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #clientIdTmpl let-row="row" let-value="value">
+	<div class="actions" fxLayout="row" fxLayoutAlign="start center">
+		<button mat-icon-button matTooltip="Подробнее" (click)="view_details(value)" aria-label="Toggle star"
+			*ngIf="value > 0">
+			{{value}} <mat-icon class="amber-fg">pageview</mat-icon>
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #injectorTmpl let-row="row" let-value="value">
+	<div [innerHTML]="row.contact_id.value_string|safehtml"></div>
+</ng-template>
+
+<ng-template #clientStatusIdTmpl let-row="row" let-rowIndex="rowIndex" let-value="value">
+	<div class="actions" fxLayout="row" fxLayoutAlign="start center">
+		<span *ngIf="row.user_id.value == 0">
+			<span>
+				{{value}}
+			</span>
+		</span>
+
+		<span *ngIf="row.user_id.value != 0">
+			<span title="Двойной щелчок для редактирования" (dblclick)="editing[rowIndex + '-status_id'] = true"
+				*ngIf="!editing[rowIndex + '-status_id']">
+				{{value}}
+			</span>
+		</span>
+
+		<select placeholder="Укажите статус заявки" *ngIf="editing[rowIndex + '-status_id']"
+			(blur)="editing[rowIndex + '-status_id'] = false" (change)="updateValue($event, 'status_id', rowIndex, row)"
+			[value]="value">
+			<option *ngFor="let key of objectKeys(item_model.status_id.select_data)" value="{{key}}">
+				{{item_model.status_id.select_data[key]}}</option>
+		</select>
+	</div>
+</ng-template>

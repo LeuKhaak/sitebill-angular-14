@@ -1,0 +1,138 @@
+@import "src/@fuse/scss/fuse";
+
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+$color-booking: #b94a48;
+
+.controls {
+    display: flex;
+    margin: 24px 0 32px;
+    padding: 0 4px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.events-preview {
+    display: flex;
+    flex-direction: row;
+
+    &__rates-title {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+
+    &__booking {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        padding: 4px 0 8px;
+        margin-bottom: 16px;
+        border-bottom: solid 1px #ccc;
+
+        &:before {
+            display: inline-block;
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: $color-booking;
+            margin-right: 8px;
+        }
+    }
+
+    &__rates-list {
+        padding-left: 0;
+        margin-bottom: 20px;
+    }
+
+    &__rates-list-item {
+        list-style: none;
+
+        &:before {
+            content: "\2022";
+            color: #8793A2;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 1.5em;
+            width: 1em;
+            margin-left: 0;
+        }
+
+        a {
+            color: #BEBEC5;
+            text-decoration: none !important;
+            display: inline-block;
+            padding: 2px 4px;
+            transition: background .3s;
+            border-radius: 2px;
+            cursor: pointer;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            &:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        &_active {
+            &:before {
+                color: #2AA198;
+            }
+            a {
+                color: #ffffff;
+            }
+        }
+    }
+}
+
+.month-title {
+    text-align: center;
+    padding: 5px 0;
+    font-weight: bold;
+    background: #ffffff;
+    border-bottom: solid 1px #e1e1e1;
+}
+
+.events {
+    flex: 1;
+    align-items: flex-end;
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+
+    &__item {
+        &_booking {
+            position: absolute;
+            left: 0;
+            top: -5px;
+            right: 0;
+            height: 5px;
+            background: $color-booking;
+            color: #fff;
+        }
+
+        &_rate {
+            font-size: 14px;
+            line-height: 14px;
+        }
+    }
+}
+
+::ng-deep {
+    .rates-edit-dialog .mat-dialog-container {
+        width: 600px;
+        max-height: 85vh;
+        padding: 0;
+    }
+
+    .cal-month-view .cal-day-cell.cal-today .cal-day-number {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,54 @@
+<div id="login" fxLayout="column">
+
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="register-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"  *ngIf="registerMessage == null && !show_input_remind_code">
+            <form name="loginForm" [formGroup]="registerForm" (ngSubmit)="remind()" novalidate>
+                <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="username" name="username">
+                    <mat-error *ngIf="registerFormErrors.username.required">
+                        укажите ваш email
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="accent" class="submit-button" aria-label="Сбросить пароль"
+                        [disabled]="registerForm.invalid">
+                    <mat-icon *ngIf="!loading">
+                        eject
+                    </mat-icon>
+                    <mat-icon *ngIf="loading"><mat-spinner [diameter]="20"></mat-spinner></mat-icon>
+                    Сбросить пароль
+                </button>
+            </form>
+
+        </div>
+        <div id="register-complete" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}" *ngIf="registerMessage != null">
+            <div class="title"  fxLayout="column" fxLayoutAlign="center center" [innerHTML]="registerMessage|safehtml"></div>
+        </div>
+
+        <div id="register-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"  *ngIf="show_input_remind_code">
+            <div class="title">Сброс пароля</div>
+
+
+            <form name="loginForm" [formGroup]="codeForm" (ngSubmit)="validate_code()" novalidate>
+                <mat-form-field>
+                    <input matInput placeholder="Код подтверждения" formControlName="code" name="code">
+                    <mat-error *ngIf="codeFormErrors.code.required">
+                        укажите код
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="accent" class="submit-button" aria-label="Подтвердить"
+                        [disabled]="codeForm.invalid">
+                    <mat-icon *ngIf="!loading">
+                        eject
+                    </mat-icon>
+                    <mat-icon *ngIf="loading"><mat-spinner [diameter]="20"></mat-spinner></mat-icon>
+                    Подтвердить
+                </button>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css" type="text/css">
+
+<div id="course-dialog" class="dialog-content-wrapper">
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Фото</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-24 m-0">
+        <uploader-component
+            [galleryImages]="data.galleryImages"
+            [entity]="_data.entity"
+            [image_field]="data.image_field"
+            [max_uploads]="max_uploads"
+            [disable_gallery_controls]="data.disable_gallery_controls"
+        ></uploader-component>
+    </div>
+
+    <ng-template #loggedOut>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+
+</div>

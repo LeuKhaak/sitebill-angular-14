@@ -1,0 +1,53 @@
+<div class="fuse-card auto-width">
+
+    <div class="p-8">
+        <div class="h1">Параметры</div>
+    </div>
+
+    <div class="p-8 pt-0">
+        <div [formGroup]="form" fxLayout="column" class="flex_wrap" *ngIf="json">
+            <span fxLayout.gt-sm="row" fxLayout.lt-sm="column" fxLayoutAlign="start center" *ngFor="let item of json | keyvalue;  let i = index">
+                <mat-form-field class="p-8" appearance="outline" [hidden]="false">
+                    <mat-label [innerHTML]="'ключ'"></mat-label>
+                    <input matInput [formControlName]="getKeyName(i)" [required]="false" placeholder="ключ">
+                    <mat-error>ключ обязательное поле!</mat-error>
+                </mat-form-field>
+
+                <span class="pb-8"><mat-icon>trending_flat</mat-icon></span>
+
+
+                <mat-form-field class="p-8" appearance="outline" [hidden]="false">
+                    <mat-label [innerHTML]="'значение'"></mat-label>
+                    <input matInput [formControlName]="getValueName(i)" [required]="false" placeholder="значение">
+                    <mat-error>значение обязательное поле!</mat-error>
+                </mat-form-field>
+                <span class="pb-12">
+                    <button mat-icon-button (click)="deleteEntry(getKeyName(i))" aria-label="Удалить">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+            </span>
+        </div>
+        <span fxLayout="row" fxLayoutAlign="start center">
+                <span class="p-8">
+                    <a mat-raised-button
+                       class="mat-accent"
+                       (click)="addEntry()"
+                       aria-label="Добавить пару ключ-значение">
+                        <mat-icon>add</mat-icon>
+                        <span [fxHide.lt-sm]="true">Добавить</span>
+                    </a>
+                </span>
+                <span>
+                    <a mat-raised-button class="light-green-50" [matMenuTriggerFor]="menu">Пресеты</a>
+                    <mat-menu #menu="matMenu">
+                      <a mat-menu-item *ngFor="let item of presets;"
+                         [matTooltip]="item.name"
+                         (click)="injectPreset(item)">{{item.title}}</a>
+                    </mat-menu>
+                </span>
+            </span>
+
+    </div>
+
+</div>

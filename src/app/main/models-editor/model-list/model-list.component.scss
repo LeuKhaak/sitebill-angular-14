@@ -1,0 +1,13 @@
+model-list {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+
+    .no-todos-text {
+        font-size: 24px;
+        font-weight: 300;
+    }
+}

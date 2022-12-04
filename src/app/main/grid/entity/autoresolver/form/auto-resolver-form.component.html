@@ -1,0 +1,23 @@
+
+<div fxLayout="row" fxLayoutAlign="center center" class="auto-resolver-form">
+    <div class="p-12 width-100-p" *ngIf="show_form">
+        <form-static *ngIf="entity"
+            [entity]="entity"
+            [disable_delete]="true"
+            [disable_save_button]="false"
+            [disable_cancel_button]="true"
+            [disable_form_title_bar]="true"
+            [predefined_ql_items]="predefined_ql_items"
+        >
+        </form-static>
+    </div>
+    <div class="p-12" *ngIf="!show_form">
+        <div *ngIf="success_message else default">
+            {{success_message}}
+        </div>
+
+        <ng-template #default>
+            <div>Данные сохранены успешно</div>
+        </ng-template>
+    </div>
+</div>

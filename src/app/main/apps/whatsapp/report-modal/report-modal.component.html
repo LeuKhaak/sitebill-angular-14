@@ -1,0 +1,32 @@
+<div fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">WhatsApp отчет</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxFlex fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+        <div class="fuse-card m-12" fxFlex="100" fxFlex.gt-sm="50">
+            <view-static [entity]="detail_entity" [predefined_ql_items]="detail_fields" height="'30vh'"></view-static>
+        </div>
+        <div class="fuse-card m-12" fxFlex="100" fxFlex.gt-sm="50">
+            <div class="p-16 pt-8">
+                <stat-card></stat-card>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="row">
+        <div fxFlex="100" [style.height]="'55vh'">
+            <messages-report-grid
+                [report_type]="_data.report_type"
+                [client_id]="sendCallbackBundle.client_id"
+                [data_id]="sendCallbackBundle.data_id"
+                [disable_fix_table_height]="true">
+
+            </messages-report-grid>
+        </div>
+    </div>
+</div>
+

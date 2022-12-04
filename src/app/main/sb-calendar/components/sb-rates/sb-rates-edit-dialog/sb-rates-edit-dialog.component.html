@@ -1,0 +1,12 @@
+<mat-toolbar mat-dialog-title class="mat-accent m-0">
+    <mat-toolbar-row class="header">
+        <h2 class="header__title">Управление стоимостью</h2>
+        <button mat-icon-button mat-dialog-close aria-label="Закрыть" class="header__btb">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<mat-dialog-content class="content">
+    <sb-rates-form [data]="data" (closeForm)="onFormClose()">
+    </sb-rates-form>
+</mat-dialog-content>

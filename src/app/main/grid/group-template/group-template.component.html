@@ -1,0 +1,38 @@
+<div class="page-layout simple fullwidth">
+    <ngx-datatable
+        #myTable
+        class="material expandable"
+        [rows]="rows"
+        [groupRowsBy]="'age'"
+        [columnMode]="ColumnMode.force"
+        [scrollbarH]="false"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="40"
+        [limit]="4"
+        [groupExpansionDefault]="true"
+    >
+        <!-- Group Header Template -->
+        <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
+            <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                <div style="padding-left:5px;">
+                    <button mat-button
+                        [class.datatable-icon-right]="!expanded"
+                        [class.datatable-icon-down]="expanded"
+                        title="Expand/Collapse Group"
+                        (click)="toggleExpandGroup(group)"
+                    >
+                        <b>Age: {{ group.value[0].age }}</b>
+                    </button>
+                </div>
+            </ng-template>
+        </ngx-datatable-group-header>
+        <!-- Row Column Template -->
+        <ngx-datatable-column name="Exp. Pay." prop="" editable="true" frozenLeft="True">
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Source" prop="source" editable="false" frozenLeft="True"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" prop="name" editable="true"></ngx-datatable-column>
+        <ngx-datatable-column name="Gender" prop="gender"></ngx-datatable-column>
+        <ngx-datatable-column name="Age" prop="age"></ngx-datatable-column>
+    </ngx-datatable>
+</div>

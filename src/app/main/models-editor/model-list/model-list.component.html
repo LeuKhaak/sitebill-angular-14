@@ -1,0 +1,14 @@
+<ng-container *ngIf="models">
+    <div *ngIf="models.length === 0" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+        <span class="no-todos-text hint-text">Модели не найдены</span>
+    </div>
+    <div class="todo-list" [@animateStagger]="{value:'50'}">
+        <model-list-item class="model-list-item has-handle "
+                         *ngFor="let model of models"
+                         [model]="model"
+                         (click)="selectModel(model)"
+                         [ngClass]="{'selected':isSelected(model)}"
+                         [@animate]="{value:'*',params:{y:'100%'}}">
+        </model-list-item>
+    </div>
+</ng-container>

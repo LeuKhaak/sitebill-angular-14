@@ -1,0 +1,103 @@
+::ng-deep .ng-dropdown-panel.select_options {
+    width: auto !important;
+}
+
+::ng-deep .ng-select {
+    padding: 0;
+}
+
+::ng-deep .ng-select.ng-select-container {
+    width: auto !important;
+}
+
+::ng-deep .ng-placeholder {
+    padding: 2px 1px;
+}
+
+::ng-deep .gold_bg {
+    /*background-color: rgb(218,165,32);*/
+}
+
+::ng-deep .theme-red-light .gold_bg .ng-select-container, ::ng-deep .theme-red-light .gold_bg .mat-form-field-flex {
+    border-bottom: 2px solid red;
+}
+
+::ng-deep .more_params {
+    height: 400px;
+    width: 100%;
+}
+
+::ng-deep .custom-slider {
+    padding-top: 10px;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
+    height: 2px;
+}
+
+::ng-deep .theme-red-light .custom-slider .ng5-slider .ng5-slider-selection {
+    background-color: #f44336; /*red*/
+}
+
+::ng-deep .theme-red-light .custom-slider .ng5-slider .ng5-slider-pointer {
+    background-color: #f44336;
+    width: 8px;
+    height: 8px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+::ng-deep .theme-default .custom-slider .ng5-slider .ng5-slider-pointer {
+}
+
+::ng-deep .theme-default .custom-slider .ng5-slider .ng5-slider-pointer {
+    width: 8px;
+    height: 8px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+::ng-deep .theme-red-light .custom-slider .ng5-slider .ng5-slider-pointer {
+    background-color: #f44336;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-pointer:after {
+    display: none;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-bubble {
+    bottom: 14px;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-limit {
+    font-weight: bold;
+    color: orange;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    top: -1px;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+}
+
+::ng-deep .room_count {
+}
+
+.hover {
+    border: 1px solid green;
+}
+
+.hover:hover {
+    display: none;
+}
+
+

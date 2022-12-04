@@ -1,0 +1,24 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Строения</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="row">
+        <div class="p-12 form-item">
+            <building-blocks-grid
+                [disable_header]="false"
+                [disable_wild_search]="true"
+                [freeze_default_columns_list]="true"
+                [disable_view_button]="true"
+                [object_id]="entity.get_default_value('object_id')"
+                [object_type]="entity.get_default_value('object_type')">
+            </building-blocks-grid>
+        </div>
+
+    </div>
+
+</div>

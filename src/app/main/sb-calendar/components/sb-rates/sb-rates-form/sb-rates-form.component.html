@@ -1,0 +1,103 @@
+<ng-container *ngIf="isEditMode">
+    <ng-container [ngTemplateOutlet]="editRateTemplate"></ng-container>
+    <div class="message-box error" *ngIf="errorMessage">{{ errorMessage }}</div>
+</ng-container>
+
+<ng-container *ngIf="!isEditMode">
+    <div class="list">
+        <ng-container *ngFor="let rate of ratesList; let index = index">
+            <ng-container
+                [ngTemplateOutlet]="currentRateModel?.rateType === rate.rateType ? editRateTemplate : viewRateTemplate"
+            ></ng-container>
+
+            <ng-template #viewRateTemplate>
+                <div
+                    class="list__item"
+                    (click)="onEditRateClick(rate)"
+                >
+                    <div class="list__item-title">{{ rate.title }} <mat-icon class="list__item-icon">edit</mat-icon></div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </div>
+</ng-container>
+
+<ng-template #editRateTemplate>
+    <mat-card class="form" *ngIf="currentRateModel">
+        <mat-card-title class="form__title">{{ currentRateModel.title }}</mat-card-title>
+        <mat-card-content [formGroup]="formModel.group">
+            <div class="form__row" *ngIf="currentRateModel.meta.hasFieldSeason">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           [matDatepicker]="startDatepicker"
+                           formControlName="season_start"
+                           placeholder="Начало сезона"/>
+                    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatepicker></mat-datepicker>
+                </mat-form-field>
+                &nbsp;&mdash;&nbsp;
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           [matDatepicker]="endDatepicker"
+                           formControlName="season_end"
+                           placeholder="Конец сезона"/>
+                    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form__row" *ngIf="currentRateModel.meta.hasFieldPeriod">
+                <mat-form-field>
+                    <select formControlName="period_start_m" matNativeControl placeholder="Месяц">
+                        <option *ngFor="let month of formModel.options.months" [value]="month.id">{{month.title}}</option>
+                    </select>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="form__select form__select_narrow">
+                    <select formControlName="period_start_d" matNativeControl placeholder="Число">
+                        <option *ngFor="let day of formModel.options.days" [value]="day">{{day}}</option>
+                    </select>
+                </mat-form-field>
+                &nbsp;&mdash;&nbsp;
+                <mat-form-field>
+                    <select formControlName="period_end_m" matNativeControl placeholder="Месяц">
+                        <option *ngFor="let month of formModel.options.months" [value]="month.id">{{month.title}}</option>
+                    </select>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="form__select form__select_narrow">
+                    <select formControlName="period_end_d" matNativeControl placeholder="Число">
+                        <option *ngFor="let day of formModel.options.days" [value]="day">{{day}}</option>
+                    </select>
+                </mat-form-field>
+            </div>
+            <div class="form__row" *ngIf="currentRateModel.meta.hasFieldMonth">
+                <mat-form-field>
+                    <select formControlName="month_number" matNativeControl>
+                        <option *ngFor="let month of formModel.options.months" [value]="month.id" [selected]="month.id == currentRateModel.month_number">{{month.title}}</option>
+                    </select>
+                </mat-form-field>
+            </div>
+            <div class="form__row" *ngIf="currentRateModel.meta.hasFieldWeekday">
+                <mat-form-field>
+                    <select formControlName="day_number" matNativeControl>
+                        <option *ngFor="let weekday of formModel.options.weekdays" [value]="weekday.id" [selected]="weekday.id == currentRateModel.day_number" >{{weekday.title}}</option>
+                    </select>
+                </mat-form-field>
+            </div>
+            <div class="form__row">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="amount" placeholder="Стоимость">
+                </mat-form-field>
+            </div>
+            <div class="form__row">
+                <mat-checkbox formControlName="isActive">Активная</mat-checkbox>
+            </div>
+        </mat-card-content>
+        <mat-card-actions class="form__actions">
+            <button mat-raised-button color="accent" (click)="onSaveRateClick()">Сохранить</button>
+            <button mat-raised-button (click)="onCancelEditRateClick()">Закрыть</button>
+        </mat-card-actions>
+    </mat-card>
+</ng-template>

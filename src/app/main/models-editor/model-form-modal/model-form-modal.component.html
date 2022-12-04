@@ -1,0 +1,11 @@
+<model-form-static *ngIf="entity"
+             [entity]="entity"
+             [disable_delete]="false"
+             [disable_save_button]="false"
+             [column_mode]="33"
+             (onClose)="close()"
+             (onChangeType)="update_form_fields_visibility($event)"
+             (afterFormInited)="update_form_fields_visibility()"
+
+>
+</model-form-static>

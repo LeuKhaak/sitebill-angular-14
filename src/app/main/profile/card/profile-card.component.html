@@ -1,0 +1,25 @@
+    <div class="fuse-card auto-width mb-32" [ngClass.gt-sm]="'mb-0 mr-32'">
+
+        <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end">
+
+            <div>
+                <div class="h3 secondary-text">Личные данные</div>
+                <div class="font-size-16 font-weight-300 line-height-1 mt-8">
+                    Группа: {{modelService.get_current_user_profile().group_id.value_string}}
+                </div>
+                <div class="font-size-16 font-weight-300 line-height-1 mt-8">
+                    {{modelService.get_current_user_profile().fio.value}}
+                </div>
+                <div class="font-size-16 font-weight-300 line-height-1 mt-8">
+                    {{modelService.get_current_user_profile().phone.value}}
+                </div>
+                <div class="font-size-16 font-weight-300 line-height-1 mt-8">
+                    {{modelService.get_current_user_profile().email.value}}
+                </div>
+            </div>
+        </div>
+
+        <div class="h-96 w-100-p">
+        </div>
+
+    </div>

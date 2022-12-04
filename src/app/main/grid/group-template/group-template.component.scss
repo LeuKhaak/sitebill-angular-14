@@ -1,0 +1,23 @@
+.control_hover {
+    width: 1px;
+    display: none;
+    overflow: hidden;
+    position: absolute;
+    top: 5px;
+    left: 50px;
+}
+
+:host ::ng-deep .datatable-body-row:hover .control_hover {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: inherit;
+    background-color: lightgray;
+    overflow: visible;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+:host ::ng-deep .datatable-body-row:hover .datatable-body-cell {
+    overflow: visible !important;
+}

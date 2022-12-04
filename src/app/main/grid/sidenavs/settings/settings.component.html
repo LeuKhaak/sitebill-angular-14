@@ -1,0 +1,92 @@
+<div  class="views" (click)="$event.stopPropagation()">
+    <div class="view">
+        <div class="header-s p8">
+
+            <span class="title">Настройки таблицы</span>
+
+            <button mat-icon-button class="close-button" (click)="onCloseClick()">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </div>
+
+        <div fxLayout="row" id="page_selector" fxLayoutAlign="start">
+            <div fxFlex="50">
+                <div class="content p-8">
+                    <mat-form-field>
+                        <mat-select [ngStyle]="{ 'width': '150px'}" selected="per_page"
+                                    (selectionChange)="per_page_change($event)" panelClass="pageselector"
+                                    placeholder="Строк в таблице" [(ngModel)]="per_page">
+                            <mat-option *ngFor="let page_value of page_options" [value]="page_value">
+                                {{page_value}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <!--div fxFlex="50">
+                <div class="content p-8 pr-48">
+                    <button mat-raised-button (click)="logout()" color="fuse-red" matTooltip="Выйти" *ngIf="show_logout_button && modelService.getConfigValue('apps.realty.enable_toolbar') !== '1'">
+                        <mat-icon>exit_to_app</mat-icon>
+                        Выйти
+                    </button>
+
+                    <button mat-icon-button class="view__close" (click)="onCloseClick()">
+                        <mat-icon class="s-24 secondary-text">close</mat-icon>
+                    </button>
+                </div>
+            </div-->
+        </div>
+
+        <div class="view__content" fxLayout="row" fxLayoutAlign="start">
+            <div fxFlex="50">
+                <!-- SIDENAV HEADER -->
+                <div class="header-s px-24" fxLayout="row" fxLayoutAlign="space-between center">
+                    <div>Активные колонки</div>
+                </div>
+                <!-- / SIDENAV HEADER -->
+                <!-- SIDENAV CONTENT -->
+                <div class="column-height content p-8">
+                    <div cdkDropList class="example-list"
+                         #active_columns_list="cdkDropList"
+                         [cdkDropListData]="active_columns"
+                         [cdkDropListConnectedTo]="[not_active_columns_list]"
+                         (cdkDropListDropped)="drop($event)">
+                        <div class="example-box green-500-bg" *ngFor="let item of active_columns" cdkDrag>
+                            <div class="example-box__title">{{item.title}} ({{item.name}})</div>
+                            <div class="example-box__handle" cdkDragHandle>
+                                <mat-icon class="example-box__handle-icon">drag_indicator</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / SIDENAV CONTENT -->
+            </div>
+            <div fxFlex="50">
+                <!-- SIDENAV HEADER -->
+                <div class="header-s px-24" fxLayout="row" fxLayoutAlign="space-between center">
+                    <div>Неактивные колонки</div>
+                </div>
+                <!-- / SIDENAV HEADER -->
+                <!-- SIDENAV CONTENT -->
+                <div class="content p-8 column-height">
+                    <div cdkDropList class="example-list"
+                         #not_active_columns_list="cdkDropList"
+                         [cdkDropListData]="not_active_columns"
+                         [cdkDropListConnectedTo]="[active_columns_list]"
+                         (cdkDropListDropped)="drop($event)">
+                        <div class="example-box primary-200-bg" *ngFor="let item of not_active_columns" cdkDrag>
+                            <div class="example-box__title">{{item.title}} ({{item.name}})</div>
+                            <div class="example-box__handle" cdkDragHandle>
+                                <mat-icon class="example-box__handle-icon">drag_indicator</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / SIDENAV CONTENT -->
+            </div>
+        </div>
+
+    </div>
+</div>

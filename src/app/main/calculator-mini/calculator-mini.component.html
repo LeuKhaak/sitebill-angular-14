@@ -1,0 +1,26 @@
+<div *ngIf="license_check_false">
+    <div fxLayout="column" fxLayoutAlign="center center">
+
+        <div fxLayout="column" class="error_content" fxLayoutAlign="center center">
+
+            <h1>Нет лицензии. Wrong license</h1>
+
+            <div align="center">Для работы приложения необходимо купить лицензию.<br> To use the application you need to buy a license.</div>
+
+
+            <a class="back-link" href="https://www.sitebill.ru/mortgage-calculator/" target="_blank">Купить | Buy</a>
+        </div>
+
+    </div>    
+</div>
+<div id="calculator-mini" *ngIf="license_check_true" (click)="open_big_calculator()">
+    <mat-card class="result">
+        <mat-card-content>
+            <div fxlayoutalign="center center">
+                <h2>{{top_text_mini}}</h2> <span class="light-blue-fg font-size-32"> {{month_payment|number:'1.0-0':'ru'}} </span> руб/мес    
+            </div>
+        </mat-card-content>
+    </mat-card>    
+
+</div>
+

@@ -1,0 +1,65 @@
+.hidden-xs {
+    @include media-breakpoint('xs') {
+        display: none !important;
+    }
+}
+.hidden-sm {
+    @include media-breakpoint('sm') {
+        display: none !important;
+    }
+}
+.hidden-md {
+    @include media-breakpoint('md') {
+        display: none !important;
+    }
+}
+.hidden-lg {
+    @include media-breakpoint('lg') {
+        display: none !important;
+    }
+}
+.hidden-xl {
+    @include media-breakpoint('xl') {
+        display: none !important;
+    }
+}
+.hidden-lt-sm {
+    @include media-breakpoint('lt-sm') {
+        display: none !important;
+    }
+}
+.hidden-lt-md {
+    @include media-breakpoint('lt-md') {
+        display: none !important;
+    }
+}
+.hidden-lt-lg {
+    @include media-breakpoint('lt-lg') {
+        display: none !important;
+    }
+}
+.hidden-lt-xl {
+    @include media-breakpoint('lt-xl') {
+        display: none !important;
+    }
+}
+.hidden-gt-xs {
+    @include media-breakpoint('gt-xs') {
+        display: none !important;
+    }
+}
+.hidden-gt-sm {
+    @include media-breakpoint('gt-sm') {
+        display: none !important;
+    }
+}
+.hidden-gt-md {
+    @include media-breakpoint('gt-md') {
+        display: none !important;
+    }
+}
+.hidden-gt-lg {
+    @include media-breakpoint('gt-lg') {
+        display: none !important;
+    }
+}

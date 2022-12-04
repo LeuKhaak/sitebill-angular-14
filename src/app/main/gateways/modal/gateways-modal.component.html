@@ -1,0 +1,7 @@
+<div class="font-size-18 font-weight-300 text-center p-12">
+    <span class="h1">Выберите способ оплаты</span>
+</div>
+
+<ng-container  *ngIf="invoice_id != null && invoice_id != undefined">
+    <gateways [invoice_id]="invoice_id"></gateways>
+</ng-container>

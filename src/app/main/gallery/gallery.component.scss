@@ -1,0 +1,18 @@
+::ng-deep .ngx-gallery-thumbnail {
+    color: #2AA198;
+    background-color: #ECECEE;
+}
+::ng-deep .ngx-gallery-thumbnail.ngx-gallery-active {
+}
+
+::ng-deep .ngx-gallery-icon {
+    padding: 2px;
+    font-size: 0.5rem;
+    background: #2196f3;
+}
+
+::ng-deep .ngx-gallery-icon:hover {
+    background-color: #bbdefb;
+    font-size: 0.5rem;
+    padding: 2px;
+}

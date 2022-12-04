@@ -1,0 +1,164 @@
+<mat-toolbar class="p-0 mat-elevation-z1">
+
+    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+        <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button class="navbar-toggle-button"
+                    *ngIf="!hiddenNavbar && !rightNavbar && !modelService.getDomConfigValue('navbar_hidden')" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button>
+
+            <!--div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></!--div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+        <div class="logo ml-16">
+            <img class="logo-icon" src="assets/images/logos/sitebill.svg">
+        </div>
+    </div-->
+
+    <div class="px-8 px-md-16">
+        <fuse-shortcuts [navigation]="navigation"></fuse-shortcuts>
+    </div>
+        </div>
+
+        <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+            <ng-container *ngIf="modelService.getConfigValue('external_links') !== null">
+                <ng-container *ngFor="let button of modelService.getConfigValue('external_links')">
+                    <button mat-button class="user-button">
+                        <div fxLayout="row" fxLayoutAlign="center center" (click)="goto_link(button.url)">
+                            <img class="avatar mr-0 mr-sm-16" src="{{button.img}}">
+                            <span class="username mr-12" fxHide fxShow.gt-sm>{{button.title}}</span>
+                        </div>
+                    </button>
+                </ng-container>
+            </ng-container>
+
+            <!--button *ngIf="modelService.getConfigValue('apps.products.contacts_market') == 1" mat-menu-item (click)="show_price()">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <ng-container *ngIf="has_contacts_access()">
+                        <mat-icon class="light-green-A700-fg">lock_open</mat-icon>
+                        <span class="iso light-green-A700-fg">Контакты открыты</span>
+                    </ng-container>
+                    <ng-container *ngIf="!has_contacts_access()">
+                        <mat-icon class="red-400-fg">lock</mat-icon>
+                        <span class="iso red-400-fg">Контакты скрыты</span>
+                    </ng-container>
+                </div>
+            </button-->
+            <button mat-menu-item class="" (click)="login_modal()" *ngIf="!modelService.is_logged_in()">
+                <mat-icon>person</mat-icon>
+                <span>Вход</span>
+            </button>
+            <button mat-button [matMenuTriggerFor]="userMenu"
+                    class="user-button"  *ngIf="modelService.is_logged_in()">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img *ngIf="modelService.get_profile_img_url(); else emptyAvatarBlock" class="avatar mr-0 mr-sm-16" src="{{modelService.get_profile_img_url()}}">
+                    <ng-template #emptyAvatarBlock>
+                        <img class="avatar mr-0 mr-sm-16" src="https://api.sitebill.ru/apps/cloudprovider/assets/images/avatars/profile.jpg">
+                    </ng-template>
+                    <span class="username mr-12" fxHide fxShow.gt-sm>{{modelService.get_current_user_profile().fio.value}}</span>
+                    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+                </div>
+            </button>
+            <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+                <ng-container *ngIf="modelService.getConfigValue('user_menu') !== null">
+                    <ng-container *ngFor="let button of modelService.getConfigValue('user_menu')">
+                        <button mat-menu-item (click)="goto(button.url)">
+                            <mat-icon>{{button.icon}}</mat-icon>
+                            <span>{{button.title}}</span>
+                        </button>
+                    </ng-container>
+                </ng-container>
+
+                <!--ng-container *ngIf="modelService.getConfigValue('user_menu') === null || modelService.getConfigValue('user_menu') === undefined">
+                    <button mat-menu-item (click)="dashboard()">
+                        <mat-icon>dashboard</mat-icon>
+                        <span>Аккаунт</span>
+                    </button>
+                    <button mat-menu-item (click)="my_data()">
+                        <mat-icon>business_center</mat-icon>
+                        <span>Мои объекты</span>
+                    </button>
+                    <button mat-menu-item (click)="all_data()">
+                        <mat-icon>list</mat-icon>
+                        <span>Все объекты</span>
+                    </button>
+                    <button mat-menu-item (click)="goto('/grid/client/')">
+                        <mat-icon>favorite</mat-icon>
+                        <span>Клиенты</span>
+                    </button>
+                    <button mat-menu-item (click)="profile()">
+                        <mat-icon>account_circle</mat-icon>
+                        <span>Личные данные</span>
+                    </button>
+                    <button mat-menu-item (click)="my_collections()">
+                        <mat-icon>star</mat-icon>
+                        <span>Подборки / избранное</span>
+                    </button>
+                </ng-container-->
+
+                <button mat-menu-item class="" (click)="logout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Выход</span>
+                </button>
+            </mat-menu>
+            <div class="toolbar-separator"></div>
+            <!--fuse-search-bar (input)="search($event)"></!--fuse-search-bar>
+
+    <div class="toolbar-separator"></div>
+
+    <button mat-button fxHide fxShow.gt-xs
+            class="language-button"
+            [matMenuTriggerFor]="languageMenu">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <img class="flag mr-8" [src]="'assets/icons/flags/'+selectedLanguage.flag+'.png'">
+            <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
+        </div>
+    </button>
+
+    <mat-menu #languageMenu="matMenu" [overlapTrigger]="false">
+
+        <button mat-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
+            <span fxLayout="row" fxLayoutAlign="start center">
+                <img class="flag mr-16" [src]="'assets/icons/flags/'+lang.flag+'.png'">
+                <span class="iso">{{lang.title}}</span>
+            </span>
+        </button>
+
+        <button mat-menu-item [routerLink]="'/components/multi-language'">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <span>Learn more</span>
+            </div>
+        </button>
+
+    </mat-menu>
+
+    <div class="toolbar-separator" fxHide fxShow.gt-xs></div>
+
+    <button mat-icon-button fxHide.gt-md
+            class="chat-panel-toggle-button"
+            (click)="toggleSidebarOpen('chatPanel')"
+            aria-label="Toggle chat panel">
+        <mat-icon class="secondary-text">chat</mat-icon>
+    </button>
+
+    <div class="toolbar-separator" fxHide.gt-md></div>
+
+    <button mat-icon-button
+            class="quick-panel-toggle-button"
+            (click)="toggleSidebarOpen('quickPanel')"
+            aria-label="Toggle quick panel">
+        <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
+    </button>
+
+    <div class="toolbar-separator" *ngIf="!hiddenNavbar && rightNavbar" fxHide fxShow.gt-xs></div>
+
+    <button mat-icon-button class="navbar-toggle-button"
+            *ngIf="!hiddenNavbar && rightNavbar" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+        <mat-icon class="secondary-text">menu</mat-icon>
+    </button-->
+        </div>
+
+    </div>
+
+</mat-toolbar>

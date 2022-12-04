@@ -1,0 +1,457 @@
+<common-template
+    [entity]="entity"
+    [disable_activation_button]="disable_activation_button"
+    [disable_delete_button]="disable_delete_button"
+    [disable_edit_button]="disable_edit_button"
+    [disable_view_button]="disable_view_button"
+    [enable_coworker_button]="enable_coworker_button"
+    [enable_testimonials_button]="enable_testimonials_button"
+    [enable_building_blocks_button]="enable_building_blocks_button"
+    [disable_gallery_controls]="disable_gallery_controls"
+    [complaint_mode]="complaint_mode"
+    (viewEvent)="view($event)"
+    (edit_formEvent)="edit_form($event)"
+    (deleteEvent)="delete($event)"
+    (reportEvent)="report($event)"
+    (coworkersEvent)="coworkers($event)"
+    (testimonialsEvent)="testimonials($event)"
+    (building_blocksEvent)="building_blocks($event)"
+    (view_galleryEvent)="view_gallery($event)"
+    (view_whatsappEvent)="view_whatsapp($event)"
+    (view_injectorEvent)="view_injector($event)"
+    (toggle_activeEvent)="toggle_active($event)"
+    (toggle_collectionEvent)="toggle_collection($event)"
+    xmlns:filtersMode="http://www.w3.org/1999/xhtml">
+
+</common-template>
+
+<mat-sidenav-container>
+
+    <div id="ngx-datatable" class="page-layout simple fullwidth">
+        <!-- HEADER -->
+        <div class="header-standalone-wrapper" fxLayout="column" *ngIf="!disable_header">
+            <div class="header-standalone-top p-8" fxLayout="column" *ngIf="header_top_panel">
+                <div class="select-button-wrapper">
+                    <button class="select-button" [ngClass]="{selected: activeSale}" (click)="toggleDialType('sale')">
+                        ПРОДАЖА
+                    </button>
+                    <button class="select-button" [ngClass]="{selected: activeRent}" (click)="toggleDialType('rent')">
+                        АРЕНДА
+                    </button>
+                </div>
+                <div class="select-button-wrapper">
+                    <button class="select-button second-line"
+                            [ngClass]="{selected: activeHouse, selectedSecondLine: activeHouse}"
+                            (click)="toggleObjectType('house')">
+                        <mat-icon>home</mat-icon>
+                        <div>ДОМА</div>
+                    </button>
+                    <button class="select-button second-line"
+                            [ngClass]="{selected: activeApartment, selectedSecondLine: activeApartment}"
+                            (click)="toggleObjectType('apartment')">
+                        <mat-icon>business</mat-icon>
+                        <div>ЖИЛАЯ</div>
+                    </button>
+                    <button class="select-button second-line"
+                            [ngClass]="{selected: activeBusiness, selectedSecondLine: activeBusiness}"
+                            (click)="toggleObjectType('business')">
+                        <mat-icon>fastfood
+                        </mat-icon>
+                        <div>КОММЕРЦИЯ</div>
+                    </button>
+                </div>
+            </div>
+            <div class="header-standalone p-8 p-md-8 accent" fxLayout="column" *ngIf="!disable_header">
+                <div class="header-content" fxLayout="row wrap" fxLayoutAlign="space-between" fxFlex="1 0 auto">
+                    <!-- BOARD SELECTION BUTTON -->
+                    <div class="leftPartWrapper">
+                        <div fxLayout="row" fxLayoutAlign="start center" *ngIf="!disable_add_button">
+                            <button class="hidden-lt-md" mat-raised-button (click)="edit_form(null)" color="fuse-white"
+                                    matTooltip="Добавить запись">Добавить запись
+                            </button>
+                            <button class="hidden-gt-sm" mat-mini-fab (click)="edit_form(null)" color="fuse-white"
+                                    matTooltip="Добавить запись">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start center" class="filtersOffWrapper ml-12 mr-12">
+                            <button
+                                class="amber"
+                                *ngIf="filterService.count_share_array(entity.get_app_name()) > get_apps_realty_min_filter_reset_count()"
+                                mat-raised-button
+                                (click)="reset_filters()"
+                                color="teal"
+                                matTooltip="Сбросить фильтры">
+                                <mat-icon class="material-icons filtersOff" color="yellow">
+                                    filter_{{getFiltersCount()}}
+                                </mat-icon>
+                            </button>
+                        </div>
+
+                        <!-- / BOARD SELECTION BUTTON -->
+                        <!-- SEARCH -->
+                        <div class="header__search-row" fxLayout="row" fxLayoutAlign="center center" fxFlex>
+
+                            <div fxLayout="column" [ngClass]="{searchMode: activeSearchMode}"
+                                 *ngIf="!disable_wild_search">
+
+                                <div class="search-wrapper mt-sm-0" *ngIf="!disable_wild_search"
+                                     (click)="setSearchMode()">
+                                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                        <mat-icon color="primary">search</mat-icon>
+                                        <input [formControl]="searchInput" matTooltip="Выполняет поиск по текстовым полям"
+                                               placeholder="Поиск по слову">
+                                        <mat-icon *ngIf="searchInput.value !== ''" class="search__clear" color="primary"
+                                                  matSuffix (click)="clear_search_text()" aria-label="Очистить поиск"
+                                                  matTooltip="Очистить поиск">close
+                                        </mat-icon>
+                                    </div>
+                                    <mat-icon class="closeSearch" *ngIf="activeSearchMode && searchInput.value !== ''"
+                                              (click)="disableSearchMode($event)" aria-label="Смотреть результаты"
+                                              matTooltip="Смотреть результаты">input
+                                    </mat-icon>
+                                    <mat-icon class="closeSearch" *ngIf="activeSearchMode && searchInput.value === ''"
+                                              (click)="disableSearchMode($event)" aria-label="Свернуть окно поиска"
+                                              matTooltip="Свернуть окно поиска">close
+                                    </mat-icon>
+                                </div>
+                                <ng-container
+                                    *ngIf="entity.get_app_name() && modelService.getConfigValue('apps.realty.search_string_parser.enable') === '1'">
+                                    <search-string-parser [search_string]="searchInput.value"
+                                                          [entity]="entity"></search-string-parser>
+                                </ng-container>
+                            </div>
+                            <button
+                                *ngIf="modelService.getConfigValue('apps.mysearch.enable') == 1 && modelService.is_logged_in()"
+                                mat-icon-button (click)="save_search()"
+                                aria-label="Сохранить поиск" matTooltip="Сохранить поиск" class="mb-4">
+                                <mat-icon>save</mat-icon>
+                            </button>
+
+                            <button
+                                *ngIf="modelService.getConfigValue('apps.mysearch.enable') == 1 && !modelService.is_logged_in()"
+                                mat-icon-button (click)="login_modal()"
+                                aria-label="Сохранить поиск" matTooltip="Сохранить поиск" class="mb-4">
+                                <mat-icon>save</mat-icon>
+                            </button>
+
+                        </div>
+                        <!-- / SEARCH -->
+                    </div>
+                    <button *ngIf="!activeFiltersMode" mat-icon-button class="icon-and-text toggleModeBtn"
+                            matTooltip="Фильтры"
+                             (click)="setFiltersMode()">
+                        <mat-icon>fingerprint</mat-icon>
+                        <div>Filters</div>
+                    </button>
+                    <div class="btnIconAndTextWrapper" [ngStyle.lt-md]="activeFiltersMode ? {'display': 'flex'} :
+                    {'display': 'none'}">
+                        <mat-icon *ngIf="activeFiltersMode" class="closeSearch closeFilters"
+                                  (click)="disableFiltersMode($event)" aria-label="Свернуть фильтры"
+                                  matTooltip="Свернуть фильтры">close
+                        </mat-icon>
+                        <div class="selectWrapper" *ngIf="showFilterFilButton">
+                            <button mat-icon-button class="icon-and-text"
+                                    aria-label="Филиалы"
+                                    matTooltip="Фил" (click)="toggleOptionsList('fils')">
+                                <mat-icon>expand_more
+                                </mat-icon>
+                                <div>Фил</div>
+                            </button>
+                            <div class="optionsList" *ngIf="activeFils">
+                                <filter-comp [columnObject]=filterFilExampleColumn [entity]="entity"></filter-comp>
+                            </div>
+                        </div>
+                        <div class="selectWrapper" *ngIf="showFilterAllButton">
+                            <button mat-icon-button class="icon-and-text"
+                                    aria-label="Сортировка по сотрудникам"
+                                    matTooltip="Сортировка по сотрудникам" (click)="toggleOptionsList('groups')">
+                                <mat-icon>expand_more</mat-icon>
+                                <div>Все</div>
+                            </button>
+                            <div class="optionsList" *ngIf="activeGroups">
+                                <filter-comp [columnObject]=filterExampleColumn [entity]="entity"
+                                             [extraParam]="extraParam">
+                                </filter-comp>
+                            </div>
+                        </div>
+                        <button mat-icon-button class="icon-and-text" (click)="selectMy()"
+                                aria-label="Список моих объектов"
+                                matTooltip="Список моих объектов">
+                            <mat-icon>perm_identity</mat-icon>
+                            <div>Мои</div>
+                            <mat-icon *ngIf="activeMy" class="activeNew">done</mat-icon>
+                        </button>
+                        <div class="selectWrapper" *ngIf="showFilterArhButton">
+                            <button mat-icon-button class="icon-and-text" *ngIf="showFilterArhButton" aria-label="Архивные"
+                                    matTooltip="Архивные"
+                                    (click)="toggleOptionsList('arh')">
+                                <mat-icon>view_comfy_alt</mat-icon>
+                                <div>Арх</div>
+                            </button>
+                            <div class="optionsList" *ngIf="activeArh">
+                                <filter-comp [columnObject]=filterArhExampleColumn [entity]="entity"
+                                             [extraParam]="extraParam">
+                                </filter-comp>
+                            </div>
+                        </div>
+                        <button mat-icon-button class="icon-and-text" *ngIf="showFilterNewButton" aria-label="Новые"
+                                matTooltip="Новые" (click)="selectNew()">
+                            <mat-icon>get_app</mat-icon>
+                            <div>Нов</div>
+                            <mat-icon *ngIf="activeNew" class="activeNew">done</mat-icon>
+                        </button>
+                        <div class="selectWrapper" *ngIf="showFilterExButton">
+                            <button mat-icon-button class="icon-and-text" *ngIf="showFilterExButton"
+                                    aria-label="Эксклюзивные" (click)="toggleOptionsList('excl')"
+                                    matTooltip="Эксклюзивные">
+                                <mat-icon>card_giftcard</mat-icon>
+                                <div>Экс</div>
+                            </button>
+                            <div class="optionsList" *ngIf="activeExcl">
+                                <filter-comp [columnObject]=filterExclExampleColumn [entity]="entity"
+                                             [extraParam]="extraParam">
+                                </filter-comp>
+                            </div>
+                        </div>
+                        <div class="selectWrapper" *ngIf="showFilterTemporarilyButton">
+                            <button mat-icon-button class="icon-and-text" *ngIf="showFilterTemporarilyButton"
+                                    aria-label="Временно не продается" (click)="toggleOptionsList('post')"
+                                    matTooltip="Временно не продается">
+                                <mat-icon>power_settings_new</mat-icon>
+                                <div>ВНП</div>
+                            </button>
+                            <div class="optionsList" *ngIf="activePost">
+                                <filter-comp [columnObject]=filterPostExampleColumn [entity]="entity"
+                                             [extraParam]="extraParam">
+                                </filter-comp>
+                            </div>
+                        </div>
+                        <!-- SELECTION -->
+                        <div *ngIf="showSelectionButton" (click)="selectObjects()">
+                            <button mat-icon-button class="icon-and-text"
+                                    aria-label="Подбор объекта по параметрам"
+                                    matTooltip="Подбор объекта по параметрам">
+                                <mat-icon>pageview</mat-icon>
+                                <div>Подбор</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TOOLBAR -->
+                    <div class="angular-toolbar" fxLayout="row" fxLayoutAlign="space-between center" fxFlexOrder="3">
+
+
+                        <!--                            БЕЛАЯ ЛИНИЯ см ниже -->
+                        <mat-form-field class="date-range toolbar__daterange" *ngIf="date_range_enable"
+                                        [ngClass]="{calendar: getCalendarStyle()}">
+                            <input autocomplete="off"
+                                   matTooltip="Выбрать период времени для отображения записей"
+                                   matInput
+                                   type="text"
+                                   ngxDaterangepickerMd
+                                   [ranges]="ranges"
+                                   opens="left"
+                                   [locale]="date_range_locale"
+                                   (change)="date_range_change($event, date_range_key)"
+                                   alwaysShowCalendars="true"
+                                   [(ngModel)]="selected_date_filter"
+                                   class="date-range-control"/>
+                            <mat-icon *ngIf="!selected_date_filter_has_values; else clearDatepicker" matSuffix
+                                      aria-label="Перейти к выбору дат"
+                                      matTooltip="Перейти к выбору дат"
+                                      style="cursor: pointer"
+                                      (click)="goToSelectDate()">
+                                calendar_today
+                            </mat-icon>
+<!--                            <div [ngClass]="{rectangle: calendarHidden}"></div>-->
+                            <ng-template #clearDatepicker>
+                                <mat-icon class="toolbar__daterange-clear clearSelectedDate" color="white" matSuffix
+                                          aria-label="Очистить поле выбора дат"
+                                          matTooltip="Очистить поле выбора дат"
+                                          (click)="clear_selected_date_filter(date_range_key)">close
+                                </mat-icon>
+                            </ng-template>
+                        </mat-form-field>
+                        <!--                    <button *ngIf="selected_date_filter_has_values" mat-icon-button matTooltip="Очистить фильтр по дате"-->
+                        <!--                            (click)="clear_selected_date_filter(date_range_key)">-->
+                        <!--                        <mat-icon color="white" matSuffix (click)="clear_selected_date_filter(date_range_key)">close</mat-icon>-->
+                        <!--                    </button>-->
+
+
+                        <button *ngIf="!disable_refresh_button" mat-icon-button (click)="refresh()"
+                                matTooltip="Обновить таблицу" class="mb-4">
+                            <mat-icon>autorenew</mat-icon>
+                        </button>
+
+                        <!-- SENDER BUTTON -->
+                        <button mat-icon-button (click)="whatsapp_list_sender(entity)"
+                                aria-label="Рассылка WhatsApp" matTooltip="Рассылка WhatsApp"
+                                *ngIf="show_whatsapp() && entity.get_app_name() === 'client'"
+                                class="mb-4">
+                            <mat-icon>message</mat-icon>
+                        </button>
+                        <!-- / SENDER BUTTON -->
+
+
+                        <!-- EXCEL IMPORT BUTTON -->
+                        <button mat-icon-button (click)="excel_modal()"
+                                aria-label="Импорт из Excel" matTooltip="Импорт из Excel" class="mb-4">
+                            <mat-icon>cloud_upload</mat-icon>
+                        </button>
+                        <!-- / EXCEL IMPORT BUTTON -->
+
+                        <!-- EXCEL EXPORT BUTTON -->
+                        <button mat-icon-button (click)="excel_export()"
+                                aria-label="Экспорт в Excel" matTooltip="Экспорт в Excel" class="mb-4">
+                            <mat-icon>cloud_download</mat-icon>
+                        </button>
+                        <!-- / EXCEL EXPORT BUTTON -->
+
+                        <!-- SETTINGS BUTTON -->
+                        <button *ngIf="!freeze_default_columns_list && entity && entity.model" mat-icon-button
+                                (click)="settings_modal()"
+                                aria-label="Настройки таблицы" matTooltip="Настройки таблицы" class="mb-4">
+                            <mat-icon>settings</mat-icon>
+                        </button>
+                        <!-- / SETTINGS BUTTON -->
+
+                        <!-- PDF BUTTON -->
+                        <button
+                            *ngIf="only_collections && modelService.getConfigValue('apps.pdfreport.enable_api_client_report') == 1"
+                            mat-icon-button (click)="export_collections_pdf('client')"
+                            aria-label="Скачать клиентский PDF" matTooltip="Скачать клиентский PDF" class="mb-4">
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </button>
+                        <!-- / PDF BUTTON -->
+
+                        <!-- PDF BUTTON -->
+                        <button
+                            *ngIf="only_collections && modelService.getConfigValue('apps.pdfreport.enable_api_staff_report') == 1"
+                            mat-icon-button (click)="export_collections_pdf('staff')"
+                            aria-label="Скачать PDF для сотрудников" matTooltip="Скачать PDF для сотрудников"
+                            class="mb-4">
+                            <mat-icon>print</mat-icon>
+                        </button>
+                        <!-- / PDF BUTTON -->
+
+                        <!-- SHARE MEMORYLIST BUTTON -->
+                        <button *ngIf="only_collections &&
+                        this.modelService.getConfigValue('apps.memorylist.link_access') == 1"
+                                mat-icon-button (click)="share_memorylist()"
+                                aria-label="Ссылка на подборку" matTooltip="Ссылка на подборку" class="mb-4">
+                            <mat-icon>share</mat-icon>
+                        </button>
+                        <!-- / SHARE MEMORYLIST BUTTON -->
+
+                    </div>
+                    <!-- / TOOLBAR -->
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="content1" layout="row">
+            <!-- WIDGET GROUP -->
+            <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                 [@animateStagger]="{value:'50'}">
+                <!-- WIDGET 11 -->
+                <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                             fxFlex="100">
+                    <!-- Front -->
+                    <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+
+                        <div class="message-box error" *ngIf="error">
+                            {{error_message}}
+                        </div>
+                        <ngx-datatable
+                            #gridTable
+                            *ngIf="compose_complete"
+                            class="{{getTableHeight()}} material expandable"
+                            [rows]="rows_data"
+                            [columns]="data_columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="ngxHeaderHeight"
+                            [footerHeight]="footerHeight"
+                            [rowHeight]="50"
+                            [scrollbarH]="scrollbarH"
+                            [scrollbarV]="true"
+                            [virtualization]="false"
+                            [reorderable]="reorderable"
+                            [externalPaging]="true"
+                            [count]="page.totalElements"
+                            [offset]="page.pageNumber"
+                            [limit]="page.size"
+                            [messages]="{emptyMessage:'Ничего не найдено',totalMessage :'всего',selectedMessage :'выбрано'}"
+                            [selectionType]="selectionType"
+                            [rowClass]="getRowClass"
+                            (activate)="onActivate($event)"
+                            (resize)="onResize($event)"
+                            (page)="setPage($event)"
+                            (select)="onSelect($event)"
+                            [selected]="selected"
+                        >
+
+                            <ngx-datatable-footer>
+                                <ng-template
+                                    ngx-datatable-footer-template
+                                    let-rowCount="rowCount"
+                                    let-pageSize="pageSize"
+                                    let-selectedCount="selectedCount"
+                                    let-curPage="curPage"
+                                    let-offset="offset"
+                                    let-isVisible="isVisible">
+                                    <div class="page-count">
+                                        <ng-container *ngIf="enable_select_rows && selectedCount > 0">
+                                            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                                                    (click)="$event.stopPropagation()"
+                                                    fxHide.xs>
+                                                <mat-icon class="secondary-text">more_vert</mat-icon>
+                                            </button>
+
+                                            <mat-menu #moreMenu="matMenu">
+                                                <button mat-menu-item (click)="addToMailingList($event)"
+                                                        aria-label="Добавить в рассылку">
+                                                    <mat-icon class="secondary-text">message</mat-icon>
+                                                    <span>Добавить в рассылку</span>
+                                                </button>
+                                                <button mat-menu-item (click)="deleteSelected($event)"
+                                                        [matTooltip]="'Удалить выбранные'"
+                                                        aria-label="Удалить выбранные">
+                                                    <mat-icon class="secondary-text">delete</mat-icon>
+                                                    <span>Удалить выбранные</span>
+                                                </button>
+                                            </mat-menu>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="enable_select_rows && selectedCount > 0">
+                                            {{selectedCount.toLocaleString()}} выбрано /
+                                        </ng-container>
+                                        {{rowCount.toLocaleString()}} всего
+
+                                    </div>
+                                    <datatable-pager
+                                        [pagerLeftArrowIcon]="'datatable-icon-left'"
+                                        [pagerRightArrowIcon]="'datatable-icon-right'"
+                                        [pagerPreviousIcon]="'datatable-icon-prev'"
+                                        [pagerNextIcon]="'datatable-icon-skip'"
+                                        [page]="curPage"
+                                        [size]="pageSize"
+                                        [count]="rowCount"
+                                        [hidden]="!((rowCount / pageSize) > 1)"
+                                        (change)="table.onFooterPage($event)">
+                                    </datatable-pager>
+                                </ng-template>
+                            </ngx-datatable-footer>
+                        </ngx-datatable>
+                    </div>
+                    <!-- / Front -->
+                </fuse-widget>
+                <!-- / WIDGET 11 -->
+            </div>
+            <!-- / WIDGET GROUP -->
+        </div>
+
+
+    </div>
+</mat-sidenav-container>

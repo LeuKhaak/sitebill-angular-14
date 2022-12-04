@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+
+        <title>Sitebill</title>
+        <base href="/">
+
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="keywords"
+              content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link href="assets/icons/meteocons/style.css" rel="stylesheet">
+        <link href="assets/icons/material-icons/outline/style.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">
+
+        <!-- FUSE Splash Screen CSS -->
+        <style type="text/css">
+            #fuse-splash-screen {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #2D323D;
+                z-index: 99999;
+                pointer-events: none;
+            }
+
+            #fuse-splash-screen .center {
+                display: block;
+                width: 100%;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            #fuse-splash-screen .logo {
+                width: 43px;
+                color: white;
+                margin: 0 auto;
+            }
+
+            #fuse-splash-screen .logo img {
+                filter: drop-shadow(0px 10px 6px rgba(0, 0, 0, 0.2))
+            }
+
+            #fuse-splash-screen .spinner-wrapper {
+                display: block;
+                position: relative;
+                width: 100%;
+                min-height: 100px;
+                height: 100px;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner {
+                position: absolute;
+                overflow: hidden;
+                left: 50%;
+                margin-left: -50px;
+                animation: outer-rotate 2.91667s linear infinite;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner {
+                width: 100px;
+                height: 100px;
+                position: relative;
+                animation: sporadic-rotate 5.25s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .gap {
+                position: absolute;
+                left: 49px;
+                right: 49px;
+                top: 0;
+                bottom: 0;
+                border-top: 10px solid;
+                box-sizing: border-box;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .left,
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .right {
+                position: absolute;
+                top: 0;
+                height: 100px;
+                width: 50px;
+                overflow: hidden;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .left .half-circle,
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .right .half-circle {
+                position: absolute;
+                top: 0;
+                width: 100px;
+                height: 100px;
+                box-sizing: border-box;
+                border: 10px solid #4285F4;
+                border-bottom-color: transparent;
+                border-radius: 50%;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .left {
+                left: 0;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .left .half-circle {
+                left: 0;
+                border-right-color: transparent;
+                animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+                -webkit-animation: left-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .right {
+                right: 0;
+            }
+
+            #fuse-splash-screen .spinner-wrapper .spinner .inner .right .half-circle {
+                right: 0;
+                border-left-color: transparent;
+                animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+                -webkit-animation: right-wobble 1.3125s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+            }
+
+            @keyframes outer-rotate {
+                0% {
+                    transform: rotate(0deg) scale(0.5);
+                }
+                100% {
+                    transform: rotate(360deg) scale(0.5);
+                }
+            }
+
+            @keyframes left-wobble {
+                0%, 100% {
+                    transform: rotate(130deg);
+                }
+                50% {
+                    transform: rotate(-5deg);
+                }
+            }
+
+            @keyframes right-wobble {
+                0%, 100% {
+                    transform: rotate(-130deg);
+                }
+                50% {
+                    transform: rotate(5deg);
+                }
+            }
+
+            @keyframes sporadic-rotate {
+                12.5% {
+                    transform: rotate(135deg);
+                }
+                25% {
+                    transform: rotate(270deg);
+                }
+                37.5% {
+                    transform: rotate(405deg);
+                }
+                50% {
+                    transform: rotate(540deg);
+                }
+                62.5% {
+                    transform: rotate(675deg);
+                }
+                75% {
+                    transform: rotate(810deg);
+                }
+                87.5% {
+                    transform: rotate(945deg);
+                }
+                100% {
+                    transform: rotate(1080deg);
+                }
+            }
+        </style>
+        <!-- / FUSE Splash Screen CSS -->
+    </head>
+
+    <body>
+        <!-- FUSE Splash Screen -->
+        <fuse-splash-screen id="fuse-splash-screen">
+            <div class="center">
+                <div class="logo">
+                    <img width="43" src="https://www.sitebill.ru/storage/icons/dragon.png"> Sitebill
+                </div>
+                <!-- Material Design Spinner -->
+                <div class="spinner-wrapper">
+                    <div class="spinner">
+                        <div class="inner">
+                            <div class="gap"></div>
+                            <div class="left">
+                                <div class="half-circle"></div>
+                            </div>
+                            <div class="right">
+                                <div class="half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Material Design Spinner -->
+            </div>
+        </fuse-splash-screen>
+        <!-- / FUSE Splash Screen -->
+        <!--app id="app_root"  class="angular" elements="room_count,location,price_selector,square_selector,floor_selector,material_selector,dead_line_selector,second_realty,no_commision" realty_id="777" ipoteka_order_url="http://brusnikadom.ru" years="15" realty_price="7100000" down_percent="50" percent="6" show_overpayment="0" show_credit_sum="0" top_text="Ежемесячный платеж:" bottom_text="по двум документам!"></app-->
+        <!--app id="app_root"  class="angular" query_string="district_id[]=28&district_id[]=34&district_id[]=31&street_id[]=3641&street_id[]=279&price_min=7000000&price=8000000&square_min=30&square_max=100&floor_min=3&floor_max=7&amp;not_first_floor=1&amp;not_last_floor=1&room_count[]=1&room_count[]=3&walls[]=Панельный&walls[]=Кирпичный&topic_id[]=6131&topic_id[]=6132&srch_word=школа" elements="room_count,location,price_selector,square_selector,floor_selector,material_selector,dead_line_selector,second_realty,no_commision" realty_id="777" ipoteka_order_url="http://brusnikadom.ru" years="15" realty_price="7100000" down_percent="50" percent="6" show_overpayment="0" show_credit_sum="0" top_text="Ежемесячный платеж:" bottom_text="по двум документам!"></app-->
+        <!--app id="app_root"  class="angular" query_string="district_id[]=28&district_id[]=34&district_id[]=31&street_id[]=3641&street_id[]=279&complex_id[]=1&complex_id[]=3&square_min=30&square_max=100&floor_min=3&floor_max=7&floor_count_min=2&floor_count_max=15&amp;not_first_floor=1&amp;not_last_floor=1&room_count[]=1&room_count[]=3&walls[]=Панельный&walls[]=Кирпичный&topic_id[]=6131&topic_id[]=6132&srch_word=школа" ></app-->
+        <!--app id="app_root" class="angular" theme="theme-red-light" elements="room_count,location,price_selector,square_selector,floor_selector,material_selector,dead_line_selector,second_realty,no_commision,city_id_selector,street_id_selector,complex_id_selector,district_id_selector,srch_word,topic_id_selector"></app-->
+        <app
+            id="app_root"
+            navbar_hidden="false"
+            toolbar_hidden="false"
+            disable_default_frontend_route="true"
+            enable_domain_auth="true"
+            standalone_mode="true"
+            enable_login_button="true"
+            dev_mode="true"
+            form_mode1="true"
+            component1="data"
+            component1="street"
+            component1="products"
+            component1="whatsapp-chat"
+            component1="models-editor"
+            component="apps-data"
+            component1="light_config"
+            only_field_name1="email"
+            only_field_name="apps.realty.logo"
+
+            component1="summary-report"
+            table_name1="data"
+            primary_key1="id"
+
+            component1="client"
+            table_name1="client"
+            primary_key1="client_id"
+
+            component1="messages"
+            table_name1="messages"
+            primary_key1="message_id"
+
+            object_id="163"
+            object_type="user"
+            success_message="Все хорошо, прекрасная Маркиза!"
+            entity_uri="prodaja"
+            only_field_name="description"
+            api_key="0sdflkw34jowpsxkrsxdf"
+
+
+            class="angular"
+            elements="room_count,location,price_selector,square_selector,floor_selector,material_selector,dead_line_selector,second_realty,no_commision,city_id_selector,street_id_selector,complex_id_selector,district_id_selector,srch_word,topic_id_selector"
+            parser_disable="true"
+        ></app>
+
+        <!--
+            source="bitrix24"
+            bitrix24="true"
+            bitrix24_access_token="5c4d225f0028234e0012cb6b00000001403803a63e8e29a27d76592d0e89fccfdede12"
+            bitrix24_domain="b7572.sitebill.net"
+            bitrix24_placement="CRM_DEAL_DETAIL_TAB"
+            bitrix24_placement_options="{'ID':'11195'}"
+            bitrix24_user_option="{'mister':'twister','sitebill_auth':'admin','user_id':'1','config':{'per_page':'20'},'admin_panel_login':1,'structure':{'admin_panel':{'login':1},'group_name':'admin'},'success':1,'session_key':'94c69557219edb744f9b7ef980adb7ea','api_url':'https://btrx2.sitebill.net','group_id':'1'}"
+        -->
+
+
+        <!--ankonsul class="angular" id="angular_search_ankonsul" ></ankonsul-->
+        <!--mortgage-calculator class="angular" id="calculator_root" realty_id="777" ipoteka_order_url="http://brusnikadom.ru" years="15" realty_price="9100000" down_percent="50" percent="6" show_overpayment="0" show_credit_sum="0" top_text="Ежемесячный платеж:" bottom_text="по двум документам!"></mortgage-calculator-->
+        <!--calculator-mini class="angular" id="calculator_mini_root" realty_id="777" ipoteka_order_url="http://brusnikadom.ru" years="15" realty_price="8100000" down_percent="50" percent="6" show_overpayment="0" show_credit_sum="0" top_text="Ежемесячный платеж:" bottom_text="по двум документам!"></calculator-mini>
+    <search class="angular" id="angular_search" ></search-->
+        <!--app run="carousel" id="app_root"></app-->
+        <!--app run="calculator" id="app_root" realty_id="777" years="15" realty_price="7000000" down_percent="50" percent="6" show_overpayment="0" show_credit_sum="0" top_text="Ежемесячный платеж:" bottom_text="по двум документам!"></app-->
+    </body>
+
+</html>

@@ -1,0 +1,9 @@
+::ng-deep {
+    .ngx-datatable.bootstrap .datatable-body .datatable-body-row .datatable-body-cell {
+        padding: 0px;
+        min-height: 22px;
+    }
+    .mat-raised-button {
+        line-height: 0;
+    }
+}

@@ -1,0 +1,44 @@
+    <div id="ngx-datatable" class="page-layout simple fullwidth" *ngIf="after_validated_key()">
+        <div class="content" layout="row">
+            <mat-tab-group dynamicHeight>
+                <mat-tab label="Все ({{getFreeClientCounter()}})">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <freeclient-grid></freeclient-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+                <mat-tab label="Мои ({{getMyClientCounter()}})">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <myclient-grid></myclient-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+
+
+            </mat-tab-group>
+
+        </div>
+    </div>
+

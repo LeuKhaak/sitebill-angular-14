@@ -1,0 +1,22 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Прикрепить объект</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="column">
+        <div class="p-12 form-item">
+            <data-grid [default_params]="{active:1}"></data-grid>
+        </div>
+        <div class="p-12 form-item">
+            <button mat-raised-button (click)="attach()" aria-label="Прикрепить" *ngIf="is_show_attach_button()">
+                <mat-icon>attach_file</mat-icon> Прикрепить
+            </button>
+        </div>
+
+    </div>
+
+</div>

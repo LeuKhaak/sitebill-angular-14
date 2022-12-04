@@ -1,0 +1,28 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Добавить файл</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="column" *ngIf="show_uploader">
+        <div class="p-12 form-item">
+            <uploader-component
+                [entity]="entity"
+                [image_field]="files_column_name"
+                (upload_complete)="upload_complete($event)"
+                (onImageArrayChange)="onImageArrayChange($event)"
+            >
+            </uploader-component>
+        </div>
+        <div class="p-12 form-item">
+            <button mat-raised-button (click)="attach()" aria-label="Прикрепить" *ngIf="show_attach_button">
+                <mat-icon>attach_file</mat-icon> Прикрепить
+            </button>
+        </div>
+
+    </div>
+
+</div>

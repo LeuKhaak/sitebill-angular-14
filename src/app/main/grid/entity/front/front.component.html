@@ -1,0 +1,190 @@
+    <div id="ngx-datatable" class="page-layout simple fullwidth">
+        <!-- HEADER -->
+        <div class="p-16 p-sm-24" fxLayout="column" fxLayoutAlign="start"
+             fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start start" [formGroup]="form">
+
+            <div class="fuse-card" fxFlex="100" fxFlex.gt-sm="33">
+
+                <div class="p-16 pt-8">
+                    <mat-label>База объектов</mat-label>
+                    <mat-select [formControlName]="'topic_id'" name="food">
+                        <mat-option *ngFor="let topic of topics" [value]="topic.id">
+                            {{topic.name}}
+                        </mat-option>
+                    </mat-select>
+                </div>
+
+            </div>
+
+            <div class="fuse-card" fxFlex="100" fxFlex.gt-sm="33">
+
+                <div class="p-16 pt-8">
+                    <mat-label>В регионе</mat-label>
+                    <mat-select [formControlName]="'region_id'" (selectionChange)="change_region_list($event)" name="food">
+                        <mat-option *ngFor="let region of regions" [value]="region.id">
+                            {{region.value}}
+                        </mat-option>
+                    </mat-select>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <div class="content" layout="row" *ngIf="modelService.all_checks_passes()">
+            <mat-tab-group dynamicHeight>
+                <mat-tab label="Продам">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <sale-grid  *ngIf="reload"
+                                        [input_entity]="sale_entity"
+                                        [disable_menu]="true"
+                                        [disable_add_button]="disable_add_button"
+                                        [disable_edit_button]="disable_edit_button"
+                                        [disable_view_button]="disable_view_button"
+                                        [disable_delete_button]="disable_delete_button"
+                                        [disable_gallery_controls]="disable_gallery_controls"
+                                        [freeze_default_columns_list]="true"
+                                        [complaint_mode]="true"
+                                        [enable_collections]="enable_collections"
+                                        [disable_activation_button]="disable_activation_button">
+                                </sale-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+                <mat-tab label="Сдам">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <sale-grid  *ngIf="reload"
+                                        [input_entity]="rent_entity"
+                                        [disable_menu]="true"
+                                        [disable_add_button]="disable_add_button"
+                                        [disable_edit_button]="disable_edit_button"
+                                        [disable_view_button]="disable_view_button"
+                                        [disable_delete_button]="disable_delete_button"
+                                        [enable_collections]="enable_collections"
+                                        [disable_gallery_controls]="disable_gallery_controls"
+                                        [freeze_default_columns_list]="true"
+                                        [complaint_mode]="true"
+                                        [disable_activation_button]="disable_activation_button">
+                                </sale-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+                <mat-tab label="Посуточно">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <sale-grid  *ngIf="reload"
+                                        [enable_collections]="enable_collections"
+                                        [input_entity]="dayrent_entity"
+                                        [disable_menu]="true"
+                                        [disable_add_button]="disable_add_button"
+                                        [disable_edit_button]="disable_edit_button"
+                                        [disable_view_button]="disable_view_button"
+                                        [disable_delete_button]="disable_delete_button"
+                                        [disable_gallery_controls]="disable_gallery_controls"
+                                        [freeze_default_columns_list]="true"
+                                        [complaint_mode]="true"
+                                        [disable_activation_button]="disable_activation_button">
+                                </sale-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+                <mat-tab label="Куплю">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <sale-grid  *ngIf="reload"
+                                        [enable_collections]="enable_collections"
+                                        [input_entity]="buy_entity"
+                                        [disable_menu]="true"
+                                        [disable_add_button]="disable_add_button"
+                                        [disable_edit_button]="disable_edit_button"
+                                        [disable_view_button]="disable_view_button"
+                                        [disable_delete_button]="disable_delete_button"
+                                        [disable_gallery_controls]="disable_gallery_controls"
+                                        [freeze_default_columns_list]="true"
+                                        [complaint_mode]="true"
+                                        [disable_activation_button]="disable_activation_button">
+                                </sale-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+                <mat-tab label="Сниму">
+                    <!-- WIDGET GROUP -->
+                    <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                         [@animateStagger]="{value:'50'}">
+                        <!-- WIDGET 11 -->
+                        <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                                     fxFlex="100">
+                            <!-- Front -->
+                            <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                                <sale-grid  *ngIf="reload"
+                                        [enable_collections]="enable_collections"
+                                        [input_entity]="needrent_entity"
+                                        [disable_menu]="true"
+                                        [disable_add_button]="disable_add_button"
+                                        [disable_edit_button]="disable_edit_button"
+                                        [disable_view_button]="disable_view_button"
+                                        [disable_delete_button]="disable_delete_button"
+                                        [disable_gallery_controls]="disable_gallery_controls"
+                                        [freeze_default_columns_list]="true"
+                                        [complaint_mode]="true"
+                                        [disable_activation_button]="disable_activation_button">
+                                </sale-grid>
+                            </div>
+                            <!-- / Front -->
+                        </fuse-widget>
+                        <!-- / WIDGET 11 -->
+                    </div>
+                    <!-- / WIDGET GROUP -->
+                </mat-tab>
+
+
+            </mat-tab-group>
+
+        </div>
+    </div>
+

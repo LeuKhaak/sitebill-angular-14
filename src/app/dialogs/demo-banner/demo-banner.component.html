@@ -1,0 +1,25 @@
+<div id="demo-banner" class="dialog-content-wrapper">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Ограниченный доступ!</span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-24 m-0">
+        Вы не можете видеть контакты, фото и полное описание объектов, комментарии, а также не можете добавлять объекты в Базу.<br/>
+        Для полного доступа к Базе недвижимости вам необходимо перейти на платный тариф.
+        <div mat-dialog-actions class="m-0" fxLayout="row" fxLayoutAlign="space-between start">
+            <div>
+                <button mat-raised-button type="button" color="accent" (click)="login()" aria-label="Пакеты услуг и тарифы" matTooltip="Пакеты услуг и тарифы">
+                    Пакеты услуг и тарифы
+                </button>
+
+                <button mat-raised-button type="submit" (click)="close()">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,85 @@
+<div class="excel-apps">
+    <div fxLayout="row" class="p-12" fxLayoutAlign="space-between center">
+        <label class="upload-button">
+            <input
+                type="file"
+                ngFileSelect
+                [options]="options"
+                (uploadOutput)="onUploadOutput($event)"
+                [uploadInput]="uploadInput"
+            />
+        </label>
+        <ng-container *ngIf="getState() === ExcelState.preview_table">
+            <div>
+                Строк: {{worksheetData.totalRows}}
+            </div>
+            <div>
+                Колонок: {{worksheetData.totalColumns}}
+            </div>
+            <button  (click)="startImport()" mat-raised-button class="mat-accent" matTooltip="Начать импорт данных">
+                Начать импорт данных
+            </button>
+        </ng-container>
+    </div>
+    <div fxLayout="row" class="p-12" fxLayoutAlign="space-between center" *ngIf="getState() === ExcelState.loading">
+        <mat-icon><mat-spinner [diameter]="20"></mat-spinner></mat-icon>
+    </div>
+
+    <div fxLayout="column" class="p-12" fxLayoutAlign="space-between center" *ngIf="getState() === ExcelState.import_complete || getState() === ExcelState.import_in_progress">
+        <h3>Статистика импорта записей:</h3>
+        <div>Новые: {{import_statistics.new_stat_items}}</div>
+        <div>Обновлено: {{import_statistics.updated_stat_items}}</div>
+        <div class="">Отклонено: {{import_statistics.rejected_stat_items}}</div>
+    </div>
+
+    <div fxLayout="row" class="p-12" fxLayoutAlign="space-between center" *ngIf="getState() === ExcelState.import_complete">
+        {{import_result}}
+    </div>
+
+    <div fxLayout="row" class="p-12" fxLayoutAlign="space-between center" *ngIf="getState() === ExcelState.import_in_progress">
+        <mat-progress-bar mode="determinate" value="{{getProgressInPercent()}}"></mat-progress-bar>
+        <div class="p-12">{{getImportedRows()}}/{{worksheetData.totalRows}}</div>
+    </div>
+
+    <div fxLayout="row" class="p-12 width-100-p" fxLayoutAlign="space-between center"
+         *ngIf="true || getState() === ExcelState.import_complete || getState() === ExcelState.import_in_progress">
+        <display-apps [messages]="import_statistics.error_stat_items"></display-apps>
+    </div>
+
+    <ngx-datatable
+        *ngIf="getState() === ExcelState.preview_table"
+        [rows]="excel_rows"
+        [columns]="excel_columns"
+        [rowHeight]="50"
+        [scrollbarV]="true"
+        [virtualization]="false"
+        class="material table-height"
+    >
+        <ngx-datatable-column *ngFor="let col of excel_columns; let i = index;" [name]="col.name">
+            <ng-template
+                ngx-datatable-cell-template
+                let-rowIndex="rowIndex"
+                let-value="value"
+                let-row="row"
+            >
+                <ng-container *ngIf="rowIndex === 0">
+                    <ng-select
+                        class="select_options"
+                        appendTo="body"
+                        bindValue="letter"
+                        bindLabel="title"
+                        [items]="mapped_columns_array"
+                        [(ngModel)]="mapped_columns[mapped_model_titles[i]]"
+                        (ngModelChange)="update_mapper($event)"
+                        (change)="update_mapper_import()"
+                    >
+
+                    </ng-select>
+                </ng-container>
+                {{row[mapped_columns[mapped_model_titles[i]]]}}
+            </ng-template>
+        </ngx-datatable-column>
+
+    </ngx-datatable>
+</div>
+

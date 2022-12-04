@@ -1,0 +1,39 @@
+<div id="save-search" class="dialog-content-wrapper">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Сохранить поиск и подписаться</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                    <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-24 m-0">
+        <form [formGroup]="dialogForm" (ngSubmit)="submit()">
+
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Название поиска" formControlName="name" required>
+                <mat-error *ngIf="dialogFormErrors.name.required">
+                    Необходимо указать название поиска
+                </mat-error>
+
+            </mat-form-field>
+
+            <div mat-dialog-actions class="m-0" fxLayout="row" fxLayoutAlign="space-between start">
+                <div>
+                    <button mat-raised-button type="submit" color="accent">
+                        Сохранить
+                    </button>
+
+                    <button mat-raised-button type="button" (click)="close()" aria-label="Не сохранять и закрыть форму" matTooltip="Не сохранять и закрыть форму">
+                        Отмена
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

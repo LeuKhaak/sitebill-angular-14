@@ -1,0 +1,113 @@
+@import "src/@fuse/scss/fuse";
+
+.mat-form-field {
+    display: block;
+}
+.mat-form-field[hidden] {
+    display: none;
+}
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+.level1 {
+}
+.level2 {
+    padding-left: 15px;
+}
+.level3 {
+    padding-left: 30px;
+}
+.level4 {
+    padding-left: 40px;
+}
+.level5 {
+    padding-left: 50px;
+}
+.level6 {
+    padding-left: 60px;
+}
+.level7 {
+    padding-left: 70px;
+}
+.level8 {
+    padding-left: 80px;
+}
+.level9 {
+    padding-left: 90px;
+}
+::ng-deep .ng-select.ng-invalid .ng-select-container {
+    border-bottom: 1px solid #f44336;
+    color: #f44336 !important;
+}
+.form-checkbox {
+    margin: 6px 12px 6px 0;
+}
+:host ::ng-deep .map-container-inner {
+    width: 300px;
+    height: 200px;
+}
+:host ::ng-deep agm-map {
+    height: 300px;
+}
+::ng-deep .flex_wrap {
+    flex-wrap: wrap !important;
+}
+::ng-deep .min-select {
+    min-width: 100px;
+}
+::ng-deep .regular-modal .mat-dialog-container{
+    padding: 0;
+}
+.reducer .p-12 {
+    padding: 4px !important;
+}
+.reducer .mat-form-field-wrapper {
+    margin: 0 !important;
+}
+.reducer .mat-form-field-appearance-outline {
+    margin: 0 !important;
+}
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0 !important;
+}
+
+.reducer .mat-form-field {
+    font-size: 14px !important;
+}
+.reducer .mat-checkbox-layout {
+}
+.reducer .mat-checkbox {
+    font-size: 14px !important;
+}
+.width-100 {
+    width: 100%;
+    margin:0 auto;
+}
+.checkbox-wrap {
+    white-space: normal !important;
+}
+.border-top-1px {
+    border-top: 5px dashed #f5f8fa;
+    margin-top: 12px;
+}
+.height-fix {
+    min-height: 80vh;
+}
+.comment-on-height-fix {
+    max-height: 30vh;
+}
+.comment-off-height-fix {
+}
+
+.mat-dialog-content-fixed-width {
+}
+
+.columnsButtonWrapper {
+    margin-right: 20px;
+    margin-left: auto;
+    @include media-breakpoint('lt-sm') {
+        display: none;
+    }
+}
+

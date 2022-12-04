@@ -1,0 +1,10 @@
+<ng-container *ngIf="!modelService.getDomConfigValue('standalone_mode')">
+    <div id="login" fxLayout="column">
+        <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+            <div id="login-form">
+                <div class="title">Добро пожаловать!</div>
+                <a *ngIf="!modelService.is_logged_in()" mat-button color="accent" (click)="login_modal()">Войти</a>
+            </div>
+        </div>
+    </div>
+</ng-container>

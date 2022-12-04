@@ -1,0 +1,64 @@
+<mat-tab-group dynamicHeight>
+    <mat-tab>
+        <ng-template matTabLabel>
+            Общий отчет
+        </ng-template>
+
+
+        <!-- WIDGET GROUP -->
+        <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+             [@animateStagger]="{value:'50'}">
+            <!-- WIDGET 11 -->
+            <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                         fxFlex="100">
+                <!-- Front -->
+                <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                    <messages-report-grid></messages-report-grid>
+                </div>
+                <!-- / Front -->
+            </fuse-widget>
+            <!-- / WIDGET 11 -->
+        </div>
+        <!-- / WIDGET GROUP -->
+    </mat-tab>
+    <mat-tab>
+        <ng-template matTabLabel>
+            Отчет по объектам
+        </ng-template>
+
+
+        <!-- WIDGET GROUP -->
+        <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+             [@animateStagger]="{value:'50'}">
+            <!-- WIDGET 11 -->
+            <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                         fxFlex="100">
+                <!-- Front -->
+                <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                    <messages-report-grid [report_type]="client_report_type"></messages-report-grid>
+                </div>
+                <!-- / Front -->
+            </fuse-widget>
+            <!-- / WIDGET 11 -->
+        </div>
+        <!-- / WIDGET GROUP -->
+    </mat-tab>
+    <mat-tab label="Отчет по клиентам">
+        <!-- WIDGET GROUP -->
+        <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+             [@animateStagger]="{value:'50'}">
+            <!-- WIDGET 11 -->
+            <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                         fxFlex="100">
+                <!-- Front -->
+                <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+                    <messages-report-grid [report_type]="data_report_type"></messages-report-grid>
+
+                </div>
+                <!-- / Front -->
+            </fuse-widget>
+            <!-- / WIDGET 11 -->
+        </div>
+        <!-- / WIDGET GROUP -->
+    </mat-tab>
+</mat-tab-group>

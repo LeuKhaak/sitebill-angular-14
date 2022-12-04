@@ -1,0 +1,100 @@
+<div id="ngx-datatable" class="page-layout simple fullwidth" *ngIf="config_loaded  && modelService.getDomConfigValue('component') !== 'authorization'">
+    <ng-container *ngIf="this.modelService.getDomConfigValue('form_mode')">
+        <auto-resolver-form
+                            [app_name]="this.modelService.getDomConfigValue('component')"
+                            [table_name]="this.modelService.getDomConfigValue('table_name')"
+                            [primary_key]="this.modelService.getDomConfigValue('primary_key')"
+                            [entity_uri]="this.modelService.getDomConfigValue('entity_uri')"
+                            [only_field_name]="this.modelService.getDomConfigValue('only_field_name')"
+                            [success_message]="this.modelService.getDomConfigValue('success_message')"
+        >
+        </auto-resolver-form>
+    </ng-container>
+    <ng-container *ngIf="!this.modelService.getDomConfigValue('form_mode')">
+        <ng-container [ngSwitch]="this.modelService.getDomConfigValue('component')">
+
+            <whatsapp-chat [phone_number]="''" *ngSwitchCase="'whatsapp-chat'">
+            </whatsapp-chat>
+
+            <models-editor *ngSwitchCase="'models-editor'">
+            </models-editor>
+
+            <json-editor *ngSwitchCase="'json-editor'">
+            </json-editor>
+
+            <data-grid *ngSwitchCase="'data'">
+            </data-grid>
+
+            <messages-grid *ngSwitchCase="'messages'">
+            </messages-grid>
+
+            <profile *ngSwitchCase="'profile'">
+
+            </profile>
+
+            <app-config *ngSwitchCase="'config'"
+                [config_key]="this.modelService.getDomConfigValue('config_key')"
+                [light_config]="this.modelService.getDomConfigValue('light_config')" >
+            </app-config>
+
+            <ng-container *ngSwitchCase="'light_config'">
+            </ng-container>
+
+            <cowork-grid  *ngSwitchCase="'coworker'"
+                          [disable_header]="false"
+                          [disable_wild_search]="true"
+                          [freeze_default_columns_list]="true"
+                          [disable_view_button]="true"
+                          [cowork_object_id]="this.modelService.getDomConfigValue('object_id')"
+                          [cowork_object_type]="this.modelService.getDomConfigValue('object_type')">
+            </cowork-grid>
+
+            <front-component *ngSwitchCase="'front'">
+            </front-component>
+
+            <user-grid *ngSwitchCase="'user'">
+            </user-grid>
+
+            <summary-report *ngSwitchCase="'summary-report'">
+
+            </summary-report>
+
+            <cloud-testimonials-grid *ngSwitchCase="'cloud-testimonials'"
+                                     [api_key]="this.modelService.getDomConfigValue('api_key')"
+                                     [object_id]="this.modelService.getDomConfigValue('object_id')"
+                                     [object_type]="this.modelService.getDomConfigValue('object_type')">
+            </cloud-testimonials-grid>
+
+            <auto-resolver-grid *ngSwitchDefault
+                                [app_name]="this.modelService.getDomConfigValue('component')"
+                                [table_name]="this.modelService.getDomConfigValue('table_name')"
+                                [primary_key]="this.modelService.getDomConfigValue('primary_key')">
+            </auto-resolver-grid>
+
+        </ng-container>
+    </ng-container>
+</div>
+
+<div class="page-layout simple fullwidth" *ngIf="access_denied_state && modelService.getDomConfigValue('component') !== 'authorization'">
+    <div fxLayout="row" fxLayoutAlign="center center" class="auto-resolver-form">
+        <div class="p-12">
+            Доступ запрещен
+        </div>
+    </div>
+</div>
+
+<div class="page-layout simple fullwidth" *ngIf="config_loaded && modelService.getDomConfigValue('component') == 'authorization'">
+    <div fxLayout="row" fxLayoutAlign="center center" class="auto-resolver-form">
+        <div class="p-12">
+            <login-standalone>
+            </login-standalone>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="this.modelService.getDomConfigValue('enable_login_button')">
+    <a *ngIf="!modelService.is_logged_in()" mat-button color="accent" (click)="login_modal()">Войти</a>
+    <span *ngIf="modelService.is_logged_in()">Logged in as: {{modelService.get_current_user_profile().email.value}}</span>
+    <a *ngIf="modelService.is_logged_in()" mat-button color="accent" (click)="logout()">Выйти</a>
+
+</ng-container>

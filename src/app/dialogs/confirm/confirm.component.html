@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+    <h1 matDialogTitle>Требуется подтверждение</h1>
+    <div mat-dialog-content [innerHTML]="confirmMessage"></div>
+    <div *ngIf="confirmMessage2" mat-dialog-content [innerHTML]="confirmMessage2"></div>
+    <div mat-dialog-actions class="pt-24" fxLayout="row" fxLayoutAlign="center space-between">
+        <button mat-raised-button class="mat-accent mr-16" (click)="dialogRef.close(true)">Да</button>
+        <button mat-button (click)="dialogRef.close(false)">Нет</button>
+    </div>
+</div>

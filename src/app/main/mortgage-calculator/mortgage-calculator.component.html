@@ -1,0 +1,126 @@
+<div *ngIf="license_check_false">
+    <div fxLayout="column" fxLayoutAlign="center center">
+
+        <div fxLayout="column" class="error_content" fxLayoutAlign="center center">
+
+            <h1>Нет лицензии. Wrong license</h1>
+
+            <div align="center">Для работы приложения необходимо купить лицензию.<br> To use the application you need to buy a license.</div>
+
+
+            <a class="back-link" href="https://www.sitebill.ru/mortgage-calculator/" target="_blank">Купить | Buy</a>
+        </div>
+
+    </div>    
+</div>
+<div id="mortgage-calculator" *ngIf="license_check_true">
+    <mat-card class="result">
+        <mat-card-content>
+            <div fxlayoutalign="center center">
+                <div>{{top_text}}</div> от <span class="light-blue-fg font-size-32"> {{month_payment|number:'1.0-0':'ru'}} </span> руб    
+                <div class="orange-fg font-size-20">{{bottom_text}}</div>
+            </div>
+        </mat-card-content>
+    </mat-card>    
+    <mat-card>
+        <mat-card-content>
+            <section class="example-section">
+                <mat-form-field class="example-margin">
+                    <input matInput type="number" placeholder="Стоимость квартиры" [(ngModel)]="realty_price" (ngModelChange)="calculate($event)">
+                    <!--span matPrefix>руб&nbsp;</span-->
+                    <span matSuffix>&nbsp;руб</span>
+                    <mat-slider
+                        class="example-margin"
+                        [disabled]="disabled"
+                        [invert]="invert"
+                        [max]="max_realty_price"
+                        [min]="min_realty_price"
+                        [step]="step_realty_price"
+                        [thumbLabel]="thumbLabel"
+                        [displayWith]="formatLabel"                        
+                        [tickInterval]="tickInterval"
+                        [(ngModel)]="realty_price"
+                        (ngModelChange)="calculate($event)"
+                        [vertical]="vertical">
+                    </mat-slider>
+
+                </mat-form-field>
+                <mat-form-field class="example-margin">
+                    <input matInput type="number" placeholder="Первоначальный взнос {{down_percent}}% *" [(ngModel)]="down_payment" (ngModelChange)="calculate($event)">
+                    <span matSuffix>&nbsp;руб</span>
+                    <mat-slider
+                        class="example-margin"
+                        [disabled]="disabled"
+                        [invert]="invert"
+                        [max]="max_down_payment"
+                        [min]="min_down_payment"
+                        [step]="step_down_payment"
+                        [thumbLabel]="thumbLabel"
+                        [tickInterval]="tickInterval"
+                        [displayWith]="displayFnDown.bind(this)"                        
+                        [(ngModel)]="down_payment"
+                        (ngModelChange)="calculate($event)"
+                        [vertical]="vertical">
+                    </mat-slider>
+                    <div><span class="font-size-10">* возможно без первоначального взноса</span></div>
+
+                </mat-form-field>
+                <mat-form-field class="example-margin">
+                    <input matInput type="number" placeholder="{{stavka_title}}" [(ngModel)]="percent">
+                    <span matSuffix>&nbsp;%</span>
+                    <mat-slider
+                        class="example-margin"
+                        [disabled]="disabled"
+                        [invert]="invert"
+                        [max]="max_percent"
+                        [min]="min_percent"
+                        [step]="step_percent"
+                        [thumbLabel]="thumbLabel"
+                        [tickInterval]="tickInterval"
+                        [(ngModel)]="percent"
+                        (ngModelChange)="calculate($event)"
+                        [vertical]="vertical">
+                    </mat-slider>
+                    <div><span class="font-size-10">{{stavka_description}}</span></div>
+
+                </mat-form-field>
+
+                <mat-form-field class="example-margin">
+                    <input matInput type="number" placeholder="Срок кредита" [(ngModel)]="years">
+                    <span matSuffix>&nbsp;лет</span>
+                    <mat-slider
+                        class="example-margin"
+                        [disabled]="disabled"
+                        [invert]="invert"
+                        [max]="max_years"
+                        [min]="min_years"
+                        [step]="step_years"
+                        [thumbLabel]="thumbLabel"
+                        [tickInterval]="tickInterval"
+                        [(ngModel)]="years"
+                        (ngModelChange)="calculate($event)"
+                        [vertical]="vertical">
+                    </mat-slider>
+                </mat-form-field>
+
+            </section>
+
+        </mat-card-content>
+    </mat-card>
+    <div fxLayout="row" fxLayoutAlign="center center" class="order_button_div" *ngIf="ipoteka_order_url != ''">
+        <a href="{{ipoteka_order_url}}"><button mat-raised-button color="accent">Оформить ипотеку</button></a>
+    </div>
+
+
+    <mat-card class="result" *ngIf="show_credit_sum || show_overpayment">
+              <mat-card-content>
+            <p *ngIf="show_credit_sum">Сумма кредита: {{realty_minus_down|number:'1.0-0':'ru'}} руб.</p>
+            <p *ngIf="show_overpayment">Переплата: {{overpayment|number:'1.0-0':'ru'}} руб.</p>
+            <!--div class="footer" fxLayout="row" fxLayoutAlign="center center">
+                <button mat-button color="accent" (click)="order_form()">Оформить заявку</button>
+            </div-->
+        </mat-card-content>
+    </mat-card>    
+
+</div>
+

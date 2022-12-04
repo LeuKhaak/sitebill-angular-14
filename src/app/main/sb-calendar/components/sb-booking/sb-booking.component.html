@@ -1,0 +1,144 @@
+<div class="controls">
+    <button
+        type="button"
+        mat-raised-button
+        class="controls__btn"
+        mwlCalendarPreviousView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="onViewDateUpdate()"
+    >
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button
+        type="button"
+        mat-raised-button
+        class="controls__btn"
+        mwlCalendarToday
+        [(viewDate)]="viewDate"
+        (viewDateChange)="onViewDateUpdate()"
+    >Сегодня
+    </button>
+    <button
+        type="button"
+        mat-raised-button
+        class="controls__btn"
+        mwlCalendarNextView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="onViewDateUpdate()"
+    >
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+</div>
+
+<div [ngSwitch]="view">
+    <div class="month-title">{{ getMonthTitle() }}</div>
+    <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [viewDate]="viewDate"
+        [events]="calendarService.events$ | async"
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        [cellTemplate]="calendarCell"
+        [openDayEventsTemplate]="calendarOpenDayEvents"
+        (dayClicked)="dayClicked($event.day)"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        locale="ru"
+        weekStartsOn="1"
+    >
+    </mwl-calendar-month-view>
+</div>
+
+<ng-template
+    #calendarCell
+    let-day="day"
+    let-openDay="openDay"
+    let-locale="locale"
+    let-tooltipPlacement="tooltipPlacement"
+    let-highlightDay="highlightDay"
+    let-unhighlightDay="unhighlightDay"
+    let-eventClicked="eventClicked"
+    let-tooltipTemplate="tooltipTemplate"
+    let-tooltipAppendToBody="tooltipAppendToBody"
+    let-tooltipDelay="tooltipDelay"
+    let-trackByEventId="trackByEventId"
+>
+    <div class="cal-cell-top">
+        <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+        <span class="cal-day-number">{{ day.date | calendarDate: 'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="events" *ngIf="day.events.length > 0">
+        <ng-container *ngFor="let event of day.events; trackBy: trackByEventId">
+            <div
+                *ngIf="event.meta.type === 'booking'"
+                class="events__item events__item_booking"
+            ></div>
+            <div *ngIf="event.meta.type === 'rate' && event.meta.isMain"
+                 class="events__item events__item_rate"
+                 [ngStyle]="{ backgroundColor: event.color?.primary }"
+                 [ngClass]="event?.cssClass"
+                 (mouseenter)="highlightDay.emit({ event: event })"
+                 (mouseleave)="unhighlightDay.emit({ event: event })"
+                 (mwlClick)="eventClicked.emit({ event: event })"
+            >
+                {{ event.meta.rate.amount | price }} руб.
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template
+    #calendarOpenDayEvents
+    let-events="events"
+    let-eventClicked="eventClicked"
+    let-isOpen="isOpen"
+    let-trackByEventId="trackByEventId"
+    let-validateDrag="validateDrag"
+>
+    <div class="cal-open-day-events" *ngIf="isOpen">
+        <div class="events-preview">
+            <div class="events-preview__list">
+                <div
+                    *ngIf="events.length && events[0].meta.type === 'booking'"
+                    class="events-preview__booking">
+                    Бронирование на текущий день: {{events[0].title}}
+                    с {{events[0].meta.reservation.checkin}} по {{events[0].meta.reservation.checkout}}
+                </div>
+                <ng-container
+                    *ngIf="events.length > 1 && events[0].meta.type === 'booking' || events.length > 0 && events[0].meta.type === 'rate'">
+                    <h4 class="events-preview__rates-title">Действующие цены:</h4>
+
+                    <ul class="events-preview__rates-list">
+                        <ng-container
+                            *ngFor="let event of events; trackBy: trackByEventId"
+                        >
+                            <li
+                                *ngIf="event.meta?.type === 'rate'"
+                                class="events-preview__rates-list-item"
+                                [ngClass]="{'events-preview__rates-list-item_active': event.meta?.rate.isActive}"
+                                [title]="event.meta?.rate.isActive ? 'Активная цена' : 'Неактивная цена'"
+                            >
+                                <a (click)="onEditRatesClick(event, viewDate, keyValue)">
+                                    {{event.meta?.rate.rate_type && rateTypes[event.meta?.rate.rate_type] ? rateTypes[event.meta?.rate.rate_type].title : ''}}
+                                    {{event.meta?.rate.amount | price}} руб.
+                                </a>
+                                <a (click)="onEditRatesClick(event, viewDate, keyValue)" [title]="'Редактировать'">
+                                    <mat-icon>edit</mat-icon>
+                                </a>
+                                <a (click)="onDeleteRatesClick(event.meta?.rate.id)" [title]="'Удалить'">
+                                    <mat-icon>delete</mat-icon>
+                                </a>
+
+                            </li>
+                        </ng-container>
+                    </ul>
+                </ng-container>
+                <button mat-raised-button type="button" color="accent"
+                        (click)="onEditRatesClick(null, viewDate, keyValue)">
+                    Добавить стоимость
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

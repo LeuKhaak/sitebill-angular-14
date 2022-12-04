@@ -1,0 +1,20 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Отзывы</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="row">
+        <div class="p-12 form-item">
+            <cloud-testimonials-grid
+                [object_id]="entity.get_default_value('object_id')"
+                [object_type]="entity.get_default_value('object_type')">
+            </cloud-testimonials-grid>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,13 @@
+<div id="gateways">
+    <ng-container *ngIf="gateways">
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button mat-raised-button color="accent" (click)="pay_interkassa()" *ngIf="!waiting_payment">
+                {{gateways.interkassa.submit.title}}
+            </button>
+            <h2 *ngIf="waiting_payment">
+                {{'GATEWAYS.WAITING_PAYMENT' | translate}}
+            </h2>
+
+        </div>
+    </ng-container>
+</div>

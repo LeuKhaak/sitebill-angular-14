@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+    <div fxFlex="90">
+        <span *ngIf="_data.message" [innerHTML]="_data.message"></span>
+        <span *ngIf="_data.error" [innerHTML]="_data.error" class="error"></span>
+    </div>
+    <div fxFlex="10">
+        <button mat-icon-button (click)="snackBarRef.dismiss()" aria-label="Закрыть">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>

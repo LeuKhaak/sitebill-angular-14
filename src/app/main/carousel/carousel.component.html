@@ -1,0 +1,26 @@
+<div id="carousel" class="page-layout simple">
+        <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="carouselItems" *ngIf="loaded_items">
+            <ngu-tile *nguCarouselDef="let item; let j = index">
+                <div class="tile" [style.background]="'url(' + property[j].img_url + ')'" ><div class="caption"><h1><a (click)="goto(property[j].href)"><p [innerHTML]="property[j].caption"></p></a></h1></div></div>
+            </ngu-tile>
+            <button NguCarouselNext class="rightRs">></button>
+            <button NguCarouselPrev class="leftRs"><</button>
+            <ul class="myPoint" NguCarouselPoint>
+                <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"></li>
+            </ul>
+        </ngu-carousel>
+
+    <!--h1>Reset</h1>
+    <div><label><input type="checkbox" [(ngModel)]="resetAnim">With Animation</label></div>
+    <button (click)="reset()">reset</button>
+
+    <div>
+        <h1>Move to slide</h1>
+        <select [(ngModel)]="slideNo">
+            <option *ngFor="let j of myCarousel.pointNumbers" [value]="j">{{j + 1}}</option>
+        </select>
+        <div><label><input type="checkbox" [(ngModel)]="withAnim">With Animation</label></div>
+        <button (click)="moveTo(slideNo)">move to {{+slideNo + 1}}</button>
+    </div-->
+</div>
+

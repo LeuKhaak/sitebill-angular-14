@@ -1,0 +1,59 @@
+<div id="course-dialog" class="dialog-content-wrapper">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title"></span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!--h2 mat-dialog-title>Объект</h2-->
+    <div mat-dialog-content class="p-24 m-0">
+
+        <div fxFlex="60">
+        <div *ngIf="rows; else loggedOut">
+            <table>
+                <tr *ngFor="let x of rows">
+                    <td width="30%">{{records[x].title}}</td>
+                    <td>
+
+
+
+                        <div *ngIf="render_value_string_array.indexOf(records[x].type) > 0">
+                            {{records[x].value_string}}
+                        </div>
+
+                        <div *ngIf="records[x].type == 'uploads'">
+                            <div *ngFor="let image of records[x].value">
+                                <img src="http://genplan1/img/data/{{image.preview}}"/>
+                            </div>
+                        </div>
+
+                        <div [innerHTML]=records[x].value *ngIf="render_value_array.indexOf(records[x].type) > 0">
+
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+
+        <ng-template #loggedOut>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+        <pre>
+
+        </pre>
+        </div>
+        <div fxFlex="40">
+                <profile-timeline></profile-timeline>
+
+        </div>
+
+
+    </div>
+
+</div>

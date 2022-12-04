@@ -1,0 +1,49 @@
+<div class="page-layout carded left-sidebar inner-scroll">
+    <apps-data-sidebar></apps-data-sidebar>
+    <!-- CENTER -->
+    <div class="center mt-16">
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content" fxLayout="row">
+                <data-grid
+                    [default_params]="default_params"
+                    [memorylist_id]="memorylist_id"
+                    [enable_collections]="enable_collections"
+                    [only_collections]="only_collections"
+                    [header_top_panel]="true"
+                    [showFilterAllButton]="true"
+                    [showFilterFilButton]="true"
+                    [showFilterMyButton]="true"
+                    [showFilterArhButton]="true"
+                    [showFilterNewButton]="true"
+                    [showFilterExButton]="true"
+                    [showFilterTemporarilyButton]="true"
+                    [showSelectionButton]="true"
+                    *ngIf="switch_trigger"></data-grid>
+
+                <data-grid
+                    [default_params]="default_params"
+                    [memorylist_id]="memorylist_id"
+                    [enable_collections]="enable_collections"
+                    [header_top_panel]="true"
+                    [showFilterAllButton]="true"
+                    [showFilterFilButton]="true"
+                    [showFilterMyButton]="true"
+                    [showFilterArhButton]="true"
+                    [showFilterNewButton]="true"
+                    [showFilterExButton]="true"
+                    [showFilterTemporarilyButton]="true"
+                    [showSelectionButton]="true"
+                    [only_collections]="only_collections"
+                    *ngIf="!switch_trigger"></data-grid>
+            </div>
+            <!-- / CONTENT  -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+</div>

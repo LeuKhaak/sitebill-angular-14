@@ -1,0 +1,21 @@
+<div id="angular-main">
+
+    <div id="container-1" class="container-fluid1">
+
+        <div id="container-2" class="container-fluid2">
+
+            <div id="container-3" class="container-fluid3 {{get_max_height_class()}}" [fusePerfectScrollbar]="true"
+                 [fusePerfectScrollbarOptions]="{suppressScrollX: true, updateOnRouteChange : true}">
+                <!-- CONTENT -->
+                <angular-content></angular-content>
+                <!-- / CONTENT -->
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+

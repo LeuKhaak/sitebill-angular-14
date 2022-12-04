@@ -1,0 +1,70 @@
+<div fxLayout="row" fxLayoutAlign="start center" class="selected">
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+
+        <div class="info" fxFlex fxFlexLayout="column">
+
+            <div class="title">
+                {{model.get_table_name()}}
+            </div>
+        </div>
+
+        <!--div class="actions" fxLayout="row" fxLayoutAlign="start center">
+
+            <button mat-icon-button (click)="toggleImportant($event)"
+                    aria-label="Toggle important" fxHide.xs>
+                <mat-icon class="red-fg" *ngIf="true">error</mat-icon>
+                <mat-icon class="secondary-text" *ngIf="false">error_outline</mat-icon>
+            </button>
+
+            <button mat-icon-button (click)="toggleStar($event)"
+                    aria-label="Toggle star" fxHide.xs>
+                <mat-icon class="amber-fg" *ngIf="true">star</mat-icon>
+                <mat-icon class="secondary-text" *ngIf="false">star_border</mat-icon>
+            </button>
+
+            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More" (click)="$event.stopPropagation()"
+                    fxHide.xs>
+                <mat-icon class="secondary-text">more_vert</mat-icon>
+            </button>
+
+            <mat-menu #moreMenu="matMenu">
+                <button mat-menu-item aria-label="toggle done" (click)="toggleCompleted($event)">
+                    <ng-container *ngIf="true">
+                        <mat-icon>check_box</mat-icon>
+                        <span>Mark as undone</span>
+                    </ng-container>
+                    <ng-container *ngIf="false">
+                        <mat-icon>check_box_outline_blank</mat-icon>
+                        <span>Mark as done</span>
+                    </ng-container>
+                </button>
+
+                <button mat-menu-item aria-label="toggle important" (click)="toggleImportant($event)">
+                    <ng-container *ngIf="true">
+                        <mat-icon>error</mat-icon>
+                        <span>Remove important</span>
+                    </ng-container>
+                    <ng-container *ngIf="false">
+                        <mat-icon>error_outline</mat-icon>
+                        <span>Mark as important</span>
+                    </ng-container>
+                </button>
+
+                <button mat-menu-item aria-label="toggle star" (click)="toggleStar($event)">
+                    <ng-container *ngIf="true">
+                        <mat-icon>star</mat-icon>
+                        <span>Remove star</span>
+                    </ng-container>
+                    <ng-container *ngIf="false">
+                        <mat-icon>star_border</mat-icon>
+                        <span>Add star</span>
+                    </ng-container>
+                </button>
+            </mat-menu>
+
+        </div-->
+
+    </div>
+
+</div>

@@ -1,0 +1,73 @@
+@import "src/@fuse/scss/fuse";
+
+mat-card {
+    margin: 12px 0;
+}
+
+.list {
+    $parent-class: &;
+
+    width: 100%;
+    margin-bottom: 8px;
+
+    &__item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        padding: 8px 4px;
+        transition: background-color 250ms;
+
+        &:hover {
+            background: #e0e0e0;
+
+            #{$parent-class}__item-icon {
+                opacity: 1;
+            }
+        }
+
+        &_main {
+            border: solid 1px #4CAF50;
+            
+            &:hover {
+                background: #eff8ef;
+            }
+        }
+    }
+    &__item-title {
+        flex: 1 0;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+    &__item-icon {
+        margin-left: 10px;
+        opacity: 0;
+        transition: opacity 250ms;
+    }
+}
+
+.list + .list-title {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: solid 1px #e0e0e0;
+}
+
+.form {
+    width: 100%;
+
+    &__title {
+        font-size: 14px;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__select {
+        &_narrow {
+            width: 40px;
+        }
+    }
+}

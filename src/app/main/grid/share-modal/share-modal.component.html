@@ -1,0 +1,19 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Ссылка на список объектов</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="row">
+        <div class="p-12">
+            <a href="{{link}}" target="_blank">{{link}}</a>
+        </div>
+        <button mat-icon-button matTooltip="Скопировать ссылку" (click)="copy()">
+            <mat-icon>file_copy</mat-icon>
+        </button>
+    </div>
+
+</div>

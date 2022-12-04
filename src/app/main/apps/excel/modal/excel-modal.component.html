@@ -1,0 +1,17 @@
+<div id="login" fxLayout="column">
+    <mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Загрузка/выгрузка Excel</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <div fxLayout="row">
+        <div class="p-12 form-item">
+            <excel-apps [entity]="entity"></excel-apps>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,102 @@
+:host {
+    ::ng-deep .map-container-inner {
+        width: 100%;
+        height: 200px;
+    }
+
+    ::ng-deep agm-map {
+        height: 300px;
+    }
+}
+
+.mat-form-field {
+    display: block;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.data-table {
+    width: 100%;
+
+    &__cell {
+        flex: 1;
+        max-width: 60%;
+
+        &_fullwidth {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        &_label {
+            flex: 1;
+            max-width: 40%;
+        }
+    }
+
+    &__cell-value_overflow {
+        position: relative;
+        max-width: 100%;
+        padding-bottom: 16px;
+        overflow-x: auto;
+
+        & ::ng-deep > .ps__rail-x {
+            top: auto !important;
+            bottom: 0;
+        }
+    }
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    mat-spinner {
+        align-self: center;
+    }
+
+    &__comments {
+        margin-top: 16px;
+
+        & ::ng-deep .mat-expansion-panel-header-title {
+            align-items: center;
+
+            .mat-icon {
+                transform: translateY(2px);
+            }
+        }
+
+        & ::ng-deep .mat-expansion-panel-header-description {
+            flex-grow: 1;
+            align-items: center;
+            flex-wrap: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        & ::ng-deep .mat-expansion-panel-body,
+        & ::ng-deep .page-layout.carded.fullwidth > .center {
+            padding: 0;
+        }
+
+        & ::ng-deep .chat #chat-content {
+            min-height: 210px;
+        }
+    }
+}
+
+.comments {
+    &__total {
+        margin-left: 8px;
+    }
+    &__message-preview {
+        max-width: 300px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-right: 4px;
+        overflow: hidden;
+    }
+}

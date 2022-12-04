@@ -1,0 +1,18 @@
+.fromToInputWrapper {
+    width: 50%;
+    &:first-child {
+        margin-right: 10px;
+    }
+    .fromToInput {
+        width: calc(100% - 5px);
+        padding: 0;
+        padding-left: 5px;
+    }
+    .incorrect {
+        position: absolute;
+        top: 5px;
+        font-size: 12px;
+        color: red;
+    }
+
+}

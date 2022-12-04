@@ -1,0 +1,82 @@
+<div id="login" fxLayout="column">
+    <!--mat-toolbar>
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">Выбор адреса</span>
+            <button mat-icon-button (click)="close()" aria-label="Закрыть">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar-->
+
+    <form name="loginForm" [formGroup]="composeForm" novalidate *ngIf="compose_form_complete">
+
+
+        <span *ngFor="let x of form_compose_columns">
+                <ng-container [ngSwitch]="options_storage_type[x]">
+                    <ng-container *ngSwitchCase="'slider'">
+                        {{options_storage[x].title}}
+                        <ng5-slider *ngIf="options_storage[x].loaded" (userChange)="onPriceSliderChange($event)" [(value)]="options_storage[x].min"
+                            [(highValue)]="options_storage[x].max" [options]="options_storage[x].options"></ng5-slider>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'select'">
+                        <ng-select *ngIf="options_storage[x] != null"
+                           [formControlName]="x"
+                           appendTo="body"
+                           bindValue="id"
+                           bindLabel="value"
+                           [items]="options_storage[x]"
+                           (ngModelChange)="enable_clear_button()"
+                           [clearOnBackspace]="false"
+                           class="select_options"
+                           [searchable]="true"
+                           [multiple]="true"
+                           [hideSelected]="true"
+                           [closeOnSelect]="false"
+                           (focus)="onFocus(x)"
+                           [placeholder]="get_title(x)">
+
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                <ng-container [ngSwitch]="entity.model[entity.columns_index[x]].type">
+                                    <ng-container *ngSwitchCase="'select_by_query'">
+                                        <input id="item-{{index}}" type="checkbox"/> {{item.value}}
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="'safe_string'">
+                                        <input id="item-{{index}}" type="checkbox"/> {{item}}
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-template>
+                        </ng-select>
+
+                    </ng-container>
+                </ng-container>
+        </span>
+
+
+        <div fxLayout="row" fxLayoutAlign="space-between center" class="button_spacer">
+            <button mat-raised-button (click)="apply()" color="accent" class="submit-button"
+                    aria-label="Применить фильтр"
+                    [disabled]="composeForm.invalid">
+                <mat-icon *ngIf="!loading">
+                    playlist_add_check
+                </mat-icon>
+                <mat-icon *ngIf="loading">
+                    <mat-spinner [diameter]="20"></mat-spinner>
+                </mat-icon>
+                Применить фильтр
+            </button>
+
+            <button mat-raised-button (click)="clear()" aria-label="Очистить" *ngIf="clear_enable">
+                <mat-icon *ngIf="!loading">
+                    clear
+                </mat-icon>
+                <mat-icon *ngIf="loading">
+                    <mat-spinner [diameter]="20"></mat-spinner>
+                </mat-icon>
+                Очистить
+            </button>
+        </div>
+
+    </form>
+</div>

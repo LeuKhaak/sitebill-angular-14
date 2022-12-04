@@ -1,0 +1,59 @@
+<div class="config-container" [class.example-is-mobile]="mobileQuery.matches">
+        <mat-toolbar color="accent" class="example-toolbar" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="showToolBar()">
+            <div fxLayout="row" fxLayoutAlign="center center" *ngIf="light_config !== 'true'">
+                <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+                <h1 class="example-app-name" *ngIf="menuItems && menuItems.length > 0">{{itemsList.title}}</h1>
+            </div>
+
+            <div fxLayout="column" *ngIf="light_config !== 'true'">
+                <div class="search-wrapper mt-sm-0">
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                        <mat-icon color="primary">search</mat-icon>
+                        <input [formControl]="searchControl" matTooltip="Выполняет поиск по текстовым полям" placeholder="Поиск по слову">
+                        <mat-icon *ngIf="searchControl.value !== ''" class="search__clear" color="primary" matSuffix (click)="clear_search_text()">close</mat-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="save-button-wrapper">
+                <button mat-raised-button color="indigo" (click)="save(null)" *ngIf="saveButton"><mat-icon>save</mat-icon> Сохранить</button>
+            </div>
+        </mat-toolbar>
+
+        <mat-sidenav-container class="example-sidenav-container">
+            <mat-sidenav *ngIf="light_config !== 'true'"
+                class="mat-sidenav" #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                         [opened]="mobileQuery.matches ? false : true"
+                         [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+                <mat-nav-list *ngIf="menuItems && menuItems.length > 0">
+                    <a mat-list-item (click)="clickMenu(i)" *ngFor="let item of menuItems; let i = index">{{item.title}}</a>
+                </mat-nav-list>
+
+
+            </mat-sidenav>
+
+            <mat-sidenav-content class="{{getSideNavContentClass()}} p-12">
+                <ng-container *ngIf="itemsList">
+                    <config-form-selector
+                        [entity]="entity"
+                        [config_items]="itemsList.data"
+                        [disable_delete]="true"
+                        [disable_cancel_button]="true"
+                        [disable_save_button]="true"
+                        [column_mode]="100"
+                        [fake_save]="true"
+                        (onSave)="save($event)"
+                        (formChanged)="showSaveButton()"
+                        [disable_mat_dialog_content_tag]="true"
+                        [disable_form_title_bar]="true">
+
+                    </config-form-selector>
+                </ng-container>
+                <ng-container *ngIf="sitebillResponse.success() && !itemsList">
+                    Ничего не найдено
+                </ng-container>
+
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+</div>
+

@@ -1,0 +1,11 @@
+<ng-container *ngIf="test_complete">
+    <ul>
+        <li *ngFor="let result of test_result_hash" [className]="get_test_class(result.status)">
+            Status: {{get_status_message(result.status)}}<br>
+            Input: <strong>{{result.input}}</strong>,<br>
+            Output: <strong>{{result.output}}</strong>,<br>
+            Expected: <strong>{{result.expected}}</strong>,<br>
+            <hr>
+        </li>
+    </ul>
+</ng-container>

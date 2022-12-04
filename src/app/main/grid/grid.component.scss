@@ -1,0 +1,565 @@
+@import "src/@fuse/scss/fuse";
+
+mat-sidenav-container {
+    width: 100%;
+    height: 100%;
+    // position: relative;
+
+    mat-sidenav {
+        width: 320px !important;
+        min-width: 320px !important;
+        max-width: 320px !important;
+
+        @include media-breakpoint('lt-sm') {
+            position: fixed;
+            left: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+}
+
+::ng-deep {
+    .example-container .mat-dialog-container {
+        padding: 0 !important;
+    }
+
+    .example-container .mat-dialog-content {
+        //min-height: 75vh !important;
+        //height: auto;
+        //border: 3px solid red;
+    }
+}
+
+::ng-deep .form-ngrx-compose-dialog {
+
+    .mat-dialog-container {
+        padding: 0;
+
+    }
+
+    .dialog-content-wrapper {
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+::ng-deep .regular-modal {
+    .cdk-overlay-pane {
+        width: unset !important;
+        height: unset !important;
+        max-width: 100% !important;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+        resize: both;
+    }
+
+}
+
+
+::ng-deep .form-ngrx-compose-dialog1 {
+
+    .mat-dialog-container {
+        padding: 0;
+        width: 90%;
+        //height: 99vh;
+        //max-width: 95vw;
+        //min-height: 99vh !important;
+
+
+        .compose-form {
+
+            .mat-form-field {
+                width: 100%;
+            }
+
+            .attachment-list {
+                font-size: 13px;
+
+                .attachment {
+                    border: 1px solid;
+                    border-radius: 20px;
+                    padding-left: 16px;
+                    margin-top: 8px;
+
+                    .filename {
+                        font-weight: 600;
+                    }
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .dialog-content {
+        //height: 95vh;
+        //max-height: 95vh;
+    }
+
+    .dialog-content-wrapper {
+        //height: 95vh;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+:host ::ng-deep .datatable-body-row:hover .datatable-body-cell {
+}
+
+.control_hover {
+    width: 1px;
+    display: none;
+    overflow: hidden;
+    position: absolute;
+    top: 5px;
+    left: 50px;
+}
+
+:host ::ng-deep .datatable-body-row:hover .control_hover {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: inherit;
+    background-color: lightgray;
+    overflow: visible;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+:host ::ng-deep .datatable-body-row:hover .datatable-body-cell {
+}
+
+:host ::ng-deep .not-active {
+    background: #ef5350;
+}
+
+:host ::ng-deep .hot {
+    background: #ffecb3;
+}
+
+:host ::ng-deep .map-container-inner {
+    width: 300px;
+    height: 200px;
+}
+
+::ng-deep .md-drppicker {
+    top: 42px !important;
+    width: 700px !important;
+    background: white;
+}
+
+::ng-deep .md-drppicker {
+    color: black !important;
+}
+
+::ng-deep .md-drppicker td.in-range {
+    background-color: #eee;
+    border-color: #eee;
+    color: rgba(0, 0, 0, .87);
+}
+
+::ng-deep .md-drppicker td.active, .md-drppicker td.active:hover {
+    background-color: #3f51b5;
+    color: #fff;
+}
+
+#ngx-datatable {
+    .header-standalone-wrapper {
+        .header-standalone-top {
+            .select-button-wrapper {
+                display: flex;
+                justify-content: flex-start;
+                width: 352px;
+                padding: 4px;
+
+                .select-button {
+                    width: 112px;
+                    padding: 4px 0;
+                    text-align: center;
+                    border-radius: 8px;
+                    border: none;
+                    color: #0000008a;
+                    background-color: transparent;
+                    cursor: pointer;
+
+                    &:not(:last-child) {
+                        margin-right: 8px;
+                    }
+
+                    &:hover {
+                        color: #000000;
+                        font-weight: 800;
+                        font-size: 13px;
+                    }
+                }
+
+                .second-line {
+                    border: solid 1px #0000008a;
+                    // color: #3f51b5;
+                }
+
+                .selected {
+                    color: #000000;
+                    font-weight: bold;
+                }
+
+                .selectedSecondLine {
+                    box-shadow: 2px 2px 2px #9EA1A9;
+                }
+            }
+        }
+
+        .header-standalone {
+            .header-content {
+                justify-content: space-between;
+                position: relative;
+
+                .hidden-lt-md,
+                .amber {
+                    // border-radius: 16px;
+                }
+
+                .header__search-row {
+                    max-width: 360px;
+
+                    .search-wrapper {
+                        width: 100%;
+                        border-radius: 48px;
+                        overflow: hidden;
+                        background: white;
+
+                        @include mat-elevation(1);
+
+                        .search {
+                            width: 100%;
+                            height: 48px;
+                            line-height: 48px;
+                            padding: 0 18px;
+
+                            input {
+                                width: 100%;
+                                height: 48px;
+                                min-height: 48px;
+                                max-height: 48px;
+                                padding: 0 16px;
+                                border: none;
+                                outline: none;
+                            }
+
+                            &__clear {
+                                cursor: pointer;
+                            }
+                        }
+
+                        .closeSearch {
+                            z-index: 7;
+                            position: relative;
+                            left: -10px;
+                            top: 10px;
+                            color: red;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .searchMode {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        z-index: 15;
+                        padding: 130px 15% 120vh;
+                        min-width: calc(100vw - 205px);
+                        background-color: rgba(130, 130, 130, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        @include media-breakpoint('lt-lg') { // 1279 - 960
+                            // min-width: calc(100vw - 15%);
+                            padding: 130px 15% 120vh 5%;
+                        }
+                        @include media-breakpoint('lt-md') { // 959
+                            top: -130px;
+                            left: -10px;
+                            // min-width: 90vw;
+                            padding: 130px 10px 120vh 5px;
+                        }
+                        @include media-breakpoint('lt-sm') { // 959
+                            min-width: calc(100vw - 175px);
+                           // padding: 130px 5px 120vh 2px;
+                        }
+                    }
+                }
+                .toggleModeBtn {
+                    display: none;
+                }
+
+                .btnIconAndTextWrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 40px;
+
+                    .icon-and-text {
+                        position: relative;
+                        min-width: 56px;
+                        width: auto;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .selectWrapper {
+                        position: relative;
+                        margin-right: 8px;
+                    }
+
+                    .optionsList {
+                        width: 75px;
+                        position: absolute;
+                        left: -8px;
+                        top: 45px;
+                        z-index: 11;
+                        padding: 2px;
+                        border: solid 1px #ededed;
+                        border-radius: 4px;
+                        background-color: #FFFFFF;
+                        color: #0000008a;
+                        font-size: 12px;
+                    }
+                }
+
+                @include media-breakpoint('lt-xl') { // > 1280
+                    .btnIconAndTextWrapper {
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                    }
+                }
+
+                @include media-breakpoint('lt-lg') { // 1279 - 960
+
+                }
+
+                @include media-breakpoint('lt-md') { // 959
+                    position: relative;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    .toggleModeBtn {
+                        display: block;
+                        margin-left: 20px;
+                        margin-right: auto;
+                        ::ng-deep .mat-button-wrapper {
+                            display: block;
+                            text-align: center !important;
+                            div {
+                                width: auto;
+                            }
+                        }
+                    }
+
+                    .btnIconAndTextWrapper {
+                        display: none;
+                        z-index: 20;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        position: absolute;
+                        min-height: 450px;
+                        margin: 0;
+                        padding: 10px;
+                        border-radius: 10px;
+                        background-color: #319fd4;
+                        .closeFilters {
+                            color: red;
+                        }
+                    }
+
+                    ::ng-deep .md-drppicker {
+                        width: 290px !important;
+                        position: fixed;
+                        left: 50% !important;
+                        top: 50% !important;
+                        max-height: 98vh;
+                        overflow: auto;
+                        margin: 0;
+
+                        &.shown {
+                            transform: translate(-50%, -50%);
+                        }
+
+                        .ranges {
+                            overflow-x: auto;
+
+                            ul {
+                                white-space: nowrap;
+                            }
+
+                            li {
+                                display: inline-block;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    .content1 {
+        overflow: hidden;
+
+        .sidebar {
+
+            &:not(.locked-open) {
+                background: white;
+            }
+        }
+    }
+
+    ::ng-deep .datatable-header {
+        height: 54px;
+        min-height: 54px;
+        user-select: none;
+        padding: 5px 0;
+
+        .datatable-header-cell {
+            max-height: 100%;
+        }
+
+        .datatable-header__filter {
+            display: inline-block;
+            margin: 0;
+            width: 100%;
+
+            input {
+                padding: 0;
+            }
+
+            ng-select {
+                padding: 4px 0 0;
+            }
+
+            .ng-placeholder {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: calc(100% - 20px);
+                overflow: hidden;
+            }
+        }
+
+        .datatable-header-cell-template-wrap {
+            width: 100%;
+        }
+    }
+    ::ng-deep .ng-select-container {
+        border: 0.5px solid #ecefec;
+        max-height: 100px;
+        .ng-value-container {
+            max-height: 80px;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+    }
+}
+
+::ng-deep ngx-datatable {
+    .datatable-footer-inner {
+        @include media-breakpoint('lt-md') {
+        }
+    }
+}
+
+.table-height {
+    min-height: calc(60vh);
+    max-height: calc(70vh);
+    @include media-breakpoint('lt-sm') {
+        max-height: calc(60vh);
+    }
+}
+
+
+.angular-toolbar {
+    position: relative;
+    @include media-breakpoint('lt-md') {
+        padding-left: 15px;
+    }
+    // margin: 0 0 0 auto;
+    .date-range {
+        z-index: 10;
+        position: relative;
+        top: 11px;
+        left: 0;
+        overflow: hidden;
+    }
+    .calendar {
+         width: 225px;
+        @include media-breakpoint('lt-md') {
+            width: 205px;
+        }
+     }
+    &__daterange {
+        width: 220px;
+    }
+
+    &__daterange-clear {
+        cursor: pointer;
+    }
+}
+
+.date-range {
+    @include media-breakpoint('lt-sm') {
+        display: none;
+    }
+}
+
+.date-range ::ng-deep .mat-form-field-wrapper {
+    max-width: 190px;
+}
+
+.date-range ::ng-deep .mat-form-field-flex {
+    display: flex;
+    flex-direction: column-reverse;
+    // justify-content: center;
+    align-items: center;
+    position: relative;
+    .mat-form-field-infix {
+        position: absolute;
+        .mat-input-element {
+            font-size: 14px;
+        }
+    }
+    .mat-form-field-suffix{
+        position: relative;
+        .clearSelectedDate {
+            position: relative;
+            left: 80px;
+            cursor: pointer;
+        }
+    }
+    .mat-form-field-underline {
+        width: 190px !important;
+    }
+}
+
+.filtersOffWrapper ::ng-deep .mat-raised-button {
+    padding: 0px;
+    min-width: 48px;
+}
+
+.filtersOff {
+   width: 16px !important;
+}
+
+.activeNew {
+    position: absolute;
+    top: 10px;
+    left: 55%;
+    color: red;
+}

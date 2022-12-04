@@ -1,0 +1,74 @@
+<!-- CHAT -->
+<div class="chat" fxFlex fxLayout="column">
+
+    <!-- CHAT CONTENT -->
+    <div id="chat-content" fxFlex fusePerfectScrollbar>
+
+        <!-- CHAT MESSAGES -->
+        <div class="chat-messages">
+
+            <!-- MESSAGE -->
+            <div fxLayout="row" *ngFor="let message of dialog" class="message-row"
+                 [ngClass]="{'user' :message.user_id.value === current_user_id}">
+                <img *ngIf="message.user_id.value != current_user_id"
+                     src="{{message.user_id.avatar}}"
+                     class="avatar"
+                     matTooltip="{{message.user_id.fio}}"
+                     alt="{{message.user_id.fio}}" />
+
+
+                <img *ngIf="message.user_id.value ===current_user_id" class="avatar" matTooltip="{{message.user_id.fio}}" src="{{message.user_id.avatar}}">
+                <div class="bubble">
+                    <div class="message">{{message.comment_text.value}}</div>
+                    <div class="time secondary-text">{{message.comment_date.value | date:'d.MM.yy HH:mm'}}</div>
+                </div>
+            </div>
+            <!-- / MESSAGE -->
+
+            <!-- MESSAGE -->
+            <!--div fxLayout="row" *ngFor="let message of dialog" class="message-row">
+
+
+                <div class="bubble">
+                    <div class="message">{{message.comment_text.value}}</div>
+                    <div class="time secondary-text">{{message.comment_date.value | date:'medium'}}</div>
+                </div>
+
+            </div-->
+            <!-- / MESSAGE -->
+
+
+        </div>
+        <!-- CHAT MESSAGES -->
+
+    </div>
+    <!-- / CHAT CONTENT -->
+
+    <!-- CHAT FOOTER -->
+    <div class="chat-footer" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="center center">
+
+        <!-- REPLY FORM -->
+        <form #replyForm="ngForm"
+              (ngSubmit)="reply()"
+              (keyup.enter)="reply()"
+              fxFlex class="reply-form"
+              fxLayout="row"
+              fxLayoutAlign="start center">
+
+            <mat-form-field fxFlex floatLabel="never">
+                <textarea matInput #replyInput placeholder="Ваш комментарий"
+                          ngModel name="message"></textarea>
+            </mat-form-field>
+
+            <button mat-fab type="submit" aria-label="Send message">
+                <mat-icon>send</mat-icon>
+            </button>
+
+        </form>
+        <!-- / REPLY FORM -->
+
+    </div>
+    <!-- / CHAT FOOTER-->
+
+</div>
+<!-- / CHAT -->

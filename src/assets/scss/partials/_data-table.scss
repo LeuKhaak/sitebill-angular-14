@@ -1,0 +1,77 @@
+@import "../variables";
+
+$background: map-get($theme, background);
+$foreground: map-get($theme, foreground);
+
+.data-table {
+    $parent-class: &;
+
+    width: 100%;
+    border: none;
+    border-spacing: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+    &__row {
+        &:last-child {
+
+            #{$parent-class}__cell {
+                border-bottom: none;
+            }
+        }
+
+        display: flex;
+        flex-direction: row;
+
+        #{$parent-class}.clickable & {
+            cursor: pointer;
+        }
+    }
+
+    &__cell {
+        flex: 1 0 auto;
+        padding: 16px 8px;
+
+        &:first-child {
+            padding-left: 24px;
+        }
+
+        &:last-child {
+            padding-right: 24px;
+        }
+    }
+
+    &__cell_header {
+        flex: 1 0 auto;
+        padding: 16px 8px;
+        font-weight: 600;
+        white-space: nowrap;
+
+        &:first-child {
+            padding-left: 24px;
+        }
+
+        &:last-child {
+            padding-right: 24px;
+        }
+    }
+
+    &.simple {
+        #{$parent-class}__cell {
+            border-bottom: 1px solid map-get($foreground, divider);
+
+            &_header {
+                color: map-get($foreground, secondary-text);
+            }
+        }
+    }
+
+    &.simple.clickable {
+        #{$parent-class}__row {
+            &:hover {
+                background-color: map-get($background, hover);
+            }
+        }
+    }
+}

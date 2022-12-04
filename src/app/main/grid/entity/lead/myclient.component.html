@@ -1,0 +1,140 @@
+<common-template [entity]="entity"
+                 (viewEvent)="view($event)"
+                 (edit_formEvent)="edit_form($event)"
+                 (deleteEvent)="delete($event)"
+                 (view_galleryEvent)="view_gallery($event)"
+                 (toggle_activeEvent)="toggle_active($event)">
+</common-template>
+<ng-template #controlTmpl let-row="row" let-value="value">
+    <!--mat-checkbox class="form-checkbox"></mat-checkbox-->
+    <div class="control_hover">
+        <span *ngIf="row.active">
+            <button mat-icon-button *ngIf="row.active.value == '0'" color="accent">
+                <mat-icon (click)="toggle_active(row, value)" aria-label="Включить" matTooltip="Включить">power_settings_new</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="row.active.value == '1'" color="warn">
+                <mat-icon (click)="toggle_active(row, value)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
+            </button>
+        </span>
+
+        <button mat-icon-button *ngIf="!disable_view_button">
+            <mat-icon (click)="view(value)" aria-label="Просмотр" matTooltip="Просмотреть запись">pageview</mat-icon>
+        </button>
+
+        <button mat-icon-button matTooltip="Взять заявку" (click)="toggleUserGet(row)" aria-label="Взять заявку">
+            <mat-icon class="green-fg">attach_money</mat-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #controlTmplMy let-row="row" let-value="value">
+    <!--mat-checkbox class="form-checkbox"></mat-checkbox-->
+    <div class="control_hover">
+        <button mat-icon-button *ngIf="!disable_view_button">
+            <mat-icon (click)="view(value)" aria-label="Просмотр" matTooltip="Просмотреть запись">pageview</mat-icon>
+        </button>
+        <span *ngIf="row.active">
+            <button mat-icon-button *ngIf="row.active.value == '0'" color="accent">
+                <mat-icon (click)="toggle_active(row, value)" aria-label="Включить" matTooltip="Включить">power_settings_new</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="row.active.value == '1'" color="warn">
+                <mat-icon (click)="toggle_active(row, value)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
+            </button>
+        </span>
+
+        <button mat-icon-button matTooltip="Отказаться от заявки" (click)="declineClient(row)" aria-label="Отказаться от заявки">
+            <mat-icon class="red-fg">close</mat-icon>
+        </button>
+    </div>
+</ng-template>
+<ng-template #hdrTpl let-column="column">
+    {{column.title}}
+</ng-template>
+
+
+<mat-sidenav-container>
+
+    <div id="ngx-datatable" class="page-layout simple fullwidth">
+        <!-- HEADER -->
+        <div class="header p-16 p-md-24 accent" fxLayout="column">
+            <div class="header-content" fxLayout="row wrap" fxLayoutAlign="space-between" fxFlex="1 0 auto">
+                <!-- BOARD SELECTION BUTTON -->
+                <!-- / BOARD SELECTION BUTTON -->
+                <!-- SEARCH -->
+                <div class="ml-sm-32" fxLayout="row" fxLayoutAlign="center center" fxFlex>
+                    <div class="search-wrapper mt-16 mt-sm-0">
+                        <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon color="primary">search</mat-icon>
+                            <input [formControl]="searchInput" placeholder="Поиск по слову">
+                            <button mat-icon-button (click)="clear_search_text()" *ngIf="searchInput.value != ''">
+                                <mat-icon color="primary" matSuffix>close</mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- / SEARCH -->
+                <!-- TOOLBAR -->
+                <div class="toolbar" fxLayout="row" fxLayoutAlign="space-between center" fxFlexOrder="3">
+                    <button mat-icon-button matTooltip="Очистить фильтр по дате" (click)="clear_selected_date_filter(date_range_key)" *ngIf="selected_date_filter_has_values">
+                        <mat-icon color="white" matSuffix>close</mat-icon>
+                    </button>
+
+                    <mat-form-field class="pt-12 pr-8" *ngIf="date_range_enable">
+                        <input autocomplete="off" matInput type="text" ngxDaterangepickerMd [ranges]="ranges" opens="left" [locale]="date_range_locale" (change)="date_range_change($event, date_range_key)" alwaysShowCalendars="true" [(ngModel)]="selected_date_filter" class="date-range-control" />
+                        <mat-icon matSuffix>calendar_today</mat-icon>
+                    </mat-form-field>
+
+                    <button mat-icon-button (click)="refresh()" matTooltip="Обновить таблицу" class="mb-4">
+                        <mat-icon>autorenew</mat-icon>
+                    </button>
+
+                </div>
+                <!-- / TOOLBAR -->
+            </div>
+        </div>
+        <!-- / HEADER -->
+        <!-- CONTENT -->
+        <div class="content" layout="row">
+
+            <!-- WIDGET GROUP -->
+            <div class="widget-group grey-100-bg" fxLayout="row wrap" fxFlex="100" *fuseIfOnDom
+                 [@animateStagger]="{value:'50'}">
+                <!-- WIDGET 11 -->
+                <fuse-widget [@animate]="{value:'*',params:{y:'100%'}}" class="widget" fxLayout="row"
+                             fxFlex="100">
+                    <!-- Front -->
+                    <div class="fuse-widget-front mat-white-bg mat-elevation-z2">
+
+                        <div class="message-box error" *ngIf="error">
+                            {{error_message}}
+                        </div>
+                        <ngx-datatable *ngIf="compose_complete" class="material"
+                                       [rows]="rows_data"
+                                       [columns]="data_columns"
+                                       [loadingIndicator]="loadingIndicator"
+                                       [columnMode]="'force'"
+                                       [headerHeight]="ngxHeaderHeight"
+                                       [footerHeight]="56"
+                                       [rowHeight]="'auto'"
+                                       [scrollbarH]="true"
+                                       [reorderable]="reorderable"
+                                       [externalPaging]="true"
+                                       [count]="page.totalElements"
+                                       [offset]="page.pageNumber"
+                                       [limit]="page.size"
+                                       [selectionType]="'checkbox'"
+                                       [rowClass]="getRowClass"
+                                       (activate)="onActivate($event)"
+                                       (resize)="onResize($event)"
+                                       (page)='setPage($event)'>
+                        </ngx-datatable>
+                    </div>
+                    <!-- / Front -->
+                </fuse-widget>
+                <!-- / WIDGET 11 -->
+            </div>
+            <!-- / WIDGET GROUP -->
+        </div>
+    </div>
+</mat-sidenav-container>

@@ -1,0 +1,18 @@
+<div class="page-layout simple fullwidth">
+
+    <ng-container *ngIf="load_complete === true">
+
+    <!-- HEADER -->
+    <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+        <h2>{{page.title.value}}</h2>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content p-24">
+        <div [innerHTML]="page.body.value|safehtml"></div>
+    </div>
+    <!-- / CONTENT -->
+    </ng-container>
+
+</div>

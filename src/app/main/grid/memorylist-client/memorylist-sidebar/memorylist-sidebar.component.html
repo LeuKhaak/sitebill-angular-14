@@ -1,0 +1,20 @@
+<!-- SIDEBAR CONTENT -->
+<div class="content" fusePerfectScrollbar>
+
+    <div class="nav material2" *ngIf="memorylist_user">
+
+        <div class="nav-subheader">Мои списки</div>
+
+        <div class="nav-item" *ngFor="let item of memorylist_user">
+            <a class="nav-link"
+               [routerLink]="'/grid/favorites/' + item['id']"
+               [routerLinkActive]="['active', 'accent']"
+               matRipple>
+                <mat-icon class="nav-link-icon" >label</mat-icon>
+                <span>{{item['value']}}</span>
+            </a>
+        </div>
+    </div>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

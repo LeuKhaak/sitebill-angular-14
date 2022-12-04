@@ -1,0 +1,31 @@
+
+        <mat-form-field class="date-range toolbar__daterange interval" style="width: 100%" *ngIf="date_range_enable"
+                        [ngClass]="{calendar: !calendarHidden}">
+            <input autocomplete="off"
+                   matTooltip="Выбрать период времени для отображения записей"
+                   matInput
+                   type="text"
+                   ngxDaterangepickerMd
+                   [ranges]="ranges"
+                   opens="left"
+                   [locale]="date_range_locale"
+                   (change)="date_range_change($event, date_range_key)"
+                   alwaysShowCalendars="true"
+                   [(ngModel)]="selected_date_filter"
+                   (ngModelChange)="selectItem($event)"
+                   class="date-range-control"/>
+            <mat-icon *ngIf="!selected_date_filter_has_values; else clearDatepicker" matSuffix
+                      aria-label="Перейти к выбору дат"
+                      matTooltip="Перейти к выбору дат"
+                      style="cursor: pointer"
+                      (click)="goToSelectDate()">
+                calendar_today
+            </mat-icon>
+        <!--    <div [ngClass]="{rectangle: calendarHidden}"></div>-->
+            <ng-template #clearDatepicker>
+                <mat-icon class="toolbar__daterange-clear" matSuffix
+                          (click)="clear_selected_date_filter(date_range_key)">close
+                </mat-icon>
+            </ng-template>
+        </mat-form-field>
+

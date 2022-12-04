@@ -1,0 +1,195 @@
+<div *ngIf="!model" fxLayout="column" fxLayoutAlign="center center" fxFlex>
+    <mat-icon class="s-120 mb-12 select-todo-icon hint-text"
+              [@animate]="{value:'*',params:{delay:'300ms',scale:'0.2'}}">check_box
+    </mat-icon>
+    <span class="hint-text mat-h1 select-todo-text" [@animate]="{value:'*',params:{delay:'400ms'}}">
+        Выберите таблицу
+    </span>
+</div>
+
+<div *ngIf="model">
+
+    <div class="todo-header" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <button mat-raised-button
+                class="mat-accent"
+                aria-label="Toggle completed"
+                (click)="edit(default_column_model)"
+                fxFlex="0 1 auto">
+            <mat-icon>playlist_add</mat-icon>
+            <span class="ml-8">Добавить колонку</span>
+        </button>
+
+        <!--div class="actions" fxLayout="row" fxLayoutAlign="start center">
+
+            <button mat-icon-button aria-label="Toggle important">
+                <mat-icon class="red-fg" *ngIf="true">error</mat-icon>
+                <mat-icon class="secondary-text" *ngIf="false">error_outline</mat-icon>
+            </button>
+
+            <button mat-icon-button aria-label="Toggle star">
+                <mat-icon class="amber-fg" *ngIf="true">star</mat-icon>
+                <mat-icon class="secondary-text" *ngIf="false">star_border</mat-icon>
+            </button>
+
+        </div-->
+    </div>
+
+    <div class="todo-content">
+
+        <ng-container *ngIf="model">
+            <ngx-datatable
+                #table
+                class="material table-height"
+                [columnMode]="'force'"
+                [rows]="model.model"
+                [columns]="columns"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                rowHeight="auto"
+                [rowClass]="getRowClass"
+                [rowHeight]="50"
+                [scrollbarV]="true"
+                [virtualization]="false"
+                [sorts]="[]"
+                [dragulaName]="'bag'"
+                [dragulaModel]="model.model"
+                (directiveDrop)="onDrop($event)"
+            >
+                <ngx-datatable-column
+                    [width]="10"
+                    name="drag_handle">
+                    <ng-template let-column="column" ngx-datatable-header-template></ng-template>
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        <mat-icon ngxDragHandle>
+                            drag_handle
+                        </mat-icon>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [width]="10"
+                    name="id">
+                    <ng-template let-column="column" ngx-datatable-header-template></ng-template>
+                    <ng-template let-value="value" let-row="row" let-rowIndex="rowIndex"  ngx-datatable-cell-template>
+                        <div fxLayout="row" fxLayoutAlign="start center">
+
+                            <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More" (click)="$event.stopPropagation()"
+                                    fxHide.xs>
+                                <mat-icon class="secondary-text">more_vert</mat-icon>
+                            </button>
+
+                            <mat-menu #moreMenu="matMenu">
+                                <button mat-menu-item (click)="edit(row)" aria-label="Редактировать">
+                                    <mat-icon class="secondary-text">edit</mat-icon>
+                                    <span>Редактировать</span>
+                                </button>
+
+                                <button mat-menu-item (click)="toggle_active(row, 'active')" aria-label="Активность">
+                                    <ng-container *ngIf="row.active">
+                                        <mat-icon class="amber-fg">power_settings_new</mat-icon>
+                                        <span>Отключить</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!row.active">
+                                        <mat-icon>power_settings_new</mat-icon>
+                                        <span>Включить</span>
+                                    </ng-container>
+                                </button>
+
+                                <button mat-menu-item (click)="delete(row, rowIndex)" aria-label="Удалить">
+                                    <mat-icon class="secondary-text">delete</mat-icon>
+                                    <span>Удалить</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <!--ngx-datatable-column
+                    [width]="5"
+                    [sortable]="false"
+                    [draggable]="false"
+                    [headerCheckboxable]="true"
+                    [checkboxable]="true"
+                >
+                </ngx-datatable-column-->
+
+                <ngx-datatable-column
+                    [width]="150"
+                    [sortable]="true"
+                    name="name">
+                    <ng-template let-column="column" ngx-datatable-header-template>Название</ng-template>
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        {{ value }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [sortable]="true"
+                    [width]="150"
+                    name="type">
+                    <ng-template let-column="column" ngx-datatable-header-template>Тип</ng-template>
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        {{ value }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [sortable]="true"
+                    [width]="30"
+                    name="required_boolean">
+                    <ng-template let-column="column" ngx-datatable-header-template>Обязательное</ng-template>
+                    <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+                        <mat-slide-toggle
+                            class="mr-24"
+                            [checked]="row.required_boolean"
+                            (click)="toggle(row, 'required_boolean')">
+                        </mat-slide-toggle>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [sortable]="true"
+                    [width]="150"
+                    name="title">
+                    <ng-template let-column="column" ngx-datatable-header-template>Заголовок</ng-template>
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        {{ value }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [sortable]="true"
+                    [width]="20"
+                    name="group_id">
+                    <ng-template let-column="column" ngx-datatable-header-template>Доступ</ng-template>
+                    <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+                        <ng-container *ngIf="isArray(row.group_id_array) && row.group_id_array.length > 0">
+                            <div fxLayout="row" matTooltip="{{row.group_id}}">
+                                <mat-icon>group</mat-icon>
+                                <div class="mt-0 group-count accent">{{row.group_id_array.length}}</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="isArray(row.group_id_array) && row.group_id_array.length === 0">
+                            Всем
+                        </ng-container>
+
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                    [sortable]="true"
+                    [width]="120"
+                    name="tab">
+                    <ng-template let-column="column" ngx-datatable-header-template>Вкладка</ng-template>
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        {{ value }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+
+            </ngx-datatable>
+
+        </ng-container>
+    </div>
+</div>

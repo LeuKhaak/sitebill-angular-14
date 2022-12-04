@@ -1,0 +1,53 @@
+<div class="page-layout blank p-24">
+
+    <h2>{{'CART.TITLE' | translate}}</h2>
+    <ng-container *ngIf="step == 'buy' && product != null">
+        <div class="customer mb-32">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th>{{'CART.COLUMN_NAME' | translate}}</th>
+                    <th>{{'CART.COLUMN_PRICE' | translate}}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{product.value.name.value}}
+                    </td>
+                    <td>
+                        {{product.value.pricing[currency_id].default_cycle_price}} {{product.value.pricing[currency_id].default_cycle}}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button mat-raised-button color="accent" (click)="add_order()">
+                {{'CART.COMPLETE_ORDER' | translate}}
+            </button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="step == 'pay' && invoice_id != null">
+        Сумма оплаты: {{order.amount.value}}
+        <gateways [invoice_id]="invoice_id"></gateways>
+    </ng-container>
+
+    <ng-container *ngIf="step == 'success'">
+        <mat-grid-list cols="1" rowHeight="40%">
+            <mat-grid-tile><mat-icon class="icon-success text-center">check_circle</mat-icon></mat-grid-tile>
+            <mat-grid-tile>
+                <button mat-raised-button color="accent" (click)="got_it()">
+                    <span class="mat-display-2 text-center">{{'CART.PAYMENT_SUCCESS' | translate}}</span>
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <div fxLayout="row" fxLayoutAlign="center center">
+        </div>
+    </ng-container>
+
+</div>

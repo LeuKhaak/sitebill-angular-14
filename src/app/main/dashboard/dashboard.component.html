@@ -1,0 +1,226 @@
+<div id="dashboard-analytics" class="page-layout blank">
+
+    <!-- CENTER -->
+    <div class="main-widget">
+
+        <!-- HEADER -->
+        <div class="header accent p-24 pb-0" fxLayout="column" fxLayoutAlign="space-between">
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+
+                <span class="mat-display-1 my-0 my-sm-24 welcome-message"
+                      [@animate]="{value:'*',params:{x:'50px'}}">Приветствуем, {{modelService.get_current_user_profile().fio.value}}!
+                </span>
+            </div>
+        </div>
+        <!-- / HEADER -->
+    </div>
+
+    <div class="content">
+
+        <div class="left mr-lg-32">
+
+            <div fxLayout="column" fxLayoutAlign="start"
+                 fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start start">
+                <!-- Widget 2 -->
+                <div class="widget" fxFlex="100" fxFlex.gt-sm="33">
+                    <profile-card></profile-card>
+                </div>
+                <!-- / Widget 2 -->
+
+
+                <!-- Widget 3 -->
+                <div class="widget" fxFlex="100" fxFlex.gt-sm="34">
+
+                    <div class="fuse-card auto-width mb-32" [ngClass.gt-sm]="'mb-0 mr-32'">
+                        <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end"  *ngIf="total_active_products == 0 && user_products_loaded">
+
+                            <div class="pr-16">
+                                <div class="h3 secondary-text">Нет активных тарифов</div>
+                            </div>
+
+                        </div>
+
+                        <table class="simple clickable" *ngIf="total_active_products > 0 && user_products_loaded">
+                            <thead>
+                            <tr>
+                                <th>Тариф</th>
+                                <th class="text-right">Оплачен до</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ng-container *ngFor="let product of user_products">
+                                <tr *ngIf="product.value.status.value == 'active' && product.value.billingcycle.value != 'once'">
+                                    <td>
+                                        <ng-container *ngIf="product.value.product_info != false">{{product.value.product_info.name.value}}</ng-container>
+                                    </td>
+                                    <td>{{product.value.nextduedate.value}}</td>
+                                </tr>
+                            </ng-container>
+                            </tbody>
+                        </table>
+
+
+                        <div class="h-96 w-100-p">
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- / Widget 3 -->
+
+                <!-- Widget 4 -->
+                <div class="widget" fxFlex="100" fxFlex.gt-sm="33" *ngIf="exclusive_limit > 0">
+
+                    <div class="fuse-card auto-width">
+
+                        <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end">
+
+                            <div class="pr-16">
+                                <div class="h3 secondary-text">Пакеты услуг</div>
+                                <div class="font-size-24 font-weight-300 mt-8">
+                                    Эксклюзивы: {{exclusive_limit}}
+                                </div>
+                            </div>
+
+                            <!--div class="py-4 font-size-16" fxLayout="row" fxLayoutAlign="start center">
+                                <div class="ml-4 text-nowrap">объявления</div>
+                            </div-->
+
+                        </div>
+
+                        <div class="h-96 w-100-p">
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- / Widget 4 -->
+
+            </div>
+
+            <div class="pt-48 pb-24 font-size-18 font-weight-300">
+                <span class="h2">Мои услуги</span>
+            </div>
+
+                <!-- Услуги -->
+                <div class="fuse-card auto-width">
+
+                    <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end"  *ngIf="user_products == null && user_products_loaded">
+
+                        <div class="pr-16">
+                            <div class="h3 secondary-text">Нет активных услуг</div>
+                        </div>
+                        <div class="h-12 w-100-p">
+                        </div>
+
+                    </div>
+
+
+                    <table class="simple clickable" *ngIf="user_products != null && user_products_loaded">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Статус</th>
+                            <th class="text-right">Дата оплаты</th>
+                            <th class="text-right"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let product of user_products" [ngClass]="{'light-green-A700': product.value.status.value == 'active'}">
+                            <td>
+                                <ng-container *ngIf="product.value.product_info != false">{{product.value.product_info.name.value}}</ng-container>
+                            </td>
+                            <td>{{product.value.status.value_string}}</td>
+                            <td>{{product.value.nextduedate.value}}</td>
+                            <td class="text-right">
+                                <ng-container *ngIf="product.value.invoice_info != null">
+                                    <button  *ngIf="product.value.invoice_info.status.value == 'unpaid'" mat-button color="accent" (click)="pay_invoice(product.value.invoice_info)">оплатить</button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- / Услуги -->
+            <div class="pt-48 pb-24 font-size-18 font-weight-300">
+                <span class="h2">Счета к оплате</span>
+            </div>
+
+                <!-- Счета -->
+                <div class="fuse-card auto-width">
+
+                    <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end"  *ngIf="invoices == null && invoices_loaded">
+
+                        <div class="pr-16">
+                            <div class="h3 secondary-text">Все счета оплачены</div>
+                        </div>
+                        <div class="h-12 w-100-p">
+                        </div>
+
+                    </div>
+
+
+                    <table class="simple clickable" *ngIf="invoices != null && invoices_loaded">
+                        <thead>
+                        <tr>
+                            <th>Сумма</th>
+                            <th class="text-right">Оплатить до</th>
+                            <th class="text-right"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let invoice of invoices">
+                            <td>{{invoice.value.total.value}}</td>
+                            <td>{{invoice.value.duedate.value}}</td>
+                            <td class="text-right">
+                                <button mat-button color="accent" (click)="pay_invoice(invoice.value)">оплатить</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- / Счета -->
+
+
+
+
+
+        </div>
+
+        <div class="right">
+
+            <div fxLayout="row wrap" fxLayout.gt-md="column">
+
+                <!-- Widget 7 -->
+                <!--div class="mb-48" [ngClass.lt-lg]="'mr-32'" [ngClass.xs]="'mr-0'">
+
+
+                    <div class="fuse-card">
+
+                        <div class="p-16">
+                            <div class="h2 font-weight-300">Мои объявления (10)</div>
+                        </div>
+                        <div class="card-divider mb-0"></div>
+                        <div class="p-16">
+                            <div class="h2 font-weight-300">Мои заявки (5)</div>
+                        </div>
+
+                        <div class="h-200">
+                        </div>
+
+
+                    </div>
+
+                </div-->
+                <!-- / Widget 7 -->
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
