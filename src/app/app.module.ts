@@ -187,7 +187,7 @@ if ( detect_mode() === SitebillModes.standalone ) {
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        RouterModule.forRoot(appRoutes, {useHash: true, onSameUrlNavigation: 'reload'}),
+        RouterModule.forRoot(appRoutes, { useHash: true, onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' }),
 
         TranslateModule.forRoot(),
 
