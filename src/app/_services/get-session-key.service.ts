@@ -41,6 +41,7 @@ export class GetSessionKeyService {
         this._unsubscribeAll = new Subject();
         this.currentUser = JSON.parse(this.storageService.getItem('currentUser')) || [];
         this.sitebillConfig = {};
+        this.currentUserProfile = new UserProfile();
     }
 
     get_session_key_safe() {
@@ -148,7 +149,7 @@ export class GetSessionKeyService {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
                 if (result.state === 'success') {
-                    if ( result.data.group_id != null ) {
+                    if (result.data && result.data.group_id !== null) {
                         this.currentUserProfile.group_id.value = result.data.group_id.value;
                         this.currentUserProfile.group_id.value_string = result.data.group_id.value_string;
                     }
