@@ -13,7 +13,7 @@ export class UserProfile {
     phone: ModelItem;
     email: ModelItem;
     imgfile: ModelItem;
-    constructor () {
+    constructor() {
         this.user_id = new ModelItem();
         this.group_id = new ModelItem();
         this.fio = new ModelItem();
@@ -26,7 +26,7 @@ export class UserProfile {
 export class ModelItem {
     value: string;
     value_string: string;
-    constructor () {
+    constructor() {
         this.value = null;
         this.value_string = null;
     }

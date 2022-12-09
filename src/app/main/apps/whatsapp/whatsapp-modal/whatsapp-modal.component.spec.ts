@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WhatsappModalComponent } from './whatsapp-modal.component';
 
@@ -6,7 +6,7 @@ xdescribe('WhatsappModalComponent', () => {
   let component: WhatsappModalComponent;
   let fixture: ComponentFixture<WhatsappModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WhatsappModalComponent ]
     })
