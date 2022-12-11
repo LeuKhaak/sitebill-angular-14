@@ -9,8 +9,8 @@
     "start-hmr-sourcemaps": "ng serve --configuration hmr --source-map=true --hmr-warning=false",
     "build": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev",
     "build-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev --stats-json",
-    "build-prod": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod",
-    "build-prod-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
+    "build-prod": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --configuration production",
+    "build-prod-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --configuration production --stats-json",
     "test": "ng test --source-map=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -77,11 +77,11 @@
     "tslib": "^2.0.0",
     "typescript": "4.3.5",
     "web-animations-js": "2.3.2",
-    "zone.js": "0.11.8"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1102.19",
-    "@angular/cli": "11.2.19",
+    "@angular-devkit/build-angular": "12.2.18",
+    "@angular/cli": "12.2.18",
     "@angular/compiler-cli": "12.2.17",
     "@angular/language-service": "12.2.17",
     "@angularclass/hmr": "2.1.3",
