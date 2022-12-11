@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import "src/@fuse/scss/fuse";
 
 .models-editor-container {
@@ -53,7 +54,7 @@
         overflow: hidden;
         background: white;
 
-        @include mat-elevation(1);
+        @include mat.elevation(1);
 
         .search {
             width: 100%;

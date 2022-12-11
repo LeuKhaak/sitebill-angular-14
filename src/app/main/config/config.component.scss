@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import "src/@fuse/scss/fuse";
 
 .height-75 {
@@ -61,7 +62,7 @@
         overflow: hidden;
         background: white;
 
-        @include mat-elevation(1);
+        @include mat.elevation(1);
 
         .search {
             width: 100%;

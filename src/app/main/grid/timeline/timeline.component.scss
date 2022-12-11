@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import "src/@fuse/scss/fuse";
 
 profile-timeline {
@@ -11,7 +12,7 @@ profile-timeline {
                 margin-bottom: 0;
                 border-radius: 4px;
                 overflow: hidden;
-                @include mat-elevation(2);
+                @include mat.elevation(2);
 
                 textarea {
                     display: flex;
@@ -40,7 +41,7 @@ profile-timeline {
                 margin-bottom: 32px;
                 overflow: hidden;
                 border-radius: 4px;
-                @include mat-elevation(2);
+                @include mat.elevation(2);
 
                 &:last-child {
                     margin-bottom: 0;
@@ -218,7 +219,7 @@ profile-timeline {
         border-radius: 4px;
         overflow: hidden;
         margin-bottom: 16px;
-        @include mat-elevation(2);
+        @include mat.elevation(2);
 
         header {
             padding: 16px;

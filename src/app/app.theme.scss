@@ -1,4 +1,5 @@
 // -----------------------------------------------------------------------------------------------------
+@use '~@angular/material' as mat;
 // @ Custom color maps for Fuse
 // -----------------------------------------------------------------------------------------------------
 $fuse-white: (
@@ -62,16 +63,16 @@ $custom_palettes: (
 // -----------------------------------------------------------------------------------------------------
 
 // Angular Material typography
-$typography: mat-typography-config(
+$typography: mat.define-typography-config(
     $font-family: 'Muli, Helvetica Neue, Arial, sans-serif',
-    $title: mat-typography-level(20px, 32px, 600),
-    $body-2: mat-typography-level(14px, 24px, 600),
-    $button: mat-typography-level(14px, 14px, 600),
-    $input: mat-typography-level(16px, 1.125, 400) // line-height must be unitless !!!
+    $title: mat.define-typography-level(20px, 32px, 600),
+    $body-2: mat.define-typography-level(14px, 24px, 600),
+    $button: mat.define-typography-level(14px, 14px, 600),
+    $input: mat.define-typography-level(16px, 1.125, 400) // line-height must be unitless !!!
 );
 
 // Setup the typography
-@include angular-material-typography($typography);
+@include mat.all-component-typographies($typography);
 
 // -----------------------------------------------------------------------------------------------------
 // @ Component theming
@@ -97,19 +98,19 @@ $typography: mat-typography-config(
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$default-primary-palette: mat-palette($fuse-navy);
-$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);
-$default-warn-palette: mat-palette($mat-red);
+$default-primary-palette: mat.define-palette($fuse-navy);
+$default-accent-palette: mat.define-palette(mat.$light-blue-palette, 600, 400, 700);
+$default-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$theme: mat-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+$theme: mat.define-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
 
 // Add ".theme-default" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
 body.theme-default {
 
     // Create an Angular Material theme from the $theme map
-    @include angular-material-theme($theme);
+    @include mat.all-component-themes($theme);
 
     // Apply the theme to the Fuse Core
     @include fuse-core-theme($theme);
@@ -132,19 +133,19 @@ body.theme-default {
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$yellow-light-theme-primary-palette: mat-palette($fuse-navy, 600, 400, 700);
-$yellow-light-theme-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
-$yellow-light-theme-warn-palette: mat-palette($mat-red);
+$yellow-light-theme-primary-palette: mat.define-palette($fuse-navy, 600, 400, 700);
+$yellow-light-theme-accent-palette: mat.define-palette(mat.$yellow-palette, 600, 400, 700);
+$yellow-light-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$yellow-light-theme: mat-light-theme($yellow-light-theme-primary-palette, $yellow-light-theme-accent-palette, $yellow-light-theme-warn-palette);
+$yellow-light-theme: mat.define-light-theme($yellow-light-theme-primary-palette, $yellow-light-theme-accent-palette, $yellow-light-theme-warn-palette);
 
 // Add ".theme-yellow-light" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
 body.theme-yellow-light {
 
     // Generate the Angular Material theme
-    @include angular-material-theme($yellow-light-theme);
+    @include mat.all-component-themes($yellow-light-theme);
 
     // Apply the theme to the Fuse Core
     @include fuse-core-theme($yellow-light-theme);
@@ -167,19 +168,19 @@ body.theme-yellow-light {
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$blue-gray-dark-theme-primary-palette: mat-palette($mat-blue);
-$blue-gray-dark-theme-accent-palette: mat-palette($mat-blue-gray);
-$blue-gray-dark-theme-warn-palette: mat-palette($mat-red);
+$blue-gray-dark-theme-primary-palette: mat.define-palette(mat.$blue-palette);
+$blue-gray-dark-theme-accent-palette: mat.define-palette(mat.$blue-gray-palette);
+$blue-gray-dark-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$blue-gray-dark-theme: mat-dark-theme($blue-gray-dark-theme-primary-palette, $blue-gray-dark-theme-accent-palette, $blue-gray-dark-theme-warn-palette);
+$blue-gray-dark-theme: mat.define-dark-theme($blue-gray-dark-theme-primary-palette, $blue-gray-dark-theme-accent-palette, $blue-gray-dark-theme-warn-palette);
 
 // Add ".theme-blue-gray-dark" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
 body.theme-blue-gray-dark {
 
     // Generate the Angular Material theme
-    @include angular-material-theme($blue-gray-dark-theme);
+    @include mat.all-component-themes($blue-gray-dark-theme);
 
     // Apply the theme to the Fuse Core
     @include fuse-core-theme($blue-gray-dark-theme);
@@ -202,19 +203,19 @@ body.theme-blue-gray-dark {
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$pink-dark-theme-primary-palette: mat-palette($mat-pink);
-$pink-dark-theme-accent-palette: mat-palette($mat-pink);
-$pink-dark-theme-warn-palette: mat-palette($mat-red);
+$pink-dark-theme-primary-palette: mat.define-palette(mat.$pink-palette);
+$pink-dark-theme-accent-palette: mat.define-palette(mat.$pink-palette);
+$pink-dark-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$pink-dark-theme: mat-dark-theme($pink-dark-theme-primary-palette, $pink-dark-theme-accent-palette, $pink-dark-theme-warn-palette);
+$pink-dark-theme: mat.define-dark-theme($pink-dark-theme-primary-palette, $pink-dark-theme-accent-palette, $pink-dark-theme-warn-palette);
 
 // Add ".theme-pink-dark" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
 body.theme-pink-dark {
 
     // Generate the Angular Material theme
-    @include angular-material-theme($pink-dark-theme);
+    @include mat.all-component-themes($pink-dark-theme);
 
     // Apply the theme to the Fuse Core
     @include fuse-core-theme($pink-dark-theme);

@@ -1,4 +1,5 @@
 // -----------------------------------------------------------------------------------------------------
+@use '~@angular/material' as mat;
 // @ Custom color maps for Fuse
 // -----------------------------------------------------------------------------------------------------
 $fuse-white: (
@@ -60,24 +61,24 @@ $custom_palettes: (
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$default-primary-palette: mat-palette($fuse-navy);
-$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);
-$default-warn-palette: mat-palette($mat-red);
+$default-primary-palette: mat.define-palette($fuse-navy);
+$default-accent-palette: mat.define-palette(mat.$light-blue-palette, 600, 400, 700);
+$default-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$theme: mat-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+$theme: mat.define-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
 
 // -----------------------------------------------------------------------------------------------------
 // @ Define a yellow light theme
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$yellow-light-theme-primary-palette: mat-palette($fuse-navy, 600, 400, 700);
-$yellow-light-theme-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
-$yellow-light-theme-warn-palette: mat-palette($mat-red);
+$yellow-light-theme-primary-palette: mat.define-palette($fuse-navy, 600, 400, 700);
+$yellow-light-theme-accent-palette: mat.define-palette(mat.$yellow-palette, 600, 400, 700);
+$yellow-light-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$yellow-light-theme: mat-light-theme($yellow-light-theme-primary-palette, $yellow-light-theme-accent-palette, $yellow-light-theme-warn-palette);
+$yellow-light-theme: mat.define-light-theme($yellow-light-theme-primary-palette, $yellow-light-theme-accent-palette, $yellow-light-theme-warn-palette);
 
 
 // -----------------------------------------------------------------------------------------------------
@@ -85,12 +86,12 @@ $yellow-light-theme: mat-light-theme($yellow-light-theme-primary-palette, $yello
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$blue-gray-dark-theme-primary-palette: mat-palette($mat-blue);
-$blue-gray-dark-theme-accent-palette: mat-palette($mat-blue-gray);
-$blue-gray-dark-theme-warn-palette: mat-palette($mat-red);
+$blue-gray-dark-theme-primary-palette: mat.define-palette(mat.$blue-palette);
+$blue-gray-dark-theme-accent-palette: mat.define-palette(mat.$blue-gray-palette);
+$blue-gray-dark-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$blue-gray-dark-theme: mat-dark-theme($blue-gray-dark-theme-primary-palette, $blue-gray-dark-theme-accent-palette, $blue-gray-dark-theme-warn-palette);
+$blue-gray-dark-theme: mat.define-dark-theme($blue-gray-dark-theme-primary-palette, $blue-gray-dark-theme-accent-palette, $blue-gray-dark-theme-warn-palette);
 
 
 // -----------------------------------------------------------------------------------------------------
@@ -98,21 +99,21 @@ $blue-gray-dark-theme: mat-dark-theme($blue-gray-dark-theme-primary-palette, $bl
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$pink-dark-theme-primary-palette: mat-palette($mat-pink);
-$pink-dark-theme-accent-palette: mat-palette($mat-pink);
-$pink-dark-theme-warn-palette: mat-palette($mat-red);
+$pink-dark-theme-primary-palette: mat.define-palette(mat.$pink-palette);
+$pink-dark-theme-accent-palette: mat.define-palette(mat.$pink-palette);
+$pink-dark-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$pink-dark-theme: mat-dark-theme($pink-dark-theme-primary-palette, $pink-dark-theme-accent-palette, $pink-dark-theme-warn-palette);
+$pink-dark-theme: mat.define-dark-theme($pink-dark-theme-primary-palette, $pink-dark-theme-accent-palette, $pink-dark-theme-warn-palette);
 
 // -----------------------------------------------------------------------------------------------------
 // @ Define a pink light theme
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$red-light-theme-primary-palette: mat-palette($mat-red);
-$red-light-theme-accent-palette: mat-palette($mat-red);
-$red-light-theme-warn-palette: mat-palette($mat-red);
+$red-light-theme-primary-palette: mat.define-palette(mat.$red-palette);
+$red-light-theme-accent-palette: mat.define-palette(mat.$red-palette);
+$red-light-theme-warn-palette: mat.define-palette(mat.$red-palette);
 
 // Create the Material theme object
-$red-light-theme: mat-light-theme($red-light-theme-primary-palette, $red-light-theme-accent-palette, $red-light-theme-warn-palette);
+$red-light-theme: mat.define-light-theme($red-light-theme-primary-palette, $red-light-theme-accent-palette, $red-light-theme-warn-palette);
