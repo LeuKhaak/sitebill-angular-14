@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import "src/@fuse/scss/fuse";
 
 .header-banner {
@@ -13,7 +14,7 @@
     overflow: hidden;
     background: white;
 
-    @include mat-elevation(1);
+    @include mat.elevation(1);
 
     .search {
         width: 100%;

@@ -26,7 +26,7 @@ export class ChatPanelService
      *
      * @returns {Promise<any> | any}
      */
-    loadContacts(): Promise<any> | any
+    loadContacts(): Promise<void>
     {
         return new Promise((resolve, reject) => {
             Promise.all([
@@ -89,7 +89,7 @@ export class ChatPanelService
      * @param contactId
      * @returns {Promise<any>}
      */
-    createNewChat(contactId): Promise<any>
+    createNewChat(contactId): Promise<void>
     {
         return new Promise((resolve, reject) => {
 

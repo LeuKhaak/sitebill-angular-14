@@ -47,7 +47,7 @@ export class CommentService implements Resolve<any>
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<void>
     {
         console.log('object_id r ' + this.object_id);
 
@@ -55,7 +55,7 @@ export class CommentService implements Resolve<any>
             Promise.all([
                 this.getTimeline(),
                 console.log('object_id r ' + this.object_id),
-                //this.getPhotosVideos()
+                // this.getPhotosVideos()
             ]).then(
                 () => {
                     resolve();

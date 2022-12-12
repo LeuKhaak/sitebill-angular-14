@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist/fuse",
             "index": "src/index_simple.html",
             "main": "src/main.ts",
@@ -31,7 +30,13 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "showCircularDependencies": false
+            "showCircularDependencies": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -44,8 +49,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "namedChunks": true,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -67,8 +70,7 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb"
                 }
-              ],
-              "sourceMap": true
+              ]
             },
             "hmr": {
               "budgets": [
@@ -84,7 +86,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

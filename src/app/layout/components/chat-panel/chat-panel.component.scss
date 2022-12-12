@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import "src/@fuse/scss/fuse";
 
 chat-panel {
@@ -348,7 +349,7 @@ chat-panel {
                             padding: 0;
                             border: none;
                             border-radius: 20px;
-                            @include mat-elevation(2);
+                            @include mat.elevation(2);
 
                             textarea {
                                 overflow: hidden;
