@@ -57,9 +57,9 @@ export class ChatService implements Resolve<any>
         this.onUserUpdated = new Subject();
         this.onLeftSidenavViewChanged = new Subject();
         this.onRightSidenavViewChanged = new Subject();
-        //this.getContacts();
-        //this.getChats();
-        //this.getUser();
+        // this.getContacts();
+        // this.getChats();
+        // this.getUser();
     }
 
     /**
@@ -69,17 +69,17 @@ export class ChatService implements Resolve<any>
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
-        //console.log('ChatService resolve');
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<void> {
+        // console.log('ChatService resolve');
 
         return new Promise((resolve, reject) => {
             Promise.all([
-                //this.getContacts(),
-                //this.getChats(),
-                //this.getUser()
+                // this.getContacts(),
+                // this.getChats(),
+                // this.getUser()
             ]).then(
                 ([contacts, chats, user]) => {
-                    //console.log(contacts);
+                    // console.log(contacts);
                     this.contacts = contacts;
                     this.chats = chats;
                     this.user = user;
@@ -102,7 +102,7 @@ export class ChatService implements Resolve<any>
         this.primary_key = primary_key;
         this.key_value = key_value;
 
-        //console.log('open close ' + this.open_close);
+        // console.log('open close ' + this.open_close);
 
         const chatItem = false;
         /*
@@ -124,11 +124,11 @@ export class ChatService implements Resolve<any>
         }
 
         const body = { action: 'comment', do: 'get', model_name: model_name, primary_key: primary_key, key_value: key_value, session_key: this.modelSerivce.get_session_key() };
-        //const chat_id = '5725a680b3249760ea21de52';
+        // const chat_id = '5725a680b3249760ea21de52';
 
 
         return new Promise((resolve, reject) => {
-            //this._httpClient.get('api/chat-chats/' + chatItem.id)
+            // this._httpClient.get('api/chat-chats/' + chatItem.id)
             this._httpClient.post(`${this.modelSerivce.get_api_url()}/apps/api/rest.php`, body)
                 .subscribe((response: any) => {
                     const chat = response;
@@ -145,7 +145,7 @@ export class ChatService implements Resolve<any>
                         current_user_id: this.modelSerivce.get_user_id(),
                         contact: chatContact
                     };
-                    //console.log(chatData);
+                    // console.log(chatData);
                     this.open_close = true;
 
 
@@ -275,9 +275,10 @@ export class ChatService implements Resolve<any>
             };
             console.log(newData);
             */
-            //const comment_text = 'test';
+            // const comment_text = 'test';
 
-            const body = { action: 'comment', do: 'add', model_name: this.model_name, primary_key: this.primary_key, key_value: this.key_value, comment_text: comment_text, session_key: this.modelSerivce.get_session_key()};
+            const body = { action: 'comment', do: 'add', model_name: this.model_name, primary_key: this.primary_key, key_value: this.key_value,
+                comment_text: comment_text, session_key: this.modelSerivce.get_session_key()};
 
             this._httpClient.post(`${this.modelSerivce.get_api_url()}/apps/api/rest.php`, body)
                 .subscribe((updatedChat: any) => {
