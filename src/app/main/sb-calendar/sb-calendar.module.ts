@@ -56,10 +56,7 @@ const bundle = [
     exports: [...bundle],
     providers: [
         SbCalendarService,
-    ],
-    entryComponents: [
-        SbRatesEditDialogComponent,
-    ],
+    ]
 })
 export class CalendarPrivateModule {
 }

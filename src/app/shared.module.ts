@@ -119,7 +119,6 @@ import {SelectionFilterComponent} from "./main/apps/selection/selection-filter/s
         MatMomentDateModule,
         NgxDatatableModule,
         FuseWidgetModule,
-
         // Material
         MatButtonModule,
         MatCheckboxModule,
@@ -133,11 +132,8 @@ import {SelectionFilterComponent} from "./main/apps/selection/selection-filter/s
         MatBadgeModule,
         MatProgressBarModule,
         Ng5SliderModule,
-
         ConfirmDialogModule,
         DragDropModule,
-
-
         MatProgressSpinnerModule,
         FuseSharedModule,
         RouterModule,
@@ -239,26 +235,7 @@ import {SelectionFilterComponent} from "./main/apps/selection/selection-filter/s
         CommentsComponent,
         GalleryComponent,
         ViewModalComponent
-    ],
-    entryComponents: [
-        LoginModalComponent,
-        FormComponent,
-        GalleryModalComponent,
-        ViewModalComponent,
-        CourseDialogComponent,
-        ConfigModalComponent,
-        FormStaticComponent,
-        ViewStaticComponent,
-        ProfileCardComponent,
-        GatewaysComponent,
-        GatewaysModalComponent,
-        DemoBannerComponent,
-        SearchStringParserComponent,
-        ConfigFormComponent,
-        CommentsComponent,
-        JsonEditorComponent
     ]
-
 })
 export class SharedModule {
 

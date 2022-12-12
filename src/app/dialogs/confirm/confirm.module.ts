@@ -15,10 +15,7 @@ import {CommonModule} from "@angular/common";
         MatButtonModule,
         FlexLayoutModule,
         CommonModule
-    ],
-    entryComponents: [
-        ConfirmComponent
-    ],
+    ]
 })
 export class ConfirmDialogModule {
 }

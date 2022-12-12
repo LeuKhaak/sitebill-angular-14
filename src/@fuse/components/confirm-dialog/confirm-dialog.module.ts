@@ -11,10 +11,7 @@ import { FuseConfirmDialogComponent } from '@fuse/components/confirm-dialog/conf
     imports: [
         MatDialogModule,
         MatButtonModule
-    ],
-    entryComponents: [
-        FuseConfirmDialogComponent
-    ],
+    ]
 })
 export class FuseConfirmDialogModule
 {

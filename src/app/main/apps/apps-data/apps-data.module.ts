@@ -29,8 +29,7 @@ const routes = [
         AppsDataComponent,
         AppsDataSidebarComponent
     ],
-    exports: [
-    ],
+    exports: [],
     imports: [
         RouterModule.forChild(routes),
         SharedModule,
@@ -40,8 +39,6 @@ const routes = [
     ],
     providers: [
         AppsDataService
-    ],
-    entryComponents: [
     ]
 })
 

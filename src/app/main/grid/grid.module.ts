@@ -372,7 +372,6 @@ const routes = [
         AutoResolverComponent,
         AutoResolverFormComponent,
         CloudTestimonialsComponent,
-
         FilterComponent,
         DeclineClientComponent,
         ReportComponent,
@@ -403,13 +402,11 @@ const routes = [
     ],
     imports: [
         RouterModule.forChild(routes),
-
         TranslateModule,
         // Material moment date module
         MatMomentDateModule,
         NgxDatatableModule,
         FuseWidgetModule,
-
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
@@ -426,8 +423,6 @@ const routes = [
         MatAutocompleteModule,
         MatSnackBarModule,
         MatMenuModule,
-
-
         // Material
         MatButtonModule,
         MatCheckboxModule,
@@ -446,7 +441,6 @@ const routes = [
         NgxDaterangepickerMd.forRoot(),
         NgSelectModule,
         Ng5SliderModule,
-
         FuseSharedModule,
         QuillModule.forRoot(),
         NgxUploaderModule,
@@ -457,7 +451,6 @@ const routes = [
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDRh-zcFa78SH-njTu5V6-zrvfIsgqTJPQ'
         }),
-
         SbCalendarModule,
         HouseSchemaModule,
     ],
@@ -483,18 +476,7 @@ const routes = [
         CommonTemplateComponent,
         SnackService,
         { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' },
-    ],
-    entryComponents: [
-        DeclineClientComponent,
-        CommonTemplateComponent,
-        ComposeModalComponent,
-        ReportComponent,
-        SaveSearchComponent,
-        RealtyItemComponent,
-        MessagesComponent,
-        MessagesReportComponent,
     ]
-
 })
 
 export class GridModule

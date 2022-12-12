@@ -20,18 +20,14 @@ const routes = [
     declarations: [
         MemorylistClientComponent
     ],
-    exports: [
-    ],
+    exports: [],
     imports: [
         RouterModule.forChild(routes),
         MemorylistSidebarModule,
         GridModule,
         SharedModule
     ],
-    providers: [
-    ],
-    entryComponents: [
-    ]
+    providers: []
 })
 
 export class MemorylistClientModule

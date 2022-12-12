@@ -36,10 +36,7 @@ import {DisplayComponent} from "./display.component";
         MatProgressSpinnerModule,
         MatProgressBarModule,
     ],
-    providers: [
-    ],
-    entryComponents: [
-    ]
+    providers: []
 })
 
 export class DisplayModule

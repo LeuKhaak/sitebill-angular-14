@@ -62,9 +62,8 @@ const routes = [
         PageComponent,
         FrontSearchComponent,
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(routes),
-
         TranslateModule,
         MatIconModule,
         MatButtonModule,
@@ -96,8 +95,6 @@ const routes = [
     ],
     providers: [
         BillingService
-    ],
-    entryComponents: [
     ]
 })
 

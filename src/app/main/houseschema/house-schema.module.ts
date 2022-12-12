@@ -53,14 +53,13 @@ const bundle = [
 
 @NgModule({
     declarations: [...bundle],
-    imports     : [
+    imports: [
         CommonModule,
         TranslateModule,
         // Material moment date module
         MatMomentDateModule,
         NgxDatatableModule,
         FuseWidgetModule,
-
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
@@ -77,8 +76,6 @@ const bundle = [
         MatAutocompleteModule,
         MatSnackBarModule,
         MatMenuModule,
-
-
         // Material
         MatButtonModule,
         MatCheckboxModule,
@@ -97,18 +94,14 @@ const bundle = [
         NgxDaterangepickerMd.forRoot(),
         NgSelectModule,
         Ng5SliderModule,
-
         FuseSharedModule,
         NgxUploaderModule,
         NgxGalleryModule,
-
     ],
     exports: [...bundle],
     providers: [
         HouseSchemaService,
-    ],
-    entryComponents: [...bundle]
-
+    ]
 })
 
 export class HouseSchemaModule
