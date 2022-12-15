@@ -1,6 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import 'rxjs/add/operator/map'
+import {catchError, map} from 'rxjs/operators';
 import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from './model.service';
@@ -8,8 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs-compat/add/operator/catch';
 import 'rxjs-compat/add/observable/of';
 import 'rxjs-compat/add/observable/empty';
-import {throwError} from 'rxjs';
-import {StorageService} from "./storage.service";
+import {StorageService} from './storage.service';
 
 
 
@@ -29,22 +28,22 @@ export class AuthenticationService {
         this.api_url = this.modelSerivce.get_api_url();
     }
 
-    login(domain: string, username: string, password: string) {
+    login(domain: string, username: string, password: string): any { // any ???
         this.api_url = this.modelSerivce.get_api_url();
 
-        //console.log('username' + username);
+        // console.log('username' + username);
 
         const body = {login: username, password: password};
-        //console.log(body);
-        //return this.http.post<any>('/apps/api/rest.php', {login: username, password: password})
-        //const url = `${this.api_url}/apps/apiproxy/restproxy.php`;
+        // console.log(body);
+        // return this.http.post<any>('/apps/api/rest.php', {login: username, password: password})
+        // const url = `${this.api_url}/apps/apiproxy/restproxy.php`;
         const url = `${this.api_url}/apps/api/rest.php`;
 
         const login_request = {action: 'oauth', do: 'login', proxysalt: '123', domain: domain, login: username, password: password};
 
         return this.http.post<any>(url, login_request)
-            .map(user => {
-                //console.log('authentication');
+            .pipe(map((user: any) => {
+                // console.log('authentication');
                 // login successful if there's a jwt token in the response
                 if (user && user.session_key) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -52,18 +51,19 @@ export class AuthenticationService {
                         this.storageService.setItem('currentUser', JSON.stringify(user));
                         this.storageService.setItem('api_url', this.modelSerivce.get_api_url());
                     } catch (e) {
-                        //console.log(e);
+                        // console.log(e);
                     }
                     this.modelSerivce.reinit_currentUser();
                 } else {
-                    //console.log('not user');
+                    // console.log('not user');
                 }
                 return user;
-            })
-            .catch(e => { return throwError('site error'); });
+                })
+            );
+        catchError((er) => ('site error'));
     }
 
-    register(username: string, password: string, password_retype: string, additional_params = null) {
+    register(username: string, password: string, password_retype: string, additional_params = null): any { // any ???
         const url = `${this.modelSerivce.get_api_url()}/apps/api/rest.php`;
 
         let register_request = {
@@ -79,52 +79,56 @@ export class AuthenticationService {
         }
 
         return this.http.post<any>(url, register_request)
-            .map(user => {
+            .pipe(map((user) => {
                 return user;
-            })
-            .catch(e => { return throwError('site error'); });
+                })
+            );
+        catchError((er) => 'site error');
     }
 
-    remind(username: string) {
+    remind(username: string): any { // any ???
         const url = `${this.modelSerivce.get_api_url()}/apps/api/rest.php`;
 
         const register_request = {action: 'oauth', do: 'remind', proxysalt: '123', login: username};
 
         return this.http.post<any>(url, register_request)
-            .map(user => {
+            .pipe(map((user) => {
                 return user;
-            })
-            .catch(e => { return throwError('site error'); });
+                })
+            );
+        catchError((er) => 'site error');
     }
 
-    remind_validate_code(code: string) {
+    remind_validate_code(code: string): any { // any ???
         const url = `${this.modelSerivce.get_api_url()}/apps/api/rest.php`;
 
         const register_request = {action: 'oauth', do: 'remind_validate_code', proxysalt: '123', code: code};
 
         return this.http.post<any>(url, register_request)
-            .map(user => {
+            .pipe(map((user) => {
                 return user;
-            })
-            .catch(e => { return throwError('site error'); });
+                })
+            );
+        catchError((er) => 'site error');
     }
 
 
-    logout() {
+    logout(): any { // any ???
         this.currentUser = JSON.parse(this.storageService.getItem('currentUser')) || [];
 
         const body = {action: 'oauth', do: 'logout', session_key: this.currentUser.session_key};
         const url = `${this.api_url}/apps/api/rest.php`;
 
         return this.http.post<any>(url, body)
-            .map(response => {
+            .pipe(map((response: any) => {
                 // login successful if there's a jwt token in the response
-                if (response.state == 'success') {
+                if (response.state === 'success') {
                     // remove user from local storage to log user out
                     localStorage.removeItem('currentUser');
                     this.modelSerivce.reinit_currentUser();
                 }
-            });
+                })
+            );
 
     }
 }

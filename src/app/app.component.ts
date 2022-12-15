@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit, Input, ElementRef} from '@angular/core';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 import {PlatformLocation } from '@angular/common';
 
@@ -20,9 +20,9 @@ import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { Bitrix24Router } from './integrations/bitrix24/bitrix24router';
 import {ModelService} from './_services/model.service';
-import {DemoBannerComponent} from "./dialogs/demo-banner/demo-banner.component";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {SitebillAuthService} from "./_services/sitebill-auth.service";
+import {DemoBannerComponent} from './dialogs/demo-banner/demo-banner.component';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {SitebillAuthService} from './_services/sitebill-auth.service';
 
 @Component({
     selector   : 'app',
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any>;
     private demoTimerSubscribe: Subscription;
     demoDialogRef: MatDialogRef<DemoBannerComponent>;
-    private firstRun: Boolean;
+    private firstRun = false;
 
     /**
      * Constructor
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit, OnDestroy
             }
         }
          */
-        //this._fuseConfigService.setConfig(conf);
+        // this._fuseConfigService.setConfig(conf);
         if (this.elRef.nativeElement.getAttribute('navbar_hidden') === 'true') {
             this.modelService.hide_navbar();
             this.modelService.setDomConfigValue('navbar_hidden', true);
@@ -138,26 +138,26 @@ export class AppComponent implements OnInit, OnDestroy
          * ----------------------------------------------------------------------------------------------------
          */
 
-        /**
-         * If you are using a language other than the default one, i.e. Turkish in this case,
-         * you may encounter an issue where some of the components are not actually being
-         * translated when your app first initialized.
-         *
-         * This is related to ngxTranslate module and below there is a temporary fix while we
-         * are moving the multi language implementation over to the Angular's core language
-         * service.
-         **/
+        // /**
+        //  * If you are using a language other than the default one, i.e. Turkish in this case,
+        //  * you may encounter an issue where some of the components are not actually being
+        //  * translated when your app first initialized.
+        //  *
+        //  * This is related to ngxTranslate module and below there is a temporary fix while we
+        //  * are moving the multi language implementation over to the Angular's core language
+        //  * service.
+        //  **/
 
         // Set the default language to 'en' and then back to 'tr'.
         // '.use' cannot be used here as ngxTranslate won't switch to a language that's already
         // been selected and there is no way to force it, so we overcome the issue by switching
         // the default language back and forth.
-        /**
-         setTimeout(() => {
-            this._translateService.setDefaultLang('en');
-            this._translateService.setDefaultLang('tr');
-         });
-         */
+
+         // setTimeout(() => {
+         //    this._translateService.setDefaultLang('en');
+         //    this._translateService.setDefaultLang('tr');
+         // });
+
 
         /**
          * ----------------------------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ export class AppComponent implements OnInit, OnDestroy
         // Add is-mobile class to the body if the platform is mobile
         if ( this._platform.ANDROID || this._platform.IOS )
         {
-            //this.document.getElementById('fuse-app').classList.add('is-mobile');
+            // this.document.getElementById('fuse-app').classList.add('is-mobile');
             this.document.body.classList.add('is-mobile');
         }
 
@@ -196,17 +196,17 @@ export class AppComponent implements OnInit, OnDestroy
                 // Boxed
                 if ( this.fuseConfig.layout.width === 'boxed' )
                 {
-                    //this.document.getElementById('fuse-app').classList.add('boxed');
-                    //this.document.body.classList.add('boxed');
+                    // this.document.getElementById('fuse-app').classList.add('boxed');
+                    // this.document.body.classList.add('boxed');
                 }
                 else
                 {
-                    //this.document.getElementById('fuse-app').classList.remove('boxed');
+                    // this.document.getElementById('fuse-app').classList.remove('boxed');
                     this.document.body.classList.remove('boxed');
                 }
 
                 // Color theme - Use normal for loop for IE11 compatibility
-                for ( let i = 0; i < this.document.body.classList.length; i++ )
+                for ( const i of this.document.body.classList)
                 {
                     const className = this.document.body.classList[i];
 
@@ -220,7 +220,7 @@ export class AppComponent implements OnInit, OnDestroy
         this.init_parser_today_count();
     }
 
-    init_parser_today_count() {
+    init_parser_today_count(): void {
         this.modelService.get_parser_today_count().subscribe((result: any) => {
             if ( result.state === 'success' ) {
                 const properties = this._fuseNavigationService.getNavigationItem('parser');
@@ -233,7 +233,7 @@ export class AppComponent implements OnInit, OnDestroy
 
     }
 
-    init_input_parameters() {
+    init_input_parameters(): void {
         let app_root_element;
         if (this.document.getElementById('angular_search')) {
             app_root_element = this.document.getElementById('angular_search');
@@ -243,14 +243,14 @@ export class AppComponent implements OnInit, OnDestroy
             app_root_element = this.document.getElementById('app_root');
         }
         if (app_root_element.getAttribute('theme')) {
-            let theme = app_root_element.getAttribute('theme');
-            //this.document.getElementById('fuse-app').classList.add(this.fuseConfig.colorTheme);
-            //this.fuseConfig.colorTheme = 'theme-red-light';
+            const theme = app_root_element.getAttribute('theme');
+            // this.document.getElementById('fuse-app').classList.add(this.fuseConfig.colorTheme);
+            // this.fuseConfig.colorTheme = 'theme-red-light';
             this.fuseConfig.colorTheme = theme;
-            //this.fuseConfig.colorTheme = 'theme-default';
-            //this.fuseConfig.colorTheme = 'theme-purple-green';
-            if (theme == 'theme-red-light') {
-                require("style-loader!app/custom-theme/ng_select_red.css");
+            // this.fuseConfig.colorTheme = 'theme-default';
+            // this.fuseConfig.colorTheme = 'theme-purple-green';
+            if (theme === 'theme-red-light') {
+                require('style-loader!app/custom-theme/ng_select_red.css'); // Can't resolve 'style-loader' ???
             }
         } else {
             this.fuseConfig.colorTheme = 'theme-default';
@@ -314,7 +314,7 @@ export class AppComponent implements OnInit, OnDestroy
 
     }
 
-    initAllAttributes (node) {
+    initAllAttributes(node): void {
         if (node.getAttributeNames()) {
             node.getAttributeNames().forEach((item) => {
                 try {
@@ -333,7 +333,7 @@ export class AppComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -351,7 +351,7 @@ export class AppComponent implements OnInit, OnDestroy
         this._fuseSidebarService.getSidebar(key).toggleOpen();
     }
 
-    switchTimer() {
+    switchTimer(): void {
         if (
             this.modelService.getConfigValue('apps.realty.show_unreg_notify') === '1'
         ) {
@@ -372,7 +372,7 @@ export class AppComponent implements OnInit, OnDestroy
         }
     }
 
-    showDemoMessage() {
+    showDemoMessage(): boolean {
         if ( this.modelService.get_current_user_profile().group_id.value === '1' ||  this.modelService.get_current_user_profile().group_id.value === '3' ) {
             return false;
         }
