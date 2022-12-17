@@ -188,7 +188,7 @@ export class FusePerfectScrollbarDirective implements OnInit, AfterViewInit, OnD
         this._destroy();
 
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

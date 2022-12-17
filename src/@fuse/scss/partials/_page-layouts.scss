@@ -203,7 +203,7 @@ $carded-header-height-without-toolbar: $carded-header-height - $carded-toolbar-h
             }
 
             // Inner scroll
-            &.inner-scroll {
+            &innerScroll {
                 flex: 1 1 auto;
 
                 > .center {

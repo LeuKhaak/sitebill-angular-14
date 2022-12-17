@@ -151,7 +151,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -159,11 +159,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    logout() {
+    logout(): void {
         this.modelService.logout();
     }
 
-    login_modal () {
+    login_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'login-form';
@@ -206,26 +206,26 @@ export class ToolbarComponent implements OnInit, OnDestroy
         this._translateService.use(langId);
     }
 
-    profile() {
+    profile(): void {
         this._router.navigate(['profile']);
     }
 
-    my_data() {
+    my_data(): void {
         this._router.navigate(['grid/data/my']);
     }
 
-    dashboard() {
+    dashboard(): void {
         this._router.navigate(['dashboard']);
     }
 
-    has_contacts_access() {
+    has_contacts_access(): boolean {
         if ( this.modelService.get_current_user_profile().group_id.value === '1' ||  this.modelService.get_current_user_profile().group_id.value === '3' ) {
             return true;
         }
         return false;
     }
 
-    show_price() {
+    show_price(): void {
         if ( this.modelService.is_logged_in() ) {
             this._router.navigate(['dashboard']);
         } else {
@@ -233,11 +233,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
         }
     }
 
-    all_data() {
+    all_data(): void {
         this._router.navigate(['grid/data/']);
     }
 
-    my_collections() {
+    my_collections(): void {
         if ( this.bitrix24Service.get_domain() !== 'localhost' ) {
             this._router.navigate(['grid/collections/']);
         } else {
@@ -245,22 +245,22 @@ export class ToolbarComponent implements OnInit, OnDestroy
         }
     }
 
-    goto(route: string) {
+    goto(route: string): void {
 
-        let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
         if ( pattern.test(route) ) {
             window.location.href = route;
         } else {
             this._router.navigate([route]);
         }
     }
-    goto_link(link: string) {
-        window.open(link, "_blank");
+    goto_link(link: string): void {
+        window.open(link, '_blank');
     }
 
 }

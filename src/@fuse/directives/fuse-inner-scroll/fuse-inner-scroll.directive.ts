@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { FuseMatchMediaService } from '@fuse/services/match-media.service';
 
 @Directive({
-    selector: '.inner-scroll'
+    selector: '[innerScroll]' // was '.inner-scroll'
 })
 export class FuseInnerScrollDirective implements OnInit, OnDestroy
 {
@@ -83,7 +83,7 @@ export class FuseInnerScrollDirective implements OnInit, OnDestroy
         this._removeClass();
 
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

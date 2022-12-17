@@ -121,7 +121,7 @@ export class SaveSearchComponent implements OnInit {
     }
 
     close() {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
     }

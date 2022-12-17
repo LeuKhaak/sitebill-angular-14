@@ -1,4 +1,4 @@
-@import "src/@fuse/scss/fuse";
+@import "../../../../@fuse/scss/fuse";
 
 standalone {
     display: flex;
@@ -50,7 +50,7 @@ standalone {
                     // Content component
                     content {
 
-                        &.inner-scroll {
+                        &innerScroll {
                             flex: 1 1 0%;
                             min-height: 0;
 

@@ -2,15 +2,15 @@ import {Component, EventEmitter, Input, OnInit, ViewEncapsulation} from '@angula
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {ModelService} from '../../../_services/model.service';
 import {SnackService} from '../../../_services/snack.service';
-import {SitebillEntity} from "../../../_models";
-import {humanizeBytes, UploaderOptions, UploadFile, UploadInput, UploadOutput} from "ngx-uploader";
-import {Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {ExcelState} from "./types/state.type";
-import {worksheetData} from "./types/worksheet-data.type";
-import {SitebillResponse} from "../../../_models/sitebill-response";
-import {StatisticsType} from "./types/statistics.type";
-import {FilterService} from "../../../_services/filter.service";
+import {SitebillEntity} from '../../../_models';
+import {humanizeBytes, UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {ExcelState} from './types/state.type';
+import {worksheetData} from './types/worksheet-data.type';
+import {SitebillResponse} from '../../../_models/sitebill-response';
+import {StatisticsType} from './types/statistics.type';
+import {FilterService} from '../../../_services/filter.service';
 
 @Component({
     selector: 'excel-apps',
@@ -25,12 +25,12 @@ export class ExcelComponent  implements OnInit {
     formData: FormData;
     files: UploadFile[];
     uploadInput: EventEmitter<UploadInput>;
-    humanizeBytes: Function;
+    humanizeBytes: any; // was Function
     dragOver: boolean;
     protected _unsubscribeAll: Subject<any>;
 
 
-    @Input("entity")
+    @Input()
     entity: SitebillEntity;
 
     onSave = new EventEmitter();
@@ -71,7 +71,7 @@ export class ExcelComponent  implements OnInit {
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         console.log(this.entity);
         let index = 0;
         for (const [key_obj, value_obj] of Object.entries(this.entity.model)) {
@@ -81,14 +81,14 @@ export class ExcelComponent  implements OnInit {
             this.excel_columns.push({
                 title: value_obj.title,
                 prop: value_obj.title,
-                //cellTemplate: this.rowTemplate,
+                // cellTemplate: this.rowTemplate,
             });
         }
     }
 
 
 
-    startParse ( file_name ) {
+    startParse( file_name ): void {
         this.setState(ExcelState.loading);
         const request = {
             action: 'dropzone_xls',
@@ -103,7 +103,7 @@ export class ExcelComponent  implements OnInit {
         this.modelService.api_request(request)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
-                if (result.status == 'OK') {
+                if (result.status === 'OK') {
                     this.worksheetData = result.excel_full_data.worksheetData[0];
                     this.prepareTableData(result.excel_full_data.data);
                     this.mapped_columns = this.mapper(result.excel_full_data.data);
@@ -118,37 +118,41 @@ export class ExcelComponent  implements OnInit {
             });
     }
 
-    mapper ( rows ) {
-        let hashmap = rows[0];
+    mapper( rows ): {[index: string]: any} {
+        const hashmap = rows[0];
 
-        let ret = {};
-        for(let key in hashmap){
-            ret[hashmap[key]] = key;
+        const ret = {};
+        for (const key in hashmap){
+            if (hashmap.hasOwnProperty(key)) {
+                ret[hashmap[key]] = key;
+            }
         }
         return ret;
     }
-    mapper_array ( rows ) {
-        let hashmap = rows[0];
+    mapper_array( rows ): any[] {
+        const hashmap = rows[0];
         this.start_excel_columns = hashmap;
 
-        let ret = [];
+        const ret = [];
         ret.push({
             letter: undefined,
             column_key: '_not_defined',
             title: 'не выбрано'
         });
 
-        for(let key in hashmap){
-            ret.push({
-                letter: key,
-                title: hashmap[key]
-            });
+        for (const key in hashmap){
+            if (hashmap.hasOwnProperty(key)) {
+                ret.push({
+                    letter: key,
+                    title: hashmap[key]
+                });
+            }
         }
         return ret;
     }
 
 
-    startImport(page = 0) {
+    startImport(page = 0): void {
         this.setState(ExcelState.import_in_progress);
         this.clearTable();
 
@@ -166,7 +170,7 @@ export class ExcelComponent  implements OnInit {
             excel_header: this.start_excel_columns,
             session_key: this.modelService.get_session_key_safe()
         };
-        //console.log(request);
+        // console.log(request);
         this.progress_page = page;
 
         this.modelService.api_request(request)
@@ -192,18 +196,18 @@ export class ExcelComponent  implements OnInit {
             });
     }
 
-    finish_import (import_result: string) {
+    finish_import(import_result: string): void {
         this.filterService.empty_share(this.entity);
         this.import_result = import_result;
         this.setState(ExcelState.import_complete);
     }
 
-    import_mapper () {
+    import_mapper(): void {
 
     }
 
-    updateStatistics( import_statistics: {} ) {
-        for (let item in StatisticsType) {
+    updateStatistics( import_statistics: {} ): void {
+        for (const item in StatisticsType) {
             if ( import_statistics &&  import_statistics.hasOwnProperty(item) ) {
                 if ( item === StatisticsType.error_stat_items ) {
                     this.import_statistics[item] = this.import_statistics[item].concat(import_statistics[item]);
@@ -217,19 +221,19 @@ export class ExcelComponent  implements OnInit {
     }
 
 
-    getImportedRows () {
-        let imported_rows = Math.round(this.progress_page*this.worksheetData.perPage);
+    getImportedRows(): number {
+        let imported_rows = Math.round(this.progress_page * this.worksheetData.perPage);
         if ( imported_rows > this.worksheetData.totalRows ) {
              imported_rows = this.worksheetData.totalRows;
         }
         return imported_rows;
     }
 
-    getProgressInPercent () {
-        return Math.round(((this.getImportedRows())/this.worksheetData.totalRows)*100);
+    getProgressInPercent(): number {
+        return Math.round(((this.getImportedRows()) / this.worksheetData.totalRows) * 100);
     }
 
-    prepareTableData ( data ) {
+    prepareTableData( data ): void {
         if ( data.length > 5 ) {
             this.excel_rows = [...data.slice(0, 5)];
         } else {
@@ -238,17 +242,17 @@ export class ExcelComponent  implements OnInit {
         // console.log(this.excel_rows);
     }
 
-    clearTable () {
-        let empty = [];
+    clearTable(): void {
+        const empty = [];
         this.excel_rows = [...empty];
     }
 
-    getState (): ExcelState {
+    getState(): ExcelState {
         return this.state;
 
     }
 
-    setState (state:ExcelState) {
+    setState(state: ExcelState): void {
         this.state = state;
 
     }
@@ -265,9 +269,11 @@ export class ExcelComponent  implements OnInit {
             anonymous: false,
             session_key: this.modelService.get_session_key_safe()
         };
-        let params = new URLSearchParams();
-        for(let key in request){
-            params.set(key, request[key])
+        const params = new URLSearchParams();
+        for (const key in request){
+            if (request.hasOwnProperty(key)) {
+                params.set(key, request[key]);
+            }
         }
 
         const event: UploadInput = {
@@ -291,13 +297,13 @@ export class ExcelComponent  implements OnInit {
         this.uploadInput.emit({ type: 'removeAll' });
     }
 
-    colName(n) {
-        let ordA = 'a'.charCodeAt(0);
-        let ordZ = 'z'.charCodeAt(0);
-        let len = ordZ - ordA + 1;
+    colName(n): string {
+        const ordA = 'a'.charCodeAt(0);
+        const ordZ = 'z'.charCodeAt(0);
+        const len = ordZ - ordA + 1;
 
-        let s = "";
-        while(n >= 0) {
+        let s = '';
+        while (n >= 0) {
             s = String.fromCharCode(n % len + ordA) + s;
             n = Math.floor(n / len) - 1;
         }
@@ -348,21 +354,21 @@ export class ExcelComponent  implements OnInit {
     }
 
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    get_default_value(i: number) {
+    get_default_value(i: number): number {
         return 0;
     }
 
-    update_mapper(event: any) {
+    update_mapper(event: any): void {
         this.excel_rows = [...this.excel_rows];
     }
 
-    update_mapper_import() {
-        for (let i = 0; i < this.mapped_model_titles.length; i++) {
+    update_mapper_import(): void {
+        for (const i of this.mapped_model_titles) {
             if ( this.mapped_columns[this.mapped_model_titles[i]] !== undefined ) {
                 this.mapped_model_keys_for_import[this.mapped_model_keys[this.mapped_model_titles[i]]] = this.start_excel_columns[this.mapped_columns[this.mapped_model_titles[i]]];
             } else {

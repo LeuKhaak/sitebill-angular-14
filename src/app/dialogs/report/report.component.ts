@@ -1,17 +1,17 @@
-import {Component, Inject, OnInit, Input, Output, EventEmitter }  from '@angular/core';
+import {Component, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, Validators, FormGroup} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {Model} from 'app/model';
 import { ChatService } from 'app/main/apps/chat/chat.service';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from 'app/_services/model.service';
-import {SnackService} from "../../_services/snack.service";
-import {SitebillEntity} from "../../_models";
-import {FilterService} from "../../_services/filter.service";
+import {SnackService} from '../../_services/snack.service';
+import {SitebillEntity} from '../../_models';
+import {FilterService} from '../../_services/filter.service';
 
 
 @Component({
@@ -38,7 +38,7 @@ export class ReportComponent implements OnInit {
 
     declineForm: FormGroup;
 
-    description:string;
+    description: string;
     @Input() model: Model;
     @Input() data: SitebillEntity;
     rows: any[];
@@ -80,7 +80,7 @@ export class ReportComponent implements OnInit {
 
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         // Horizontal Stepper form steps
         this.declineForm = this.fb.group({
             comment: [''],
@@ -123,7 +123,7 @@ export class ReportComponent implements OnInit {
         }
     }
 
-    submit () {
+    submit(): void {
         this.declinePressed = true;
         this.declineProcessing = true;
 
@@ -131,7 +131,7 @@ export class ReportComponent implements OnInit {
             .subscribe((response: any) => {
                 console.log(response);
 
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                     this._snackService.message(response.message);
                     return null;
                 } else {
@@ -142,12 +142,12 @@ export class ReportComponent implements OnInit {
             });
     }
 
-    save() {
+    save(): void {
         this.dialogRef.close(this.form.value);
     }
 
-    close() {
-        this._unsubscribeAll.next();
+    close(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
         this._chatService.closeChat();

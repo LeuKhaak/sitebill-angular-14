@@ -7,7 +7,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
-import {ModelService} from "../../../../../_services/model.service";
+import {ModelService} from '../../../../../_services/model.service';
 
 
 @Component({
@@ -82,9 +82,9 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
 
                         if ( activeNavItem )
                         {
-                            const activeItemOffsetTop       = activeNavItem.offsetTop,
-                                  activeItemOffsetParentTop = activeNavItem.offsetParent.offsetTop,
-                                  scrollDistance            = activeItemOffsetTop - activeItemOffsetParentTop - (48 * 3) - 168;
+                            const activeItemOffsetTop       = activeNavItem.offsetTop;
+                            const activeItemOffsetParentTop = activeNavItem.offsetParent.offsetTop;
+                            const scrollDistance            = activeItemOffsetTop - activeItemOffsetParentTop - (48 * 3) - 168;
 
                             this._fusePerfectScrollbar.scrollToTop(scrollDistance);
                         }
@@ -133,8 +133,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
             });
     }
 
-    replaceURL(value: string, regexValue: string, replaceValue: string) {
-        let pattern = new RegExp(regexValue, 'g');
+    replaceURL(value: string, regexValue: string, replaceValue: string): string {
+        const pattern = new RegExp(regexValue, 'g');
         return value.replace(pattern, replaceValue);
     }
 
@@ -144,7 +144,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

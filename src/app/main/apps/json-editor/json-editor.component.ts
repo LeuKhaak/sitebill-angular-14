@@ -1,16 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnDestroy, OnInit} from '@angular/core';
 
 import { ModelService } from 'app/_services/model.service';
-import {Subject, Subscription} from "rxjs";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {JsonParams} from "../../../_models";
-import {takeUntil} from "rxjs/operators";
-import {forbiddenNullValue} from "../../grid/form/form-constructor.component";
+import {Subject, Subscription} from 'rxjs';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {JsonParams} from '../../../_models';
+import {takeUntil} from 'rxjs/operators';
+import {forbiddenNullValue} from '../../grid/form/form-constructor.component';
 
 interface Preset {
     name: string;
     title: string;
-    pairs: JsonParams
+    pairs: JsonParams;
 }
 
 @Component({
@@ -18,7 +18,7 @@ interface Preset {
     templateUrl: './json-editor.component.html',
     styleUrls  : ['./json-editor.component.scss']
 })
-export class JsonEditorComponent
+export class JsonEditorComponent implements OnInit, OnDestroy
 {
     protected _unsubscribeAll: Subject<any>;
     form: FormGroup;
@@ -26,10 +26,10 @@ export class JsonEditorComponent
     @Input()
     json: JsonParams;
 
-    @Output() onChange = new EventEmitter();
+    @Output() forChange = new EventEmitter();
 
 
-    form_length: number = 0;
+    form_length = 0;
     form_subscription: Subscription;
     presets: Preset[];
 
@@ -147,21 +147,21 @@ export class JsonEditorComponent
 
     }
 
-    subscribeForm () {
+    subscribeForm(): void {
         this.form_subscription = this.form.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((status) => {
-                this.onChange.emit(this.recreateJson(status));
+                this.forChange.emit(this.recreateJson(status));
             });
     }
 
-    unsubscribeForm () {
+    unsubscribeForm(): void {
         if ( this.form_subscription ) {
             this.form_subscription.unsubscribe();
         }
     }
 
-    drawForm ( json: JsonParams ) {
+    drawForm( json: JsonParams ): void {
         let i = 0;
         this.form_length = 0;
         this.unsubscribeForm();
@@ -178,27 +178,27 @@ export class JsonEditorComponent
         }
         this.form_length = i;
         this.subscribeForm();
-        this.onChange.emit(json);
+        this.forChange.emit(json);
     }
 
-    recreateJson ( newKeyValue: {} ):JsonParams {
-        let new_json:JsonParams = {};
+    recreateJson( newKeyValue: {} ): JsonParams {
+        const new_json: JsonParams = {};
         for ( let i = 0; i < this.form_length; i++ ) {
             new_json[newKeyValue[this.getKeyName(i)]] = newKeyValue[this.getValueName(i)];
         }
         return new_json;
     }
 
-    getCurrentJson() {
-        let json:JsonParams = {};
+    getCurrentJson(): JsonParams {
+        const json: JsonParams = {};
         for ( let i = 0; i < this.form_length; i++ ) {
             json[this.form.controls[this.getKeyName(i)].value] = this.form.controls[this.getValueName(i)].value;
         }
         return json;
     }
 
-    deleteEntry(key: string) {
-        let current_json = this.getCurrentJson();
+    deleteEntry(key: string): JsonParams {
+        const current_json = this.getCurrentJson();
         delete(current_json[this.form.controls[key].value]);
         this.json = current_json;
         this.drawForm(current_json);
@@ -206,10 +206,10 @@ export class JsonEditorComponent
     }
 
 
-    getKeyName( index: number ) {
+    getKeyName( index: number ): string {
         return 'key-' + index.toString();
     }
-    getValueName( index: number ) {
+    getValueName( index: number ): string {
         return 'value-' + index.toString();
     }
 
@@ -219,12 +219,12 @@ export class JsonEditorComponent
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    addEntry() {
-        let current_json = this.getCurrentJson();
+    addEntry(): void {
+        const current_json = this.getCurrentJson();
         let new_key = 'key' + this.form_length++;
         while (current_json[new_key] !== undefined) {
             new_key = 'key' + this.form_length++;
@@ -232,11 +232,11 @@ export class JsonEditorComponent
         current_json[new_key] = '';
         this.json = current_json;
         this.drawForm(current_json);
-        this.onChange.emit(current_json);
+        this.forChange.emit(current_json);
     }
 
-    injectPreset(preset: Preset) {
-        let current_json = this.getCurrentJson();
+    injectPreset(preset: Preset): void {
+        const current_json = this.getCurrentJson();
         for (const [key_obj, value_obj] of Object.entries(preset.pairs)) {
             if ( current_json[key_obj] === undefined ) {
                 current_json[key_obj] = value_obj;

@@ -1,21 +1,21 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { locale as english } from './i18n/en';
 import { locale as russian } from './i18n/ru';
 import { ModelService } from 'app/_services/model.service';
-import {takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {SnackService} from "../../../../_services/snack.service";
-import {AppsDataService} from "../apps-data.service";
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {SnackService} from '../../../../_services/snack.service';
+import {AppsDataService} from '../apps-data.service';
 
 @Component({
     selector   : 'apps-data-sidebar',
     templateUrl: './apps-data-sidebar.component.html',
     styleUrls  : ['./apps-data-sidebar.component.scss']
 })
-export class AppsDataSidebarComponent
+export class AppsDataSidebarComponent implements OnInit
 {
     protected _unsubscribeAll: Subject<any>;
     public memorylist_user: any[];
@@ -39,13 +39,13 @@ export class AppsDataSidebarComponent
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.load_memorylist_for_user();
     }
 
 
-    load_memorylist_for_user () {
-        let params = {};
+    load_memorylist_for_user(): void {
+        const params = {};
         this.modelService.load_dictionary_model_with_params(
             'memorylist_user',
             'memorylist_id',
@@ -61,8 +61,8 @@ export class AppsDataSidebarComponent
 
     }
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

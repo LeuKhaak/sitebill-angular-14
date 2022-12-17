@@ -1,15 +1,15 @@
-import {Component, Inject, OnInit, Input, Output, EventEmitter }  from '@angular/core';
+import {Component, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Subject} from 'rxjs';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 
 import {Model} from 'app/model';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from 'app/_services/model.service';
-import {SnackService} from "../../_services/snack.service";
-import {SitebillEntity} from "../../_models";
-import {LoginModalComponent} from "../../login/modal/login-modal.component";
-import {Router} from "@angular/router";
+import {SnackService} from '../../_services/snack.service';
+import {SitebillEntity} from '../../_models';
+// import {LoginModalComponent} from "../../login/modal/login-modal.component";
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class DemoBannerComponent implements OnInit {
     form: FormGroup;
     dialogFormErrors: any;
     comment: any;
-    description:string;
+    description: string;
     @Input() model: Model;
     @Input() data: SitebillEntity;
 
@@ -47,17 +47,17 @@ export class DemoBannerComponent implements OnInit {
         this._unsubscribeAll = new Subject();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
 
-    login() {
+    login(): void {
         this.close();
         this._router.navigate(['/frontend/prices']);
     }
 
-    close() {
-        this._unsubscribeAll.next();
+    close(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
     }

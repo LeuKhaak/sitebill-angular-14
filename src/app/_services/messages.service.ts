@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {ModelService} from "./model.service";
-import {Message} from "../main/apps/whatsapp/types/venom-bot/model/message";
-import {SitebillEntity} from "../_models";
-import {Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {SitebillResponse} from "../_models/sitebill-response";
-import * as moment from "moment";
-import {indexOf} from "lodash";
+import {ModelService} from './model.service';
+import {Message} from '../main/apps/whatsapp/types/venom-bot/model/message';
+import {SitebillEntity} from '../_models';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {SitebillResponse} from '../_models/sitebill-response';
+import * as moment from 'moment';
+// import {indexOf} from "lodash";
 
 
 @Injectable()
@@ -47,8 +47,8 @@ export class MessagesService {
         }
     }
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

@@ -5,6 +5,7 @@ import {
     Input,
     OnInit,
     Output,
+    OnDestroy
 } from '@angular/core';
 import { ModelService } from '../../../_services/model.service';
 import {
@@ -68,7 +69,7 @@ export function forbiddenNullValue(): ValidatorFn {
         StorageService,
     ],
 })
-export class SelectionFormConstructorComponent implements OnInit {
+export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
     // storageService: StorageService;
 
     constructor(
@@ -163,16 +164,16 @@ export class SelectionFormConstructorComponent implements OnInit {
     savedNumber: number;
     numberOfColumns: number;
 
-    @Input('predefined_ql_items')
+    @Input()
     predefined_ql_items: any;
 
-    @Input('column_mode')
+    @Input()
     column_mode: number;
 
-    @Input('height')
+    @Input()
     height: any;
 
-    @Input('disable_mat_dialog_content_tag')
+    @Input()
     disable_mat_dialog_content_tag = false;
 
     onSave = new EventEmitter();
@@ -181,7 +182,7 @@ export class SelectionFormConstructorComponent implements OnInit {
     @Output() afterFormInited = new EventEmitter();
 
     private visible_items_counter: number;
-    commentsBlockMeta: CommentsBlockMeta = {};
+    commentsBlockMeta: CommentsBlockMeta = new CommentsBlockMeta();
 
     private comment_open = false;
 
@@ -234,7 +235,7 @@ export class SelectionFormConstructorComponent implements OnInit {
                     ['clean'], // remove formatting button
                 ],
                 handlers: {
-                    placeholder: function(value) {
+                    placeholder: function(value): void {
                         if (value) {
                             const cursorPosition =
                                 this.quill.getSelection().index;
@@ -278,7 +279,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         // 'id',
     ];
 
-    ngOnInit() {
+    ngOnInit(): void {
         // Reactive Form
         this._data.entity.set_readonly(false);
         if (this._data.entity.is_delete_disabled()) {
@@ -293,7 +294,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         // console.log(filters);
     }
 
-    initSubscribers() {}
+    initSubscribers(): void {}
 
     getCurrency(): void {
         this.modelService
@@ -477,13 +478,13 @@ export class SelectionFormConstructorComponent implements OnInit {
         );
     }
 
-    getInputValue(name) {
+    getInputValue(name): number { // number ???
         if (name === 'year') {
             return this.currentYear;
         }
     }
 
-    init_form() {
+    init_form(): void {
         // Сначала нужно получить значение topic_id
         // В цикле, есть есть совпадения с active_in_topic, тогда применяем правила ОБЯЗАТЕЛЬНОСТИ
         // При смене типа в форме, надо перезапускать процесс показа/валидации элементов
@@ -658,13 +659,13 @@ export class SelectionFormConstructorComponent implements OnInit {
         // console.log(this.records);
     }
 
-    onChangeTextarea(newValue: string, name: string) {
+    onChangeTextarea(newValue: string, name: string): void {
         this.form.controls[name].patchValue(newValue);
     }
 
-    count_visible_items() {
+    count_visible_items(): void {
         this.visible_items_counter = 0;
-        for (let i = 0; i < this.rows.length; i++) {
+        for (const i of this.rows) {
             if (
                 !this.records[this.rows[i]].hidden &&
                 this.records[this.rows[i]].type !== 'hidden'
@@ -673,20 +674,20 @@ export class SelectionFormConstructorComponent implements OnInit {
             }
         }
     }
-    get_visible_items_counter() {
+    get_visible_items_counter(): number {
         return this.visible_items_counter;
     }
 
-    hide_dadata(row) {
+    hide_dadata(row): void {
         this.hide_row(row);
     }
 
-    hide_row(row) {
+    hide_row(row): void {
         this.records[row].hidden = true;
         this.records[row].type = 'hidden';
     }
 
-    show_row_soft(row) {
+    show_row_soft(row): void {
         this.records[row].hidden = false;
         if (this.records[row].type_native !== this.records[row].type) {
             this.records[row].type = this.records[row].type_native;
@@ -701,7 +702,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         return this.records[key];
     }
 
-    init_geodata(columnName) {
+    init_geodata(columnName): void {
         try {
             // console.log(parseFloat(this.records[columnName].value.lat));
             if (parseFloat(this.records[columnName].value.lat)) {
@@ -719,7 +720,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         } catch {}
     }
 
-    init_photo_image(field_name, image) {
+    init_photo_image(field_name, image): void {
         this.galleryImages[field_name] = [];
         const self = this;
         if (image !== '') {
@@ -749,7 +750,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
     }
 
-    init_gallery_images(field_name, images) {
+    init_gallery_images(field_name, images): any { // any ???
         this.galleryImages[field_name] = {};
         const self = this;
         if (images) {
@@ -789,7 +790,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         // console.log(this.galleryImages[field_name]);
     }
 
-    init_select_box_options(columnName) {
+    init_select_box_options(columnName): void {
         if (this.records[columnName].api) {
             this.modelService
                 .api_call(this.records[columnName].api)
@@ -809,7 +810,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
     }
 
-    init_select_by_query_options(columnName, rowIndex = 0) {
+    init_select_by_query_options(columnName, rowIndex = 0): void {
         // console.log(this._data.get_default_params());
         this.termsearch = false;
         this.modelService
@@ -866,11 +867,11 @@ export class SelectionFormConstructorComponent implements OnInit {
             });
     }
 
-    onScrollToEnd(columnName: string) {
+    onScrollToEnd(columnName: string): void {
         this.fetchMore(columnName);
     }
 
-    onScroll({ end }, columnName: string) {
+    onScroll({ end }, columnName: string): void {
         if (
             !this.options_storage[columnName] ||
             !this.options_storage_buffer[columnName]
@@ -893,7 +894,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
     }
 
-    private fetchMore(columnName: string) {
+    private fetchMore(columnName: string): void {
         if (this.termsearch) {
             return;
         }
@@ -911,7 +912,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }, 200);
     }
 
-    initial_select_list(columnName: string, term: string) {
+    initial_select_list(columnName: string, term: string): void {
         if (typeof this.options_storage[columnName] === 'object') {
             this.options_storage_buffer[columnName] = this.options_storage[
                 columnName
@@ -921,7 +922,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
     }
 
-    onSearch(columnName: string) {
+    onSearch(columnName: string): void {
         this.input$
             .pipe(
                 debounceTime(200),
@@ -941,7 +942,7 @@ export class SelectionFormConstructorComponent implements OnInit {
             });
     }
 
-    is_date_type(type: string) {
+    is_date_type(type: string): boolean {
         if (
             type === 'dtdatetime' ||
             type === 'dtdate' ||
@@ -953,7 +954,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         return false;
     }
 
-    apply_topic_activity() {
+    apply_topic_activity(): any {
         return null;
         let current_topic_id = 0;
         if (this.form.controls['topic_id'] != null) {
@@ -963,7 +964,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
 
         if (current_topic_id != null) {
-            for (let i = 0; i < this.rows.length; i++) {
+            for (const i of this.rows) {
                 if (
                     this.records[this.rows[i]].active_in_topic !== '0' &&
                     this.records[this.rows[i]].active_in_topic != null
@@ -976,7 +977,7 @@ export class SelectionFormConstructorComponent implements OnInit {
                             this.rows[i]
                         ].active_in_topic_array.indexOf(
                             current_topic_id.toString()
-                        ) == -1
+                        ) === -1
                     ) {
                         this.form.get(this.rows[i]).clearValidators();
                         this.form.get(this.rows[i]).updateValueAndValidity();
@@ -984,7 +985,7 @@ export class SelectionFormConstructorComponent implements OnInit {
                         this.records[this.rows[i]].hidden = true;
                     } else {
                         this.records[this.rows[i]].hidden = false;
-                        if (this.records[this.rows[i]].required == 'on') {
+                        if (this.records[this.rows[i]].required === 'on') {
                             this.records[this.rows[i]].required_boolean = true;
                             this.form
                                 .get(this.rows[i])
@@ -1006,13 +1007,13 @@ export class SelectionFormConstructorComponent implements OnInit {
             }
         }
     }
-    after_form_inited() {
+    after_form_inited(): void {
         this.form_title = this.get_title();
         this.afterFormInited.emit(this.form);
         this.cdr.markForCheck();
     }
 
-    get_title() {
+    get_title(): string {
         // @todo нужно будет сделать генератор заголовков для всхе сущностей (не только data)
         const title_items = [
             'topic_id',
@@ -1046,7 +1047,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         return final_title;
     }
 
-    delete() {
+    delete(): void {
         this.confirmDialogRef = this._matDialog.open(ConfirmComponent, {
             disableClose: false,
         });
@@ -1082,11 +1083,11 @@ export class SelectionFormConstructorComponent implements OnInit {
         });
     }
 
-   save() {
+   save(): void {
 
     }
 
-    get_ql_items_from_form() {
+    get_ql_items_from_form(): {[index: string]: any} {
         const ql_items = {};
         const now = moment();
 
@@ -1128,7 +1129,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         return ql_items;
     }
 
-    add_to_collections(data_id, items) {
+    add_to_collections(data_id, items): void {
         const title = 'bitrix deal ' + this.bitrix24Service.get_entity_id();
         this.modelService
             .toggle_collections(
@@ -1138,7 +1139,7 @@ export class SelectionFormConstructorComponent implements OnInit {
                 data_id
             )
             .subscribe((response: any) => {
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                     this._snackService.message(response.message);
                 } else {
                     this.bitrix24Service.comment_add(data_id, items, 'add');
@@ -1148,7 +1149,7 @@ export class SelectionFormConstructorComponent implements OnInit {
             });
     }
 
-    mapClick(event) {
+    mapClick(event): void {
         // console.log('map click');
         // console.log(event);
         if (event.coords) {
@@ -1160,17 +1161,17 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
     }
 
-    OnDestroy() {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    close() {
-        this._unsubscribeAll.next();
+    close(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    valid_link(value) {
+    valid_link(value): boolean {
         if (value !== null) {
             const reg =
                 '^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
@@ -1184,7 +1185,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         this.storageService.setItem('numberOfColumns', String(n));
     }
 
-    get_flex_width(size: string, form_type: string, record: SitebillModelItem) {
+    get_flex_width(size: string, form_type: string, record: SitebillModelItem): number | string {
         // console.log(record);
         if (record.type === 'hidden' || record.hidden === true) {
             return 0;
@@ -1245,7 +1246,7 @@ export class SelectionFormConstructorComponent implements OnInit {
         size: string,
         form_type: string,
         record: SitebillModelItem
-    ) {
+    ): string {
         if (record.type === 'hidden' || record.hidden === true) {
             return '';
         }
@@ -1255,20 +1256,20 @@ export class SelectionFormConstructorComponent implements OnInit {
         }
         return css_class;
     }
-    get_appearance() {
+    get_appearance(): string {
         // outline,standard,fill,legacy
         return 'outline';
     }
 
-    updateParametersStorage(value: any, name: string) {
+    updateParametersStorage(value: any, name: string): void {
         this.parameters_storage[name] = value;
     }
 
-    onCommentToggle(comment_open: boolean) {
+    onCommentToggle(comment_open: boolean): void {
         this.comment_open = comment_open;
     }
 
-    getCommentHeightFix() {
+    getCommentHeightFix(): string {
         if (this.comment_open) {
             return 'comment-on-height-fix';
         }
@@ -1280,7 +1281,7 @@ export class SelectionFormConstructorComponent implements OnInit {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

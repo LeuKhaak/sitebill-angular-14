@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {fuseAnimations} from '../../../../@fuse/animations';
-import {SitebillEntity} from "../../../_models";
-import {Subject} from "rxjs";
+// import {SitebillEntity} from '../../../_models';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'display-apps',
@@ -14,7 +14,7 @@ export class DisplayComponent  implements OnInit, AfterViewChecked {
     protected _unsubscribeAll: Subject<any>;
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
-    @Input("messages")
+    @Input()
     messages: any[];
 
     constructor(
@@ -24,24 +24,24 @@ export class DisplayComponent  implements OnInit, AfterViewChecked {
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         console.log(this.messages);
         this.scrollToBottom();
     }
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         this.scrollToBottom();
     }
 
     scrollToBottom(): void {
         try {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch(err) { }
+        } catch (err) { }
     }
 
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

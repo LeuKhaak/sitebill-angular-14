@@ -139,8 +139,8 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
 
         // Programmatically add/remove padding to the element
         // that comes after or before based on the position
-        let sibling,
-            styleRule;
+        let sibling;
+        let styleRule;
 
         const styleValue = this.foldedWidth + 'px';
 
@@ -249,7 +249,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
         this._fuseSidebarService.unregister(this.name);
 
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

@@ -9,9 +9,9 @@ import {FuseUtils} from '@fuse/utils';
 import { ModelService } from 'app/_services/model.service';
 
 export class CommentsBlockMeta {
-    isOpened?: boolean = false;
-    commentsTotal?: number = 0;
-    lastMessage?: string = '';
+    isOpened = false;
+    commentsTotal = 0;
+    lastMessage = '';
 }
 
 
@@ -74,9 +74,9 @@ export class ChatService implements Resolve<any>
 
         return new Promise((resolve, reject) => {
             Promise.all([
-                // this.getContacts(),
-                // this.getChats(),
-                // this.getUser()
+                this.getContacts(), // was //
+                this.getChats(), // was //
+                this.getUser() // was //
             ]).then(
                 ([contacts, chats, user]) => {
                     // console.log(contacts);
@@ -157,7 +157,7 @@ export class ChatService implements Resolve<any>
 
     }
 
-    closeChat() {
+    closeChat(): void {
         const chatData = {
             chatId: null,
             dialog: [],
