@@ -4,10 +4,6 @@ import {catchError, map} from 'rxjs/operators';
 import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from './model.service';
-import 'rxjs/add/operator/catch';
-import 'rxjs-compat/add/operator/catch';
-import 'rxjs-compat/add/observable/of';
-import 'rxjs-compat/add/observable/empty';
 import {StorageService} from './storage.service';
 
 

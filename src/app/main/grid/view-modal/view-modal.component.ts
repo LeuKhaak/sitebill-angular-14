@@ -32,7 +32,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
     disable_toolbar: boolean;
 
     loadingIndicator: boolean;
-    commentsBlockMeta: CommentsBlockMeta = {};
+    commentsBlockMeta = new CommentsBlockMeta();
 
     constructor(
         protected _chatService: ChatService,
@@ -112,7 +112,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
 
     close() {
         this._data.set_readonly(false);
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
         this._chatService.closeChat();

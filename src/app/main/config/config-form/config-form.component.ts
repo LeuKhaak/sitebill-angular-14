@@ -119,7 +119,7 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
 
 
     close() {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

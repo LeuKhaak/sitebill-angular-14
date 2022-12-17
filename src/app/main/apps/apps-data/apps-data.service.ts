@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {ModelService} from "../../../_services/model.service";
-import {ApiParams} from "../../../_models";
+import {ModelService} from '../../../_services/model.service';
+import {ApiParams} from '../../../_models';
 
 export class MenuItem {
     title: string;
@@ -50,16 +50,16 @@ export class AppsDataService {
         ];
     }
 
-    setActiveMenuItem(item: MenuItem) {
+    setActiveMenuItem(item: MenuItem): void {
         // console.log(item);
         this.active_menu_item = item;
     }
 
-    getActiveMenuItem () {
+    getActiveMenuItem(): MenuItem {
         return this.active_menu_item;
     }
 
-    getMenuItemByTag ( tag:string ): MenuItem {
+    getMenuItemByTag( tag: string ): MenuItem {
         return this.main_menu.filter(item => item.tag === tag)[0];
     }
 }

@@ -53,26 +53,26 @@ export class SbRatesFormComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.initRatesViewList();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
     }
 
-    onEditRateClick(rate: SbRateModel) {
+    onEditRateClick(rate: SbRateModel): void {
         this.currentRateModel = rate;
         this.buildRateForm(this.currentRateModel);
     }
 
-    onCancelEditRateClick() {
+    onCancelEditRateClick(): void {
         this.currentRateModel = null;
         this.closeForm.emit();
     }
 
-    onSaveRateClick() {
+    onSaveRateClick(): void {
         if (!this.formModel.group || this.formModel.group.invalid) {
             Object.keys(this.formModel.group.controls).forEach((key) => {
                 this.formModel.group.controls[key].markAsTouched();
@@ -90,7 +90,7 @@ export class SbRatesFormComponent implements OnInit, OnDestroy {
             )
             .subscribe((result: any) => {
                 if (result && result.data && result.data.status === 1) {
-                    this.calendarService.updateEventsTrigger$.next();
+                    this.calendarService.updateEventsTrigger$.next(null);
                     this.closeForm.emit();
                     return;
                 }
@@ -98,7 +98,7 @@ export class SbRatesFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    initRatesViewList() {
+    initRatesViewList(): void {
         if (this.data.event && this.data.event.meta) {
             this.isEditMode = true;
             this.currentRateModel = new SbRateModel(this.data.event.meta.rate);
@@ -114,10 +114,9 @@ export class SbRatesFormComponent implements OnInit, OnDestroy {
                 });
             });
         }
-
     }
 
-    private buildRateForm(rate: SbRateModel) {
+    private buildRateForm(rate: SbRateModel): void {
         const config: { [name: string]: any } = {
             id: [rate.id, []],
             amount: [rate.amount.toString(), [Validators.required, Validators.min(0)]],

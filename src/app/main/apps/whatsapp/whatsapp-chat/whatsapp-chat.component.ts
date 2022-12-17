@@ -196,7 +196,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
 
     OnDestroy () {
         console.log('OnDestroy');
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         clearInterval(this.clearInterval);
     }

@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from 'app/_services/model.service';
-import {SitebillEntity} from "../../../_models";
+import {SitebillEntity} from '../../../_models';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class ProfileTimelineComponent implements OnInit, OnDestroy
     private currentUser: currentUser;
     api_url: string;
 
-    @Input("entity")
+    @Input()
     entity: SitebillEntity;
 
 
@@ -61,9 +61,9 @@ export class ProfileTimelineComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        //console.log('init timeline');
+        // console.log('init timeline');
 
-        //this._chatService.getChat('5725a680b3249760ea21de52');
+        // this._chatService.getChat('5725a680b3249760ea21de52');
         if ( this.entity ) {
             this._chatService.getChat(this.entity.get_table_name(), this.entity.get_primary_key(), this.entity.get_key_value());
         }
@@ -85,7 +85,7 @@ export class ProfileTimelineComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

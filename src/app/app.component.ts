@@ -210,7 +210,7 @@ export class AppComponent implements OnInit, OnDestroy
                 {
                     const className = this.document.body.classList[i];
 
-                    if ( className.startsWith('theme-') )
+                    if ( className && className.startsWith('theme-') )
                     {
                         this.document.body.classList.remove(className);
                     }

@@ -6,26 +6,27 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    AfterViewChecked
 } from '@angular/core';
-import {Message} from "../../types/venom-bot/model/message";
-import {Chat, DialogPost, SendCallbackBundle} from "../../types/whatsapp.types";
-import {FormBuilder, FormGroup, NgForm, Validators} from "@angular/forms";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AttachModalComponent} from "./attach-modal/attach-modal.component";
-import {SitebillEntity} from "../../../../../_models";
-import {takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {DomSanitizer} from "@angular/platform-browser";
-import {WhatsAppService} from "../../whatsapp.service";
-import {AttachEntityModalComponent} from "./attach-entity-modal/attach-entity-modal.component";
+import {Message} from '../../types/venom-bot/model/message';
+import {Chat, DialogPost, SendCallbackBundle} from '../../types/whatsapp.types';
+import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AttachModalComponent} from './attach-modal/attach-modal.component';
+import {SitebillEntity} from '../../../../../_models';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {DomSanitizer} from '@angular/platform-browser';
+import {WhatsAppService} from '../../whatsapp.service';
+import {AttachEntityModalComponent} from './attach-entity-modal/attach-entity-modal.component';
 
 @Component({
     selector: 'chat-dialog',
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.scss']
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent implements OnInit, AfterViewChecked {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     protected _unsubscribeAll: Subject<any>;
     form: FormGroup;
@@ -33,16 +34,16 @@ export class DialogComponent implements OnInit {
 
     public show_gallery = false;
 
-    @Input("chat")
+    @Input()
     chat: Chat;
 
-    @Input("sendCallbackBundle")
+    @Input()
     sendCallbackBundle: SendCallbackBundle;
 
-    @Input("dialog")
+    @Input()
     dialog: Message[];
 
-    @Output() onChange: EventEmitter<DialogPost> = new EventEmitter();
+    @Output() forChange: EventEmitter<DialogPost> = new EventEmitter();
 
     @ViewChildren('replyInput')
     replyInputField;
@@ -81,7 +82,7 @@ export class DialogComponent implements OnInit {
 
     }
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         this.scrollToBottom();
     }
 
@@ -135,15 +136,13 @@ export class DialogComponent implements OnInit {
             if ( this.whatsAppService.getMailingAttachList().length > 0 ) {
                 this.dialogPost.entities = this.whatsAppService.getMailingAttachList();
             }
-            this.onChange.emit(this.dialogPost);
+            this.forChange.emit(this.dialogPost);
             this.dialogPost = null;
         }
         this.readyToReply();
     }
 
-    attach_entity_modal() {
-
-
+    attach_entity_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'regular-modal';
@@ -164,9 +163,7 @@ export class DialogComponent implements OnInit {
             });
     }
 
-    attach_modal() {
-
-
+    attach_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'regular-modal';
@@ -187,12 +184,12 @@ export class DialogComponent implements OnInit {
             });
     }
 
-    OnDestroy() {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    private onFormValuesChanged() {
+    private onFormValuesChanged(): void {
         if (this.form.controls['message'].value != null && this.form.controls['message'].value.trim() !== '') {
             this.can_send = true;
         } else {
@@ -200,14 +197,14 @@ export class DialogComponent implements OnInit {
         }
     }
 
-    show_mailing_list () {
+    show_mailing_list(): boolean {
         if (this.whatsAppService.getMailingList().length > 0) {
             return true;
         }
         return false;
     }
 
-    show_mailing_attach_list () {
+    show_mailing_attach_list(): boolean {
         if (this.whatsAppService.getMailingAttachList().length > 0) {
             this.can_send = true;
             return true;
@@ -215,7 +212,7 @@ export class DialogComponent implements OnInit {
         return false;
     }
 
-    clear_mailing_attach_list() {
+    clear_mailing_attach_list(): void {
         this.can_send = false;
         this.whatsAppService.clearMailingAttachList();
     }

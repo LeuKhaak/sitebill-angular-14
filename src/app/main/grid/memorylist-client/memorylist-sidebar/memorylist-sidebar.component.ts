@@ -58,7 +58,7 @@ export class MemorylistSidebarComponent
     }
 
     OnDestroy () {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }
