@@ -2,8 +2,8 @@ import { Component, HostBinding, Input, OnDestroy, OnInit, ViewEncapsulation } f
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {SitebillEntity} from "../../../../_models";
-import {ModelsEditorService} from "../../models-editor.service";
+import {SitebillEntity} from '../../../../_models';
+import {ModelsEditorService} from '../../models-editor.service';
 
 @Component({
     selector     : 'model-list-item',
@@ -60,7 +60,7 @@ export class ModelListItemComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

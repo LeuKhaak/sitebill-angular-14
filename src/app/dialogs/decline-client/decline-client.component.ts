@@ -201,7 +201,7 @@ export class DeclineClientComponent implements OnInit {
     }
 
     close() {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
         this._chatService.closeChat();

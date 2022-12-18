@@ -70,8 +70,6 @@ if ( detect_dev_mode() ) {
     ],
     providers: [
         WhatsAppService
-    ],
-    entryComponents: [
     ]
 })
 

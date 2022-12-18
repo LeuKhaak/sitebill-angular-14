@@ -4,12 +4,12 @@ import { Subject } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 
 import { takeUntil } from 'rxjs/operators';
-import {SitebillEntity, SitebillModelItem} from "../../../_models";
-import {ModelService} from "../../../_services/model.service";
-import {SnackService} from "../../../_services/snack.service";
-import {SitebillResponse} from "../../../_models/sitebill-response";
-import {ModelsEditorService} from "../models-editor.service";
-import {instances} from "chart.js";
+import {SitebillEntity, SitebillModelItem} from '../../../_models';
+import {ModelService} from '../../../_services/model.service';
+import {SnackService} from '../../../_services/snack.service';
+import {SitebillResponse} from '../../../_models/sitebill-response';
+import {ModelsEditorService} from '../models-editor.service';
+import {instances} from 'chart.js';
 
 @Component({
     selector     : 'model-list',
@@ -22,7 +22,7 @@ export class ModelListComponent implements OnInit, OnDestroy
 {
     models: SitebillEntity[];
     currentModel: SitebillEntity;
-    public sitebillResponse:SitebillResponse;
+    public sitebillResponse: SitebillResponse;
 
 
     // Private
@@ -59,10 +59,10 @@ export class ModelListComponent implements OnInit, OnDestroy
                 if ( this.sitebillResponse.success() ) {
                     this.models = [];
                     for (const [key, value] of Object.entries(this.sitebillResponse.data)) {
-                        let entity = new SitebillEntity();
+                        const entity = new SitebillEntity();
                         if ( value ) {
                             for (const [key_obj, value_obj] of Object.entries(value)) {
-                                let model_item = new SitebillModelItem(value_obj);
+                                const model_item = new SitebillModelItem(value_obj);
                                 entity.model.push(model_item);
                             }
                         }
@@ -83,7 +83,7 @@ export class ModelListComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -101,7 +101,7 @@ export class ModelListComponent implements OnInit, OnDestroy
         this._modelsEditorService.setCurrentModel(model);
     }
 
-    isSelected ( model: SitebillEntity ) {
+    isSelected( model: SitebillEntity ): boolean {
         if ( model === this._modelsEditorService.getCurrentModel() ) {
             return true;
         }

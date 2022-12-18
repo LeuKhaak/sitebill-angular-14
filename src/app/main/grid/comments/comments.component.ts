@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {fuseAnimations} from '../../../../@fuse/animations';
-import {Subject} from "rxjs";
-import {SitebillEntity} from "../../../_models";
-import {ChatService, CommentsBlockMeta} from "../../apps/chat/chat.service";
-import {takeUntil} from "rxjs/operators";
+import {Subject} from 'rxjs';
+import {SitebillEntity} from '../../../_models';
+import {ChatService, CommentsBlockMeta} from '../../apps/chat/chat.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'comments-apps',
@@ -13,12 +13,12 @@ import {takeUntil} from "rxjs/operators";
 })
 export class CommentsComponent  implements OnInit {
     protected _unsubscribeAll: Subject<any>;
-    commentsBlockMeta: CommentsBlockMeta = {};
+    commentsBlockMeta = new CommentsBlockMeta();
 
-    @Input("entity")
+    @Input()
     entity: SitebillEntity;
 
-    @Output() onToggle = new EventEmitter<boolean>();
+    @Output() forToggle = new EventEmitter<boolean>();
 
 
     constructor(
@@ -29,7 +29,7 @@ export class CommentsComponent  implements OnInit {
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((chatData) => {
@@ -45,12 +45,12 @@ export class CommentsComponent  implements OnInit {
             });
     }
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    eventOpenClose() {
-        this.onToggle.emit(this.commentsBlockMeta.isOpened)
+    eventOpenClose(): void {
+        this.forToggle.emit(this.commentsBlockMeta.isOpened);
     }
 }

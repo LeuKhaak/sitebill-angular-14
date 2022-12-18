@@ -12,7 +12,7 @@ import * as moment from 'moment';
 export class FuseCountdownComponent implements OnInit, OnDestroy
 {
     // Event date
-    @Input('eventDate')
+    @Input()
     eventDate;
 
     countdown: any;
@@ -81,7 +81,7 @@ export class FuseCountdownComponent implements OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

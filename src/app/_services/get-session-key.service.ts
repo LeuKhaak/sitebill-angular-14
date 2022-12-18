@@ -361,7 +361,7 @@ export class GetSessionKeyService {
         }
     }
 
-    init_nobody_session() {
+    init_nobody_session(): any { // any ???
         let body = {};
         body = { action: 'init_nobody_session', session_key: 'nobody'};
         return this.http.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, body);
@@ -386,8 +386,8 @@ export class GetSessionKeyService {
             });
     }
 
-    OnDestroy() {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

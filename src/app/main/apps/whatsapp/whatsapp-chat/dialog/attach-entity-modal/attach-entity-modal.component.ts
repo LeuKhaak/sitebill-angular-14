@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {fuseAnimations} from "../../../../../../../@fuse/animations";
-import {SitebillEntity} from "../../../../../../_models";
-import {ModelService} from "../../../../../../_services/model.service";
-import {Subject} from "rxjs";
-import {WhatsAppService} from "../../../whatsapp.service";
+import {fuseAnimations} from '../../../../../../../@fuse/animations';
+import {SitebillEntity} from '../../../../../../_models';
+import {ModelService} from '../../../../../../_services/model.service';
+import {Subject} from 'rxjs';
+import {WhatsAppService} from '../../../whatsapp.service';
 
 @Component({
     selector: 'attach-entity-modal',
@@ -32,28 +32,28 @@ export class AttachEntityModalComponent  implements OnInit {
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
 
-    close() {
+    close(): void {
         this.dialogRef.close();
     }
 
-    save(event) {
-        //this.onSave.emit(event);
+    save(event): void {
+        // this.onSave.emit(event);
     }
 
-    OnDestroy () {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    attach() {
+    attach(): void {
         this.dialogRef.close();
     }
 
-    is_show_attach_button() {
+    is_show_attach_button(): boolean {
         return this.whatsAppService.getMailingAttachList().length > 0;
     }
 }

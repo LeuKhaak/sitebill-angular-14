@@ -9,7 +9,7 @@ import {SitebillEntity, SitebillModelItem} from 'app/_models';
 import {FilterService} from 'app/_services/filter.service';
 import {Page} from '../../page';
 import {Bitrix24Service} from '../../../../integrations/bitrix24/bitrix24.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
     selector: 'grid-settings',
@@ -26,17 +26,17 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
     @Input() grid_items: any[];
     @Input() page: Page;
 
-    @Output() close = new EventEmitter();
+    @Output() byClose = new EventEmitter();
 
     page_options: number[];
     per_page: number;
 
     active_columns: SitebillModelItem[];
     not_active_columns: SitebillModelItem[];
-    init_columns_complete: boolean = false;
+    init_columns_complete = false;
 
     protected _unsubscribeAll: Subject<any>;
-    private show_logout_button: boolean = false;
+    private show_logout_button = false;
 
     constructor(
         private modelService: ModelService,
@@ -74,23 +74,23 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
-    init_grid() {
+    init_grid(): void {
         let grid_items = this.grid_items;
         let tmp_model_array;
-        if (grid_items.length == 0) {
+        if (grid_items.length === 0) {
             grid_items = this.entity.default_columns_list;
         }
 
         this.active_columns = [];
         this.not_active_columns = [];
-        //this.not_active_columns = this.entity.model;
-        //this.not_active_columns = Object.assign([], this.entity.model);
+        // this.not_active_columns = this.entity.model;
+        // this.not_active_columns = Object.assign([], this.entity.model);
 
 
-        //console.log(this.entity.model);
-        //console.log(grid_items);
-        //console.log(this.entity.columns_index);
-        //console.log(this.not_active_columns);
+        // console.log(this.entity.model);
+        // console.log(grid_items);
+        // console.log(this.entity.columns_index);
+        // console.log(this.not_active_columns);
         if ( !Array.isArray(this.entity.model) ) {
             tmp_model_array = Object.values(this.entity.model);
         }
@@ -108,13 +108,13 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
 
         if ( Array.isArray(this.entity.model) ) {
             this.entity.model.forEach((item, index) => {
-                if (grid_items.indexOf(item.name) == -1) {
+                if (grid_items.indexOf(item.name) === -1) {
                     this.not_active_columns.push(item);
                 }
             });
         } else if (typeof this.entity.model === 'object') {
             Object.values(this.entity.model).forEach((item: SitebillModelItem, index) => {
-                if (grid_items.indexOf(item.name) == -1) {
+                if (grid_items.indexOf(item.name) === -1) {
                     this.not_active_columns.push(item);
                 }
             });
@@ -125,21 +125,21 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
         /*
 
         */
-        //this.not_active_columns.splice(3, 1);
+        // this.not_active_columns.splice(3, 1);
 
-        //console.log(this.active_columns);
-        //console.log(this.not_active_columns);
+        // console.log(this.active_columns);
+        // c onsole.log(this.not_active_columns);
     }
 
-    drop(event: CdkDragDrop<string[]>) {
-        //console.log('drop');
+    drop(event: CdkDragDrop<string[]>): void {
+        // console.log('drop');
 
         if (event !== null) {
             if (event.previousContainer === event.container) {
                 moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             } else {
                 if ( this.active_columns.length <= 1 && (event.previousContainer.data.length === this.active_columns.length)) {
-                    return false;
+                    return;
                 }
 
                 transferArrayItem(
@@ -174,7 +174,7 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
 
     }
 
-    per_page_change(event) {
+    per_page_change(event): void {
         const params = event.value;
 
         this.modelService.update_column_meta(this.entity.get_table_name(), null, 'per_page', params)
@@ -184,7 +184,7 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
 
     }
 
-    logout() {
+    logout(): void {
         this.modelService.logout();
     }
 
@@ -205,12 +205,12 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    onCloseClick() {
-        this.close.emit();
+    onCloseClick(): void {
+        this.byClose.emit();
         this.dialogRef.close();
     }
 }

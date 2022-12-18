@@ -1,4 +1,4 @@
-@import "src/@fuse/scss/fuse";
+@import "../../../../@fuse/scss/fuse";
 
 vertical-layout-1 {
     display: flex;
@@ -46,7 +46,7 @@ vertical-layout-1 {
                     // Content component
                     content {
 
-                        &.inner-scroll {
+                        &innerScroll {
                             flex: 1 1 0%;
                             min-height: 0;
 

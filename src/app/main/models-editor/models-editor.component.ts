@@ -1,38 +1,38 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ViewChild, OnInit} from '@angular/core';
 // import { ModelService } from 'app/_services/model.service';
 import { ConfigService } from 'app/_services/config.service';
-import {Subject} from "rxjs";
-import {SitebillResponse} from "../../_models/sitebill-response";
-import {SitebillEntity} from "../../_models";
-import {FormControl} from "@angular/forms";
-import {ConfigFormComponent} from "../config/config-form/config-form.component";
-import {MatSidenav} from "@angular/material/sidenav";
-import {SnackService} from "../../_services/snack.service";
-import {MediaMatcher} from "@angular/cdk/layout";
-import {debounceTime, distinctUntilChanged, takeUntil} from "rxjs/operators";
-import * as _ from "lodash";
-import {ModelsEditorService} from "./models-editor.service";
+import {Subject} from 'rxjs';
+import {SitebillResponse} from '../../_models/sitebill-response';
+import {SitebillEntity} from '../../_models';
+import {FormControl} from '@angular/forms';
+import {ConfigFormComponent} from '../config/config-form/config-form.component';
+import {MatSidenav} from '@angular/material/sidenav';
+import {SnackService} from '../../_services/snack.service';
+import {MediaMatcher} from '@angular/cdk/layout';
+import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import * as _ from 'lodash';
+import {ModelsEditorService} from './models-editor.service';
 
 @Component({
     selector   : 'models-editor',
     templateUrl: './models-editor.component.html',
     styleUrls  : ['./models-editor.component.scss']
 })
-export class ModelsEditorComponent
+export class ModelsEditorComponent implements OnInit
 {
     protected _unsubscribeAll: Subject<any>;
-    public sitebillResponse:SitebillResponse;
-    public itemsList:any;
-    public menuItems:any;
+    public sitebillResponse: SitebillResponse;
+    public itemsList: any;
+    public menuItems: any;
     entity: SitebillEntity;
     public searchControl: FormControl;
-    private debounce: number = 400;
+    private debounce = 400;
 
 
     mobileQuery: MediaQueryList;
 
     private _mobileQueryListener: () => void;
-    public saveButton: boolean = false;
+    public saveButton = false;
 
     @ViewChild(ConfigFormComponent) config_form_child: ConfigFormComponent;
     @ViewChild(MatSidenav) side_nav: MatSidenav;
@@ -75,19 +75,19 @@ export class ModelsEditorComponent
 
     }
 
-    filterBy(array, value = null){
+    filterBy(array, value = null): any[] {
         if (!value || value === '') {
             return array;
         }
-        let filtered = [];
-        let tmp_array = _.cloneDeep(array);
+        const filtered = [];
+        const tmp_array = _.cloneDeep(array);
 
 
 
-        for(let i = 0; i < tmp_array.length; i++){
+        for (const i of tmp_array){
 
-            let obj = Object.assign({}, tmp_array[i].data);
-            let f1 = Object.keys(obj)
+            const obj = Object.assign({}, tmp_array[i].data);
+            const f1 = Object.keys(obj)
                 .filter( key =>
                     key.indexOf(value) >= 0
                     || obj[key].title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0
@@ -96,19 +96,16 @@ export class ModelsEditorComponent
                 )
                 .reduce( (res, key) => (res[key] = obj[key], res), {} );
             if ( Object.keys(f1).length !== 0 ) {
-                //console.log(f1);
+                // console.log(f1);
                 tmp_array[i].data = f1;
                 filtered.push(tmp_array[i]);
             }
-
         }
-
         return filtered;
-
     }
 
-    save(event) {
-        let ql_items = this.config_form_child.get_changed_items();
+    save(event): void {
+        const ql_items = this.config_form_child.get_changed_items();
         this.configService.update_system_config(ql_items)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: SitebillResponse) => {
@@ -123,23 +120,23 @@ export class ModelsEditorComponent
     }
 
 
-    OnDestroy() {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    clickMenu(model_name: string) {
+    clickMenu(model_name: string): void {
         if ( this.mobileQuery.matches ) {
             this.side_nav.toggle();
 
         }
         console.log(model_name);
         console.log(this.itemsList[model_name]);
-        //this.showAppsConfig(index);
+        // this.showAppsConfig(index);
     }
 
-    showAppsConfig(index: number, filtered_array = null) {
+    showAppsConfig(index: number, filtered_array = null): void {
         if ( !filtered_array ) {
             filtered_array = this.filterBy(this.sitebillResponse.data, this.searchControl.value);
         }
@@ -148,11 +145,11 @@ export class ModelsEditorComponent
         this.menuItems = filtered_array;
     }
 
-    showSaveButton() {
+    showSaveButton(): void {
         this.saveButton = true;
     }
 
-    clear_search_text() {
+    clear_search_text(): void {
         this.searchControl.patchValue('');
     }
 

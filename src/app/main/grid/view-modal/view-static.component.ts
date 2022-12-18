@@ -13,12 +13,12 @@ import {FilterService} from '../../../_services/filter.service';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
 import {SitebillEntity} from '../../../_models';
 import {FormConstructorComponent} from '../form/form-constructor.component';
-import {StorageService} from "../../../_services/storage.service";
+import {StorageService} from '../../../_services/storage.service';
 
 class CommentsBlockMeta {
-    isOpened?: boolean = false;
-    commentsTotal?: number = 0;
-    lastMessage?: string = '';
+    isOpened = false;
+    commentsTotal = 0;
+    lastMessage = '';
 }
 
 @Component({
@@ -27,8 +27,8 @@ class CommentsBlockMeta {
     styleUrls: ['./view-modal.component.scss']
 })
 export class ViewStaticComponent extends FormConstructorComponent implements OnInit {
-    @Input("entity")
-    _data: SitebillEntity;
+    @Input()
+    entity: SitebillEntity;
 
 
     form: FormGroup;
@@ -39,7 +39,7 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
     render_value_array = ['empty', 'textarea_editor', 'safe_string', 'textarea', 'primary_key'];
 
     loadingIndicator: boolean;
-    commentsBlockMeta: CommentsBlockMeta = {};
+    commentsBlockMeta = new CommentsBlockMeta();
     public disable_toolbar: boolean;
 
     constructor(
@@ -75,34 +75,34 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
 
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.form = this._formBuilder.group({});
         this._data.set_readonly(true);
         this._data.set_disable_comment();
         this.getModel();
     }
 
-    get_youtube_code(video_id: string) {
+    get_youtube_code(video_id: string): string {
         if (video_id === '') {
             return '';
         }
         return '<iframe width="100%" height="100" src="https://www.youtube.com/embed/' + video_id + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><strong>';
     }
 
-    get_colspan(type: string, name: string) {
+    get_colspan(type: string, name: string): number {
         if (type === 'geodata' || type === 'uploads' || type === 'textarea_editor' || name === 'youtube') {
             return 2;
         }
         return 1;
     }
 
-    save() {
+    save(): void {
         this._data.set_readonly(false);
     }
 
-    close() {
+    close(): void {
         this._data.set_readonly(false);
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this._chatService.closeChat();
     }

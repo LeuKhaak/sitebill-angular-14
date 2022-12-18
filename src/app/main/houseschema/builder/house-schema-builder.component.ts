@@ -1,32 +1,32 @@
-import {Component, Inject, Input} from '@angular/core';
+import {Component, Inject, Input, OnInit, OnDestroy} from '@angular/core';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import {ModelService} from "../../../_services/model.service";
-import {HouseSchemaService} from "../services/houseschema.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
-import {SitebillEntity} from "../../../_models";
-import {FormComponent} from "../../grid/form/form.component";
-import {NgxGalleryImage} from "ngx-gallery-9";
-import {SafeResourceUrl} from "@angular/platform-browser";
-import { fabric } from "fabric";
-import {LabelSelectorComponent} from "./modal/label-selector/label-selector.component";
-import {labelColors, LevelLocationModel} from "../models/level-location.model";
-import {LevelModel} from "../models/level.model";
-import {SectionModel} from "../models/section.model";
-import {StairModel} from "../models/stair.model";
+import {ModelService} from '../../../_services/model.service';
+import {HouseSchemaService} from '../services/houseschema.service';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {SitebillEntity} from '../../../_models';
+import {FormComponent} from '../../grid/form/form.component';
+import {NgxGalleryImage} from 'ngx-gallery-9';
+import {SafeResourceUrl} from '@angular/platform-browser';
+import { fabric } from 'fabric';
+import {LabelSelectorComponent} from './modal/label-selector/label-selector.component';
+import {labelColors, LevelLocationModel} from '../models/level-location.model';
+import {LevelModel} from '../models/level.model';
+import {SectionModel} from '../models/section.model';
+import {StairModel} from '../models/stair.model';
 // import {element} from "protractor";
-import {SnackService} from "../../../_services/snack.service";
-import {FilterService} from "../../../_services/filter.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subject} from "rxjs";
-import {delay, takeUntil} from "rxjs/operators";
+import {SnackService} from '../../../_services/snack.service';
+import {FilterService} from '../../../_services/filter.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subject} from 'rxjs';
+import {delay, takeUntil} from 'rxjs/operators';
 
 @Component({
     selector   : 'house-schema-builder',
     templateUrl: './house-schema-builder.component.html',
     styleUrls  : ['./house-schema-builder.component.scss']
 })
-export class HouseSchemaBuilderComponent
+export class HouseSchemaBuilderComponent implements OnInit, OnDestroy
 {
     public canvas: any;
     public textString: string;
@@ -38,13 +38,13 @@ export class HouseSchemaBuilderComponent
     public label_entity: SitebillEntity;
     public input_entity: SitebillEntity;
 
-    @Input("_data")
+    @Input()
     _data: {
         entity: SitebillEntity,
         image_field: string,
         image_index: number,
         galleryImages: NgxGalleryImage[],
-    }
+    };
 
     schema_url: SafeResourceUrl;
     private field_name: string;
@@ -73,7 +73,7 @@ export class HouseSchemaBuilderComponent
         this.initLabelEntity();
     }
 
-    initLabelEntity() {
+    initLabelEntity(): void {
         this.label_entity = new SitebillEntity();
         this.label_entity.set_app_name('labels');
         this.label_entity.set_table_name('labels');
@@ -81,7 +81,7 @@ export class HouseSchemaBuilderComponent
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         if ( this._data ) {
             const image_index = this._data.image_index;
             this.schema_url = this._data.galleryImages[image_index].big;
@@ -112,7 +112,7 @@ export class HouseSchemaBuilderComponent
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe((entity: SitebillEntity) => {
-            if (entity.get_app_name() == this.label_entity.get_app_name()) {
+            if (entity.get_app_name() === this.label_entity.get_app_name()) {
                 // console.log(entity);
                 // console.log(entity.get_ql_items());
                 if (entity.get_hook() === 'afterDelete' && entity.get_param('canvas_id')) {
@@ -129,7 +129,7 @@ export class HouseSchemaBuilderComponent
                             entity.get_ql_items().building_blocks_id,
                             labelColors.building_blocks
                         );
-                    } else if(entity.get_ql_items().realty_id) {
+                    } else if (entity.get_ql_items().realty_id) {
                         this.setRealtyId(entity.get_param('canvas_id'), entity.get_ql_items().realty_id);
                         this.changeCanvasText(entity.get_param('canvas_id'), entity.get_ql_items().realty_id);
                     }
@@ -139,7 +139,7 @@ export class HouseSchemaBuilderComponent
         });
     }
 
-    initForm () {
+    initForm(): void {
         this.form = this._formBuilder.group({
             level_name : ['', Validators.required],
         });
@@ -154,34 +154,34 @@ export class HouseSchemaBuilderComponent
         });
     }
 
-    changeCanvasText( id:number, text:string, color = labelColors.realty ) {
+    changeCanvasText( id: number, text: string, color = labelColors.realty ): void {
         this.canvas.getObjects().forEach(item => {
             if (item.toObject().id === id) {
-                item._objects[0].set("fillColor", color);
-                item._objects[0].set("fill", color);
-                item._objects[0].set("radius", 21);
-                item._objects[1].set("text", text);
+                item._objects[0].set('fillColor', color);
+                item._objects[0].set('fill', color);
+                item._objects[0].set('radius', 21);
+                item._objects[1].set('text', text);
             }
-        })
+        });
         this.refreshLabel(id);
     }
 
-    refreshLabel(id:number) {
+    refreshLabel(id: number): void {
         this.canvas.getObjects().forEach(item => {
             if (item.toObject().id === id) {
-                item._objects[0].set("radius", this.getRadius()+1);
+                item._objects[0].set('radius', this.getRadius() + 1);
             }
-        })
+        });
         this.canvas.renderAll();
         this.canvas.getObjects().forEach(item => {
             if (item.toObject().id === id) {
-                item._objects[0].set("radius", this.getRadius());
+                item._objects[0].set('radius', this.getRadius());
             }
-        })
+        });
         this.canvas.renderAll();
     }
 
-    load_level() {
+    load_level(): void {
         this.level = new LevelModel({
             id: this.getCurrentPosition(),
             title: '',
@@ -215,7 +215,7 @@ export class HouseSchemaBuilderComponent
                         ([key, location]) => {
 
                             if ( location ) {
-                                let nlocation = new LevelLocationModel(location);
+                                const nlocation = new LevelLocationModel(location);
                                 // console.log(location);
                                 // console.log(nlocation.getLabelId());
                                 if ( nlocation.id ) {
@@ -242,12 +242,12 @@ export class HouseSchemaBuilderComponent
         });
     }
 
-    removeCanvasLabel (object_id) {
+    removeCanvasLabel(object_id): void {
         this.canvas.getObjects().forEach(item => {
             if (item.toObject().id === object_id) {
                 this.canvas.remove(item);
             }
-        })
+        });
         this.canvas.renderAll();
         if ( this.level.locations ) {
             this.level.locations = this.level.locations.filter((element) => {
@@ -260,7 +260,7 @@ export class HouseSchemaBuilderComponent
     }
 
 
-    addLabel (location: LevelLocationModel) {
+    addLabel(location: LevelLocationModel): void {
         // console.log('add label');
         // console.log(location);
 
@@ -280,7 +280,7 @@ export class HouseSchemaBuilderComponent
         }
 
 
-        var t = new fabric.Text(circle_label.toString(), {
+        const t = new fabric.Text(circle_label.toString(), {
             fontFamily: 'Calibri',
             fontSize: 12,
             fill: '#000000',
@@ -291,13 +291,13 @@ export class HouseSchemaBuilderComponent
             top: location.y + circle.radius
         });
 
-        var add = new fabric.Group([circle, t],{
+        const add = new fabric.Group([circle, t], {
             // any group attributes here
         });
 
         this.extend(add, location.getId());
 
-        add.on('mousedblclick', function(opt){
+        add.on('mousedblclick', function(opt): void{
             // console.log('mousedblclick fired with opts: ');
             // console.log(opt.target);
             // console.log(opt.target.fill);
@@ -306,7 +306,7 @@ export class HouseSchemaBuilderComponent
             opt.target.set("fill", '#00e676');
             opt.target.set("fillColor", '#00e676');
              */
-            //console.log(this.getLabelId(opt.target.toObject().id));
+            // console.log(this.getLabelId(opt.target.toObject().id));
             this.label_entity.set_key_value(this.getLabelId(opt.target.toObject().id));
             this.label_entity.set_param('canvas_id', opt.target.toObject().id);
             this.label_entity.set_param('realty_id', this.getRealtyId(opt.target.toObject().id));
@@ -316,11 +316,11 @@ export class HouseSchemaBuilderComponent
             this.editLabel();
         }.bind(this));
 
-        add.on('moved', function(opt){
-            //console.log('mouseout fired with opts: ');
-            //console.log(opt.target);
-            //console.log(opt.target.toObject().id);
-            //this.removeCanvasLabel(opt.target.toObject().id);
+        add.on('moved', function(opt): void{
+            // console.log('mouseout fired with opts: ');
+            // console.log(opt.target);
+            // console.log(opt.target.toObject().id);
+            // this.removeCanvasLabel(opt.target.toObject().id);
             this.updateXY(opt.target.toObject().id, opt.target.left, opt.target.top);
         }.bind(this));
         // console.log(add);
@@ -329,7 +329,7 @@ export class HouseSchemaBuilderComponent
         this.level.pushLocation(location);
     }
 
-    setRealtyId ( id, realty_id ) {
+    setRealtyId( id, realty_id ): void {
         if ( this.level.locations ) {
             this.level.locations.forEach((element) => {
                 if (id === element.id) {
@@ -339,7 +339,7 @@ export class HouseSchemaBuilderComponent
         }
     }
 
-    setBuildingBlocksId ( id, building_blocks_id ) {
+    setBuildingBlocksId( id, building_blocks_id ): void {
         if ( this.level.locations ) {
             this.level.locations.forEach((element) => {
                 if (id === element.id) {
@@ -350,7 +350,7 @@ export class HouseSchemaBuilderComponent
     }
 
 
-    setLabelId ( id, label_id ) {
+    setLabelId( id, label_id ): void {
         if ( this.level.locations ) {
             this.level.locations.forEach((element) => {
                 if (id === element.id) {
@@ -361,7 +361,7 @@ export class HouseSchemaBuilderComponent
     }
 
 
-    getRealtyId ( id ) {
+    getRealtyId( id ): number {
         let realty_id = 0;
         this.level.locations.forEach((element) => {
             if (id === element.id) {
@@ -371,7 +371,7 @@ export class HouseSchemaBuilderComponent
         return realty_id;
     }
 
-    getBuildingBlocksId ( id ) {
+    getBuildingBlocksId( id ): number {
         let building_blocks_id = 0;
         this.level.locations.forEach((element) => {
             if (id === element.id) {
@@ -381,7 +381,7 @@ export class HouseSchemaBuilderComponent
         return building_blocks_id;
     }
 
-    getLabelId ( id ) {
+    getLabelId( id ): number {
         let label_id = 0;
         this.level.locations.forEach((element) => {
             if (id === element.id) {
@@ -394,7 +394,7 @@ export class HouseSchemaBuilderComponent
 
 
 
-    addEmptyLabel(top = 10, left = 10) {
+    addEmptyLabel(top = 10, left = 10): void {
         const current_location = new LevelLocationModel({
             id: this.randomId(),
             title: '',
@@ -410,7 +410,7 @@ export class HouseSchemaBuilderComponent
 
 
 
-    updateImageLevel(source) {
+    updateImageLevel(source): void {
         this.level.title = this.form.controls['level_name'].value;
         this.setCurrentPosition(this.getCurrentPosition());
         this.houseSchemaService.update_level(
@@ -427,47 +427,47 @@ export class HouseSchemaBuilderComponent
 
     }
 
-    editLabel() {
+    editLabel(): void {
         this.label_entity.set_default_value('object_id', this.input_entity.get_key_value());
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
         dialogConfig.autoFocus = true;
-        //dialogConfig.width = '99vw';
-        //dialogConfig.maxWidth = '99vw';
-        //dialogConfig.data = { app_name: this.entity.get_table_name(), primary_key: this.entity.primary_key, key_value: item_id };
-        //this.entity.set_key_value(item_id);
+        // dialogConfig.width = '99vw';
+        // dialogConfig.maxWidth = '99vw';
+        // dialogConfig.data = { app_name: this.entity.get_table_name(), primary_key: this.entity.primary_key, key_value: item_id };
+        // this.entity.set_key_value(item_id);
         dialogConfig.data = this.label_entity;
-        //console.log(dialogConfig.data);
+        // console.log(dialogConfig.data);
         dialogConfig.panelClass = 'form-ngrx-compose-dialog';
 
-        //console.log(this.label_entity);
+        // console.log(this.label_entity);
 
 
         this.dialog.open(LabelSelectorComponent, dialogConfig);
         this.updateImageLevel('editLabel');
     }
 
-    extend(obj, id) {
-        obj.toObject = (function (toObject) {
-            return function () {
+    extend(obj, id): void {
+        obj.toObject = ((toObject) => {
+            return function(): void {
                 return fabric.util.object.extend(toObject.call(this), {
                     id: id
                 });
             };
         })(obj.toObject);
     }
-    //======= this is used to generate random id of every object ===========
-    randomId() {
+    // ======= this is used to generate random id of every object ===========
+    randomId(): number {
         return Math.floor(Math.random() * 999999) + 1;
     }
-    //== this function is used to active the object after creation ==========
-    selectItemAfterAdded(obj) {
+    // == this function is used to active the object after creation ==========
+    selectItemAfterAdded(obj): void {
         this.canvas.discardActiveObject().renderAll();
         this.canvas.setActiveObject(obj);
     }
 
-    updateXY( id, x, y ) {
+    updateXY( id, x, y ): void {
 
         this.level.locations.forEach((element) => {
             if (id === element.id) {
@@ -480,31 +480,31 @@ export class HouseSchemaBuilderComponent
 
         this.updateImageLevel('updateXY');
     }
-    getWidth(postfix = 'px') {
+    getWidth(postfix = 'px'): string {
         return this.size.width + postfix;
     }
-    getHeight(postfix = 'px') {
+    getHeight(postfix = 'px'): string {
         return this.size.height + postfix;
     }
-    getRadius() {
+    getRadius(): number {
         return 20;
     }
 
-    private getFieldName() {
+    private getFieldName(): string {
         return this.field_name;
     }
 
-    private setCurrentPosition( position ) {
+    private setCurrentPosition( position ): void {
         this.current_position = position;
     }
 
-    private getCurrentPosition() {
+    private getCurrentPosition(): number {
         return this.current_position;
     }
 
-    ngOnDestroy () {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

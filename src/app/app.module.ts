@@ -183,17 +183,14 @@ if ( detect_mode() === SitebillModes.standalone ) {
         SnackBarComponent,
         Bitrix24Router,
     ],
-    imports     : [
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         RouterModule.forRoot(appRoutes, { useHash: true, onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' }),
-
         TranslateModule.forRoot(),
-
         // Material moment date module
         MatMomentDateModule,
-
         // Material
         MatButtonModule,
         MatIconModule,
@@ -219,14 +216,12 @@ if ( detect_mode() === SitebillModes.standalone ) {
         MatSnackBarModule,
         MatButtonToggleModule,
         MatExpansionModule,
-
         // Fuse modules
         FuseModule.forRoot(fuseConfig),
         FuseProgressBarModule,
         FuseSharedModule,
         FuseSidebarModule,
         FuseThemeOptionsModule,
-
         // App modules
         LayoutModule,
         SampleModule,
@@ -254,8 +249,7 @@ if ( detect_mode() === SitebillModes.standalone ) {
         // provider used to create fake backend
         // fakeBackendProvider
     ],
-    entryComponents: [AppComponent, SnackBarComponent],
-    bootstrap   : [
+    bootstrap: [
         AppComponent
     ]
 })

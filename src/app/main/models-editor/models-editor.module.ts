@@ -85,7 +85,6 @@ if ( detect_mode() == SitebillModes.standalone ) {
         NgxDatatableModule,
         FuseWidgetModule,
         RouterModule.forChild(routes),
-
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
@@ -102,8 +101,6 @@ if ( detect_mode() == SitebillModes.standalone ) {
         MatAutocompleteModule,
         MatSnackBarModule,
         MatMenuModule,
-
-
         // Material
         MatButtonModule,
         MatCheckboxModule,
@@ -122,7 +119,6 @@ if ( detect_mode() == SitebillModes.standalone ) {
         NgxDaterangepickerMd.forRoot(),
         NgSelectModule,
         Ng5SliderModule,
-
         FuseSharedModule,
         MatListModule,
         NgxDnDModule,
@@ -137,9 +133,7 @@ if ( detect_mode() == SitebillModes.standalone ) {
     providers: [
         ModelsEditorService,
         DragulaService
-    ],
-    entryComponents: [...bundle]
-
+    ]
 })
 
 export class ModelsEditorModule

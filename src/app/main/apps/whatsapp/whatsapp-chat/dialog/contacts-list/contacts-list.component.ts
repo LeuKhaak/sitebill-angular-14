@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {takeUntil} from "rxjs/operators";
-import {ModelService} from "../../../../../../_services/model.service";
-import {Subject} from "rxjs";
-import {FilterService} from "../../../../../../_services/filter.service";
-import {WhatsAppService} from "../../../whatsapp.service";
-import {SendCallbackBundle} from "../../../types/whatsapp.types";
+import {takeUntil} from 'rxjs/operators';
+import {ModelService} from '../../../../../../_services/model.service';
+import {Subject} from 'rxjs';
+import {FilterService} from '../../../../../../_services/filter.service';
+import {WhatsAppService} from '../../../whatsapp.service';
+import {SendCallbackBundle} from '../../../types/whatsapp.types';
 
 @Component({
     selector: 'whatsapp-contacts-list',
@@ -14,7 +14,7 @@ import {SendCallbackBundle} from "../../../types/whatsapp.types";
 export class ContactsListComponent implements OnInit {
     protected _unsubscribeAll: Subject<any>;
 
-    @Input("sendCallbackBundle")
+    @Input()
     sendCallbackBundle: SendCallbackBundle;
 
     public phone_list: string[];
@@ -32,12 +32,12 @@ export class ContactsListComponent implements OnInit {
         this.loadMailingListFromWhatsappService();
     }
 
-    loadMailingListFromWhatsappService () {
+    loadMailingListFromWhatsappService(): void {
         if ( this.whatsAppService.getMailingList().length > 0 ) {
             this.whatsAppService.getMailingList().forEach(item => {
-                let mapped = Object.keys(item);
-                mapped.forEach(function (column_item, i, arr) {
-                   if ( column_item == 'phone' ) {
+                const mapped = Object.keys(item);
+                mapped.forEach(function(column_item, i, arr): void {
+                   if ( column_item === 'phone' ) {
                        if ( this.phone_list.indexOf(item[column_item].value) < 0 ) {
                            this.phone_list.push(item[column_item].value);
                        }
@@ -48,7 +48,7 @@ export class ContactsListComponent implements OnInit {
 
     }
 
-    loadMailingListFromGridParams () {
+    loadMailingListFromGridParams(): void {
         this.modelService.load(this.sendCallbackBundle.entity.get_table_name(), ['phone'], this.getFilterParams(), null, 1, 999)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
@@ -62,29 +62,27 @@ export class ContactsListComponent implements OnInit {
             });
     }
 
-    getFilterParams() {
-        let filter_params_json = {};
+    getFilterParams(): {[index: string]: any} {
+        const filter_params_json = {};
         let concatenate_search_string = null;
 
-        var obj = this.filterService.get_share_array(this.sendCallbackBundle.entity.get_app_name());
-        var mapped = Object.keys(obj);
-        //console.log(mapped);
-        var self = this;
-
-        mapped.forEach(function (item, i, arr) {
+        const obj = this.filterService.get_share_array(this.sendCallbackBundle.entity.get_app_name());
+        const mapped = Object.keys(obj);
+        // console.log(mapped);
+        mapped.forEach(function(item, i, arr): void {
             if (
-                self.modelService.getConfigValue('apps.realty.search_string_parser.enable') === '1' &&
+                this.modelService.getConfigValue('apps.realty.search_string_parser.enable') === '1' &&
                 item === 'concatenate_search' &&
-                self.sendCallbackBundle.entity.get_app_name() === 'data'
+                this.sendCallbackBundle.entity.get_app_name() === 'data'
             ) {
                 concatenate_search_string = obj[item];
             } else {
-                //console.log(obj[item].length);
-                //console.log(typeof obj[item]);
+                // console.log(obj[item].length);
+                // console.log(typeof obj[item]);
                 if (obj[item] != null ) {
-                    if (obj[item].length != 0) {
+                    if (obj[item].length !== 0) {
                         filter_params_json[item] = obj[item];
-                    } else if (typeof obj[item] === 'object' && obj[item].length != 0) {
+                    } else if (typeof obj[item] === 'object' && obj[item].length !== 0) {
                         filter_params_json[item] = obj[item];
                     }
                 }
@@ -93,8 +91,8 @@ export class ContactsListComponent implements OnInit {
         return filter_params_json;
     }
 
-    OnDestroy() {
-        this._unsubscribeAll.next();
+    OnDestroy(): void {
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

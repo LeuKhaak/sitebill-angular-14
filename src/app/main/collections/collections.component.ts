@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter }  from '@angular/core';
+import {Component, OnInit, Output, OnDestroy, EventEmitter } from '@angular/core';
 import {Subject} from 'rxjs';
 import {FuseConfigService} from '@fuse/services/config.service';
 
@@ -16,7 +16,7 @@ import {FilterService} from '../../_services/filter.service';
     styleUrls: ['./collections.component.css'],
     animations: fuseAnimations
 })
-export class CollectionsComponent implements OnInit {
+export class CollectionsComponent implements OnInit, OnDestroy {
     @Output() submitEvent = new EventEmitter<string>();
     protected _unsubscribeAll: Subject<any>;
     private collections_total_counter: number;
@@ -37,7 +37,7 @@ export class CollectionsComponent implements OnInit {
 
     }
 
-    disable_menu() {
+    disable_menu(): void {
         this._fuseConfigService.config = {
             layout: {
                 navbar: {
@@ -53,18 +53,18 @@ export class CollectionsComponent implements OnInit {
         };
     }
 
-    set_total_counter_collections(event) {
+    set_total_counter_collections(event): void {
         this.collections_total_counter = event;
         this.bitrix24Service.set_collections_count(event);
     }
 
-    set_total_counter_data(event) {
+    set_total_counter_data(event): void {
         this.data_total_counter = event;
     }
 
-    configure_menu () {
+    configure_menu(): void {
         if ( this.modelSerivce.is_config_loaded() ) {
-            //console.log(this.modelSerivce.getConfigValue('apps.realty.enable_toolbar'));
+            // console.log(this.modelSerivce.getConfigValue('apps.realty.enable_toolbar'));
             if (this.modelSerivce.getConfigValue('apps.realty.enable_toolbar') === '1') {
                 this._fuseConfigService.config = {
                     layout: {
@@ -88,8 +88,8 @@ export class CollectionsComponent implements OnInit {
 
     }
 
-    ngOnInit() {
-        //this.test_bitrix24();
+    ngOnInit(): void {
+        // this.test_bitrix24();
         this.disable_menu();
         this.configure_menu();
         this.bitrix24Service.init_input_parameters();
@@ -109,8 +109,8 @@ export class CollectionsComponent implements OnInit {
          */
         this.filterService.share.subscribe((entity: SitebillEntity) => {
             this.set_total_counter_collections(this.bitrix24Service.get_collections_count());
-            //console.log('subscribe collections');
-            //console.log(this.collections_total_counter);
+            // console.log('subscribe collections');
+            // console.log(this.collections_total_counter);
         });
 
 
@@ -121,7 +121,7 @@ export class CollectionsComponent implements OnInit {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

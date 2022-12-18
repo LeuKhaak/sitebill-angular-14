@@ -21,8 +21,7 @@ import {DisplayModule} from "../display/display.module";
         ExcelComponent,
         ExcelModalComponent
     ],
-    exports: [
-    ],
+    exports: [],
     imports: [
         MatIconModule,
         CommonModule,
@@ -39,10 +38,7 @@ import {DisplayModule} from "../display/display.module";
         MatProgressBarModule,
         DisplayModule,
     ],
-    providers: [
-    ],
-    entryComponents: [
-    ]
+    providers: []
 })
 
 export class ExcelModule
