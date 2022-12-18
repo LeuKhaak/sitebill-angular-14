@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {Message} from '../../types/venom-bot/model/message';
 import {Chat, DialogPost, SendCallbackBundle} from '../../types/whatsapp.types';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AttachModalComponent} from './attach-modal/attach-modal.component';
 import {SitebillEntity} from '../../../../../_models';
@@ -29,7 +29,7 @@ import {AttachEntityModalComponent} from './attach-entity-modal/attach-entity-mo
 export class DialogComponent implements OnInit, AfterViewChecked {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     protected _unsubscribeAll: Subject<any>;
-    form: FormGroup;
+    form: UntypedFormGroup;
 
 
     public show_gallery = false;
@@ -60,7 +60,7 @@ export class DialogComponent implements OnInit, AfterViewChecked {
 
     constructor(
         protected dialog_modal: MatDialog,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         public whatsAppService: WhatsAppService,
         public _sanitizer: DomSanitizer
     ) {

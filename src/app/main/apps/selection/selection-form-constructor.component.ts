@@ -10,9 +10,9 @@ import {
 import { ModelService } from '../../../_services/model.service';
 import {
     AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     FormArray,
     ValidatorFn,
     Validators,
@@ -74,7 +74,7 @@ export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
 
     constructor(
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
@@ -98,7 +98,7 @@ export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
         this.savedNumber = +storageService.getItem('numberOfColumns');
         this.numberOfColumns = this.savedNumber ? this.savedNumber : 3;
     }
-    form: FormGroup;
+    form: UntypedFormGroup;
     public _data: { entity: SitebillEntity; selectionMode: boolean };
     public entity: SitebillEntity;
     public error_message: string = null;
@@ -492,7 +492,7 @@ export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.rows.length; i++) {
             // console.log(this.records);
             if (this.records[this.rows[i]]) {
-                const form_control_item = new FormControl(
+                const form_control_item = new UntypedFormControl(
                     this.records[this.rows[i]].value
                 );
                 form_control_item.clearValidators();

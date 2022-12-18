@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {ModelService} from '../../_services/model.service';
 import {SnackService} from '../../_services/snack.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {FuseNavigationService} from '../../../@fuse/components/navigation/navigation.service';
 import {AuthenticationService} from '../../_services';
@@ -20,11 +20,11 @@ import {StorageService} from "../../_services/storage.service";
     animations: fuseAnimations
 })
 export class RegisterModalComponent extends FormConstructorComponent implements OnInit {
-    registerForm: FormGroup;
+    registerForm: UntypedFormGroup;
     registerFormErrors: any;
     registerMessage: string;
 
-    valid_domain_through_email: FormGroup;
+    valid_domain_through_email: UntypedFormGroup;
     loading = false;
     show_register: boolean;
     show_login: boolean;
@@ -33,7 +33,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
         protected modelService: ModelService,
         protected _snackService: SnackService,
         private authenticationService: AuthenticationService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _fuseNavigationService: FuseNavigationService,
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,

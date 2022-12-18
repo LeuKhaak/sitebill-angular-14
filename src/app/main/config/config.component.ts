@@ -7,7 +7,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {SitebillEntity} from '../../_models';
 import {ConfigFormComponent} from './config-form/config-form.component';
 import {SnackService} from '../../_services/snack.service';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import * as _ from 'lodash';
 import {MatSidenav} from '@angular/material/sidenav';
 
@@ -22,7 +22,7 @@ export class ConfigComponent implements OnInit {
     public itemsList: any;
     public menuItems: any;
     entity: SitebillEntity;
-    public searchControl: FormControl;
+    public searchControl: UntypedFormControl;
     private debounce = 400;
 
 
@@ -48,7 +48,7 @@ export class ConfigComponent implements OnInit {
     ) {
         this._unsubscribeAll = new Subject();
         this.sitebillResponse = new SitebillResponse();
-        this.searchControl = new FormControl('');
+        this.searchControl = new UntypedFormControl('');
 
 
         this.mobileQuery = media.matchMedia('(max-width: 600px)');

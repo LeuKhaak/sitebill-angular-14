@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Course} from "app/model/course";
-import {FormBuilder, Validators, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import * as moment from 'moment';
 
@@ -20,14 +20,14 @@ import { ModelService } from 'app/_services/model.service';
 })
 export class DeclineClientComponent implements OnInit {
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     formErrors: any;
     declineFormErrors: any;
     comment: any;
     declinePressed: boolean;
     declineProcessing: boolean;
 
-    declineForm: FormGroup;
+    declineForm: UntypedFormGroup;
 
     description:string;
     @Input() model: Model;
@@ -46,7 +46,7 @@ export class DeclineClientComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<DeclineClientComponent>,
         private _httpClient: HttpClient,
         private modelSerivce: ModelService,

@@ -17,7 +17,7 @@ import {StairModel} from '../models/stair.model';
 // import {element} from "protractor";
 import {SnackService} from '../../../_services/snack.service';
 import {FilterService} from '../../../_services/filter.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {delay, takeUntil} from 'rxjs/operators';
 
@@ -51,7 +51,7 @@ export class HouseSchemaBuilderComponent implements OnInit, OnDestroy
     private current_position: number;
     private level: LevelModel;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     private _unsubscribeAll: Subject<any>;
 
 
@@ -65,7 +65,7 @@ export class HouseSchemaBuilderComponent implements OnInit, OnDestroy
         private houseSchemaService: HouseSchemaService,
         protected _snackService: SnackService,
         public filterService: FilterService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: UntypedFormBuilder
     )
     {
         this._unsubscribeAll = new Subject();

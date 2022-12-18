@@ -4,7 +4,7 @@ import { ConfigService } from 'app/_services/config.service';
 import {Subject} from 'rxjs';
 import {SitebillResponse} from '../../_models/sitebill-response';
 import {SitebillEntity} from '../../_models';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {ConfigFormComponent} from '../config/config-form/config-form.component';
 import {MatSidenav} from '@angular/material/sidenav';
 import {SnackService} from '../../_services/snack.service';
@@ -25,7 +25,7 @@ export class ModelsEditorComponent implements OnInit
     public itemsList: any;
     public menuItems: any;
     entity: SitebillEntity;
-    public searchControl: FormControl;
+    public searchControl: UntypedFormControl;
     private debounce = 400;
 
 
@@ -46,7 +46,7 @@ export class ModelsEditorComponent implements OnInit
     ) {
         this._unsubscribeAll = new Subject();
         this.sitebillResponse = new SitebillResponse();
-        this.searchControl = new FormControl('');
+        this.searchControl = new UntypedFormControl('');
 
 
         this.mobileQuery = media.matchMedia('(max-width: 600px)');

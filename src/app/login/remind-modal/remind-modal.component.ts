@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ModelService} from '../../_services/model.service';
 import {SnackService} from '../../_services/snack.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {FuseNavigationService} from '../../../@fuse/components/navigation/navigation.service';
 import {AuthenticationService} from '../../_services';
@@ -13,15 +13,15 @@ import {AuthenticationService} from '../../_services';
     animations: fuseAnimations
 })
 export class RemindModalComponent  implements OnInit {
-    registerForm: FormGroup;
+    registerForm: UntypedFormGroup;
     registerFormErrors: any;
 
-    codeForm: FormGroup;
+    codeForm: UntypedFormGroup;
     codeFormErrors: any;
 
     registerMessage: string;
 
-    valid_domain_through_email: FormGroup;
+    valid_domain_through_email: UntypedFormGroup;
     loading = false;
     show_register: boolean;
     show_login: boolean;
@@ -33,7 +33,7 @@ export class RemindModalComponent  implements OnInit {
         protected modelService: ModelService,
         protected _snackService: SnackService,
         private authenticationService: AuthenticationService,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         protected _fuseNavigationService: FuseNavigationService,
     ) {
         this.valid_domain_through_email = this._formBuilder.group({

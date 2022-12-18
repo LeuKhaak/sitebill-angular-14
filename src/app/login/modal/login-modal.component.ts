@@ -4,7 +4,7 @@ import {ModelService} from '../../_services/model.service';
 import {SnackService} from '../../_services/snack.service';
 import {APP_CONFIG, AppConfig} from '../../app.config.module';
 import {SitebillEntity} from '../../_models';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {DOCUMENT} from '@angular/common';
 import {toASCII} from "punycode";
@@ -23,14 +23,14 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
     animations: fuseAnimations
 })
 export class LoginModalComponent  implements OnInit {
-    loginForm: FormGroup;
+    loginForm: UntypedFormGroup;
     loginFormErrors: any;
 
-    registerForm: FormGroup;
+    registerForm: UntypedFormGroup;
     registerFormErrors: any;
     registerMessage: string;
 
-    valid_domain_through_email: FormGroup;
+    valid_domain_through_email: UntypedFormGroup;
     hide_domain: boolean = true;
     loading = false;
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
@@ -50,7 +50,7 @@ export class LoginModalComponent  implements OnInit {
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         private authenticationService: AuthenticationService,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _fuseConfigService: FuseConfigService,
         private alertService: AlertService,
         public snackBar: MatSnackBar,

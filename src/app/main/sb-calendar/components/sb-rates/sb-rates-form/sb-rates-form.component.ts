@@ -3,12 +3,12 @@ import {SB_MONTHS, SB_RATE_TYPES, SB_WEEKDAYS} from '../../../classes/sb-calenda
 import {SbRateModel} from '../../../models/sb-rate.model';
 import {Subject, Subscription} from 'rxjs';
 import {SbCalendarService} from '../../../services/sb-calendar.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {takeUntil} from 'rxjs/operators';
 import {SbRatesEditDialogDataModel} from '../../../models/sb-rates-edit-dialog-data.model';
 
 class RateFormModel {
-    group: FormGroup;
+    group: UntypedFormGroup;
     subscription$: Subscription;
     options: { [name: string]: any };
 }
@@ -48,7 +48,7 @@ export class SbRatesFormComponent implements OnInit, OnDestroy {
     private readonly destroy$ = new Subject<void>();
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private calendarService: SbCalendarService,
     ) {
     }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ import { ChatService } from 'app/main/apps/chat/chat.service';
 export class ChatUserSidenavComponent implements OnInit, OnDestroy
 {
     user: any;
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -42,9 +42,9 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy
     {
         this.user = this._chatService.user;
 
-        this.userForm = new FormGroup({
-            mood  : new FormControl(this.user.mood),
-            status: new FormControl(this.user.status)
+        this.userForm = new UntypedFormGroup({
+            mood  : new UntypedFormControl(this.user.mood),
+            status: new UntypedFormControl(this.user.status)
         });
 
         this.userForm.valueChanges

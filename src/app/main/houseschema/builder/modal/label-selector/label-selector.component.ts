@@ -5,7 +5,7 @@ import {NgxGalleryImage} from "ngx-gallery-9";
 import {SitebillEntity} from "../../../../../_models";
 import {FormComponent} from "../../../../grid/form/form.component";
 import {ModelService} from "../../../../../_services/model.service";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {SnackService} from "../../../../../_services/snack.service";
 import {FilterService} from "../../../../../_services/filter.service";
 import {Bitrix24Service} from "../../../../../integrations/bitrix24/bitrix24.service";
@@ -27,7 +27,7 @@ export class LabelSelectorComponent extends FormComponent
     constructor(
         protected dialogRef: MatDialogRef<FormComponent>,
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

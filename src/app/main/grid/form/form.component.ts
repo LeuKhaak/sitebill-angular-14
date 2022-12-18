@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 
 import {APP_CONFIG, AppConfig} from 'app/app.config.module';
 import {ModelService} from 'app/_services/model.service';
@@ -28,7 +28,7 @@ export class FormComponent extends FormConstructorComponent implements OnInit {
     constructor(
         protected dialogRef: MatDialogRef<FormComponent>,
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

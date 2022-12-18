@@ -4,7 +4,7 @@ import { FilterService } from 'app/_services/filter.service';
 import {ModelService} from '../../../../_services/model.service';
 import {FuseConfigService} from '../../../../../@fuse/services/config.service';
 import {SitebillEntity} from '../../../../_models';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'front-component',
@@ -13,7 +13,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
     animations: fuseAnimations
 })
 export class FrontComponent {
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     public allow_load_grid = false;
     private disable_add_button: boolean = false;
@@ -38,7 +38,7 @@ export class FrontComponent {
 
     constructor(
         private filterService: FilterService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         private _fuseConfigService: FuseConfigService,
         protected cdr: ChangeDetectorRef,
         public modelService: ModelService
@@ -51,8 +51,8 @@ export class FrontComponent {
 
     ngOnInit() {
         this.form = this._formBuilder.group({
-            topic_id: new FormControl('', []),
-            region_id: new FormControl('', []),
+            topic_id: new UntypedFormControl('', []),
+            region_id: new UntypedFormControl('', []),
         });
         this.form.valueChanges.subscribe(query => {
             this.change_columns_list({value: query.topic_id});
