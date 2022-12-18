@@ -12,7 +12,7 @@ import {SnackService} from '../../../_services/snack.service';
 import {FilterService} from '../../../_services/filter.service';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
 import {SitebillEntity} from '../../../_models';
-import {StorageService} from "../../../_services/storage.service";
+import {StorageService} from '../../../_services/storage.service';
 
 
 @Component({
@@ -71,7 +71,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
 
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((chatData) => {
@@ -91,26 +91,26 @@ export class ViewModalComponent extends FormComponent implements OnInit {
         this._chatService.getChat(this._data.get_table_name(), this._data.primary_key, this._data.key_value);
     }
 
-    get_youtube_code(video_id: string) {
+    get_youtube_code(video_id: string): string {
         if (video_id === '') {
             return '';
         }
         return '<iframe width="100%" height="100" src="https://www.youtube.com/embed/' + video_id + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><strong>';
     }
 
-    get_colspan(type: string, name: string) {
+    get_colspan(type: string, name: string): number {
         if (type === 'geodata' || type === 'uploads' || type === 'textarea_editor' || name === 'youtube' || type === 'injector') {
             return 2;
         }
         return 1;
     }
 
-    save() {
+    save(): void {
         this._data.set_readonly(false);
         this.dialogRef.close(this.form.value);
     }
 
-    close() {
+    close(): void {
         this._data.set_readonly(false);
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

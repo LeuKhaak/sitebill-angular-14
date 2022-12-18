@@ -308,122 +308,128 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
         // При смене типа в форме, надо перезапускать процесс показа/валидации элементов
 
         for (let i = 0; i < this.rows.length; i++) {
-            // console.log(this.records[this.rows[i]].type);
-            const form_control_item = new FormControl(this.records[this.rows[i]].value);
-            form_control_item.clearValidators();
-            this.records[this.rows[i]].required_boolean = false;
-            if ( this._data.get_hidden_column_edit(this.rows[i]) ) {
-                this.records[this.rows[i]].hidden = true;
-            } else {
-                this.records[this.rows[i]].hidden = false;
-            }
-            if (this.records[this.rows[i]].active_in_topic !== '0' && this.records[this.rows[i]].active_in_topic != null) {
-                this.records[this.rows[i]].active_in_topic_array = this.records[this.rows[i]].active_in_topic.split(',');
-            } else {
-                this.records[this.rows[i]].active_in_topic_array = null;
-            }
-
-            if (this.records[this.rows[i]].required === 'on') {
-                if (!this.records[this.rows[i]].hidden) {
-                    form_control_item.setValidators(forbiddenNullValue());
-                    this.records[this.rows[i]].required_boolean = true;
-                }
-            }
-            if (this.records[this.rows[i]].name === 'email') {
-                form_control_item.setValidators(Validators.email);
-            }
-            // console.log(this.rows[i]);
-            // console.log(form_control_item);
-
-            this.form.addControl(this.rows[i], form_control_item);
-
-            if (this.is_date_type(this.records[this.rows[i]].type) && this.records[this.rows[i]].value === 'now') {
-                this.form.controls[this.rows[i]].patchValue(moment());
-            }
-
-            if (this.records[this.rows[i]].type === 'textarea_editor') {
-                this.text_area_editor_storage[this.records[this.rows[i]].name] = this.records[this.rows[i]].value;
-            }
-
-            if (this.records[this.rows[i]].type === 'parameter') {
-                this.parameters_storage[this.records[this.rows[i]].name] = this.records[this.rows[i]].value;
-            }
-
-            if (
-                this.records[this.rows[i]].type === 'select_by_query' ||
-                this.records[this.rows[i]].type === 'select_by_query_multiple' ||
-                this.records[this.rows[i]].type === 'select_by_query_multi'
-            ) {
-                this.init_select_by_query_options(this.records[this.rows[i]].name, i);
-                if (this.records[this.rows[i]].value === 0) {
-                    this.form.controls[this.rows[i]].patchValue(null);
-                }
-            }
-            if (
-                this.records[this.rows[i]].type === 'select_box_structure' ||
-                this.records[this.rows[i]].type === 'select_box_structure_simple_multiple' ||
-                this.records[this.rows[i]].type === 'select_box_structure_multiple_checkbox'
-            ) {
-                this.init_select_by_query_options(this.records[this.rows[i]].name, i);
-                if (this.records[this.rows[i]].value === 0) {
-                    this.form.controls[this.rows[i]].patchValue(null);
-                }
-            }
-
-            if (this.records[this.rows[i]].type === 'date') {
-                // this.form.controls[this.rows[i]].patchValue();
-                // console.log(this.records[this.rows[i]]);
-                if (this.records[this.rows[i]].value_string !== '' && this.records[this.rows[i]].value_string != null) {
-                    this.form.controls[this.rows[i]].patchValue(moment(this.records[this.rows[i]].value_string, 'DD.MM.YYYY'));
+            if (this.records[this.rows[i]]) {
+                // console.log(this.records[this.rows[i]].type);
+                const form_control_item = new FormControl(this.records[this.rows[i]].value);
+                form_control_item.clearValidators();
+                this.records[this.rows[i]].required_boolean = false;
+                if (this._data.get_hidden_column_edit(this.rows[i])) {
+                    this.records[this.rows[i]].hidden = true;
                 } else {
-                    this.form.controls[this.rows[i]].patchValue(null);
+                    this.records[this.rows[i]].hidden = false;
                 }
-            }
-
-            if (this.records[this.rows[i]].type === 'dttime') {
-                this.form.controls[this.rows[i]].patchValue(this.records[this.rows[i]].value.slice(10, 16));
-            }
-
-            if (this.records[this.rows[i]].type === 'select_box') {
-                this.init_select_box_options(this.records[this.rows[i]].name);
-                if (this.records[this.rows[i]].value_string === '' && this.records[this.rows[i]].value === '') {
-                    this.form.controls[this.rows[i]].patchValue(null);
+                if (this.records[this.rows[i]].active_in_topic !== '0' && this.records[this.rows[i]].active_in_topic !=
+                    null) {
+                    this.records[this.rows[i]].active_in_topic_array =
+                        this.records[this.rows[i]].active_in_topic.split(',');
+                } else {
+                    this.records[this.rows[i]].active_in_topic_array = null;
                 }
 
-            }
-
-
-            if (this.records[this.rows[i]].type === 'checkbox') {
-                if (this.records[this.rows[i]].value !== 1) {
-                    this.form.controls[this.rows[i]].patchValue(false);
+                if (this.records[this.rows[i]].required === 'on') {
+                    if (!this.records[this.rows[i]].hidden) {
+                        form_control_item.setValidators(forbiddenNullValue());
+                        this.records[this.rows[i]].required_boolean = true;
+                    }
                 }
-            }
+                if (this.records[this.rows[i]].name === 'email') {
+                    form_control_item.setValidators(Validators.email);
+                }
+                // console.log(this.rows[i]);
+                // console.log(form_control_item);
 
-            if (this.records[this.rows[i]].type === 'geodata') {
-                this.init_geodata(this.records[this.rows[i]].name);
-            }
+                this.form.addControl(this.rows[i], form_control_item);
 
-            if (this.records[this.rows[i]].type === 'photo') {
-                this.init_photo_image(this.records[this.rows[i]].name, this.records[this.rows[i]].value);
-            }
-
-
-            if (this.records[this.rows[i]].type === 'uploads') {
-                this.init_gallery_images(this.records[this.rows[i]].name, this.records[this.rows[i]].value);
-            }
-
-            if (this.records[this.rows[i]].parameters != null) {
-                if (this.records[this.rows[i]].parameters.dadata === 1) {
-                    this.hide_dadata(this.rows[i]);
+                if (this.is_date_type(this.records[this.rows[i]].type) && this.records[this.rows[i]].value === 'now') {
+                    this.form.controls[this.rows[i]].patchValue(moment());
                 }
 
-            }
-            if (this._data.is_hidden(this.rows[i])) {
-                this.hide_row(this.rows[i]);
-            }
-            if (this._data.get_default_value(this.rows[i])) {
-                this.records[this.rows[i]].value = this._data.get_default_value(this.rows[i]);
-                this.form.controls[this.rows[i]].patchValue(this.records[this.rows[i]].value);
+                if (this.records[this.rows[i]].type === 'textarea_editor') {
+                    this.text_area_editor_storage[this.records[this.rows[i]].name] = this.records[this.rows[i]].value;
+                }
+
+                if (this.records[this.rows[i]].type === 'parameter') {
+                    this.parameters_storage[this.records[this.rows[i]].name] = this.records[this.rows[i]].value;
+                }
+
+                if (
+                    this.records[this.rows[i]].type === 'select_by_query' ||
+                    this.records[this.rows[i]].type === 'select_by_query_multiple' ||
+                    this.records[this.rows[i]].type === 'select_by_query_multi'
+                ) {
+                    this.init_select_by_query_options(this.records[this.rows[i]].name, i);
+                    if (this.records[this.rows[i]].value === 0) {
+                        this.form.controls[this.rows[i]].patchValue(null);
+                    }
+                }
+                if (
+                    this.records[this.rows[i]].type === 'select_box_structure' ||
+                    this.records[this.rows[i]].type === 'select_box_structure_simple_multiple' ||
+                    this.records[this.rows[i]].type === 'select_box_structure_multiple_checkbox'
+                ) {
+                    this.init_select_by_query_options(this.records[this.rows[i]].name, i);
+                    if (this.records[this.rows[i]].value === 0) {
+                        this.form.controls[this.rows[i]].patchValue(null);
+                    }
+                }
+
+                if (this.records[this.rows[i]].type === 'date') {
+                    // this.form.controls[this.rows[i]].patchValue();
+                    // console.log(this.records[this.rows[i]]);
+                    if (this.records[this.rows[i]].value_string !== '' && this.records[this.rows[i]].value_string !=
+                        null) {
+                        this.form.controls[this.rows[i]].patchValue(
+                            moment(this.records[this.rows[i]].value_string, 'DD.MM.YYYY'));
+                    } else {
+                        this.form.controls[this.rows[i]].patchValue(null);
+                    }
+                }
+
+                if (this.records[this.rows[i]].type === 'dttime') {
+                    this.form.controls[this.rows[i]].patchValue(this.records[this.rows[i]].value.slice(10, 16));
+                }
+
+                if (this.records[this.rows[i]].type === 'select_box') {
+                    this.init_select_box_options(this.records[this.rows[i]].name);
+                    if (this.records[this.rows[i]].value_string === '' && this.records[this.rows[i]].value === '') {
+                        this.form.controls[this.rows[i]].patchValue(null);
+                    }
+
+                }
+
+
+                if (this.records[this.rows[i]].type === 'checkbox') {
+                    if (this.records[this.rows[i]].value !== 1) {
+                        this.form.controls[this.rows[i]].patchValue(false);
+                    }
+                }
+
+                if (this.records[this.rows[i]].type === 'geodata') {
+                    this.init_geodata(this.records[this.rows[i]].name);
+                }
+
+                if (this.records[this.rows[i]].type === 'photo') {
+                    this.init_photo_image(this.records[this.rows[i]].name, this.records[this.rows[i]].value);
+                }
+
+
+                if (this.records[this.rows[i]].type === 'uploads') {
+                    this.init_gallery_images(this.records[this.rows[i]].name, this.records[this.rows[i]].value);
+                }
+
+                if (this.records[this.rows[i]].parameters != null) {
+                    if (this.records[this.rows[i]].parameters.dadata === 1) {
+                        this.hide_dadata(this.rows[i]);
+                    }
+
+                }
+                if (this._data.is_hidden(this.rows[i])) {
+                    this.hide_row(this.rows[i]);
+                }
+                if (this._data.get_default_value(this.rows[i])) {
+                    this.records[this.rows[i]].value = this._data.get_default_value(this.rows[i]);
+                    this.form.controls[this.rows[i]].patchValue(this.records[this.rows[i]].value);
+                }
             }
 
         }
@@ -445,8 +451,10 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
     count_visible_items(): void {
         this.visible_items_counter = 0;
         for (const i of this.rows) {
-            if ( !this.records[this.rows[i]].hidden && this.records[this.rows[i]].type !== 'hidden') {
-                this.visible_items_counter ++;
+            if (this.records[this.rows[i]]) {
+                if (!this.records[this.rows[i]].hidden && this.records[this.rows[i]].type !== 'hidden') {
+                    this.visible_items_counter++;
+                }
             }
         }
     }
@@ -663,36 +671,37 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
 
         if (current_topic_id != null) {
             for (const i of this.rows) {
-                if (
-                    this.records[this.rows[i]].active_in_topic !== '0' &&
-                    this.records[this.rows[i]].active_in_topic != null
-                ) {
+                if (this.records[this.rows[i]]) {
                     if (
-                        Array.isArray(this.records[this.rows[i]].active_in_topic_array) &&
-                        this.records[this.rows[i]].active_in_topic_array.indexOf(current_topic_id.toString()) === -1
+                        this.records[this.rows[i]].active_in_topic !== '0' &&
+                        this.records[this.rows[i]].active_in_topic != null
                     ) {
-                        this.form.get(this.rows[i]).clearValidators();
-                        this.form.get(this.rows[i]).updateValueAndValidity();
-                        this.records[this.rows[i]].required_boolean = false;
-                        this.records[this.rows[i]].hidden = true;
-                    } else {
-                        this.records[this.rows[i]].hidden = false;
-                        if (this.records[this.rows[i]].required === 'on') {
-                            this.records[this.rows[i]].required_boolean = true;
-                            this.form.get(this.rows[i]).setValidators(forbiddenNullValue());
+                        if (
+                            Array.isArray(this.records[this.rows[i]].active_in_topic_array) &&
+                            this.records[this.rows[i]].active_in_topic_array.indexOf(current_topic_id.toString()) === -1
+                        ) {
+                            this.form.get(this.rows[i]).clearValidators();
                             this.form.get(this.rows[i]).updateValueAndValidity();
+                            this.records[this.rows[i]].required_boolean = false;
+                            this.records[this.rows[i]].hidden = true;
+                        } else {
+                            this.records[this.rows[i]].hidden = false;
+                            if (this.records[this.rows[i]].required === 'on') {
+                                this.records[this.rows[i]].required_boolean = true;
+                                this.form.get(this.rows[i]).setValidators(forbiddenNullValue());
+                                this.form.get(this.rows[i]).updateValueAndValidity();
+                            }
                         }
                     }
-                }
-                if (this.records[this.rows[i]].parameters != null) {
-                    if (this.records[this.rows[i]].parameters.dadata === 1) {
+                    if (this.records[this.rows[i]].parameters != null) {
+                        if (this.records[this.rows[i]].parameters.dadata === 1) {
+                            this.hide_dadata(this.rows[i]);
+                        }
+                    }
+                    if (this.records[this.rows[i]].type === 'compose') {
                         this.hide_dadata(this.rows[i]);
                     }
                 }
-                if (this.records[this.rows[i]].type === 'compose') {
-                    this.hide_dadata(this.rows[i]);
-                }
-
             }
         }
     }
