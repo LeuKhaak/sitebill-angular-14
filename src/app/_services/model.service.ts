@@ -59,7 +59,7 @@ export class ModelService {
         this.navbar_hidden = false;
         this.toolbar_hidden = false;
         // console.log('ModelService constructor');
-        this.entity = new SitebillEntity;
+        this.entity = new SitebillEntity();
         this.entity.set_app_name(null);
         this.entity.set_table_name(null);
         this.entity.primary_key = null;
