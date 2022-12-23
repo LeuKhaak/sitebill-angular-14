@@ -12,7 +12,7 @@ import { locale as russian } from './i18n/ru';
 import { ModelService } from 'app/_services/model.service';
 import {SitebillEntity} from '../../../_models';
 import {FilterService} from "../../../_services/filter.service";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {Router} from "@angular/router";
@@ -25,7 +25,7 @@ import {Router} from "@angular/router";
 export class FrontSearchComponent
 {
     public entity: SitebillEntity;
-    searchInput: FormControl;
+    searchInput: UntypedFormControl;
     protected _unsubscribeAll: Subject<any>;
 
 
@@ -48,7 +48,7 @@ export class FrontSearchComponent
         this._unsubscribeAll = new Subject();
 
         this.entity = new SitebillEntity();
-        this.searchInput = new FormControl();
+        this.searchInput = new UntypedFormControl();
         this.setup_apps();
 
         this._fuseTranslationLoaderService.loadTranslations(english, russian);
@@ -69,7 +69,7 @@ export class FrontSearchComponent
     ngOnInit() {
         if (this.filterService.get_share_array(this.entity.get_app_name()) != null) {
             if (this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search'] != null) {
-                this.searchInput = new FormControl(this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search']);
+                this.searchInput = new UntypedFormControl(this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search']);
             }
         }
 

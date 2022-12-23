@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, Input, Output, EventEmitter }  from '@angular/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, Validators, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 import {Model} from 'app/model';
@@ -19,14 +19,14 @@ import {SitebillEntity} from "../../_models";
 export class SaveSearchComponent implements OnInit {
     filter_params_json: any;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     formErrors: any;
     dialogFormErrors: any;
     comment: any;
     declinePressed: boolean;
     declineProcessing: boolean;
 
-    dialogForm: FormGroup;
+    dialogForm: UntypedFormGroup;
 
     description:string;
     @Input() model: Model;
@@ -41,7 +41,7 @@ export class SaveSearchComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<SaveSearchComponent>,
         public modelService: ModelService,
         @Inject(APP_CONFIG) private config: AppConfig,

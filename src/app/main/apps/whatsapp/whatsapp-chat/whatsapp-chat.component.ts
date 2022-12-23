@@ -1,19 +1,19 @@
 import {AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Subject} from "rxjs";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {WhatsAppService} from "../whatsapp.service";
-import {ModelService} from "../../../../_services/model.service";
-import {takeUntil} from "rxjs/operators";
-import {ResponseState, SitebillResponse} from "../../../../_models/sitebill-response";
-import {WhatsappStateTypes} from "../types/whatsapp-state.types";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {SitebillSession} from "../../../../_models/sitebillsession";
-import {Chat, DialogPost, SendCallbackBundle} from "../types/whatsapp.types";
-import {Message} from "../types/venom-bot/model/message";
-import {ApiCall, ApiParams, SitebillEntity, SitebillModelItem} from "../../../../_models";
-import {SnackService} from "../../../../_services/snack.service";
+import {Subject} from 'rxjs';
+import {fuseAnimations} from '../../../../../@fuse/animations';
+import {WhatsAppService} from '../whatsapp.service';
+import {ModelService} from '../../../../_services/model.service';
+import {takeUntil} from 'rxjs/operators';
+import {ResponseState, SitebillResponse} from '../../../../_models/sitebill-response';
+import {WhatsappStateTypes} from '../types/whatsapp-state.types';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {SitebillSession} from '../../../../_models/sitebillsession';
+import {Chat, DialogPost, SendCallbackBundle} from '../types/whatsapp.types';
+import {Message} from '../types/venom-bot/model/message';
+import {ApiCall, ApiParams, SitebillEntity, SitebillModelItem} from '../../../../_models';
+import {SnackService} from '../../../../_services/snack.service';
 // import {promise} from "protractor";
-import {MessagesService} from "../../../../_services/messages.service";
+import {MessagesService} from '../../../../_services/messages.service';
 
 @Component({
     selector: 'whatsapp-chat',
@@ -29,15 +29,15 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
 
     public qr_image: SafeResourceUrl;
     private wait_qr_ms = 12000;
-    private qr_seconds: number = 0;
+    private qr_seconds = 0;
     private clearInterval: NodeJS.Timeout;
 
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
-    @Input("messages")
+    @Input()
     messages: any[];
 
-    @Input("sendCallbackBundle")
+    @Input()
     sendCallbackBundle: SendCallbackBundle;
 
     private chat: Chat;
@@ -57,7 +57,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
     }
 
 
-    initGetQrCodeProcess ( session: SitebillSession ) {
+    initGetQrCodeProcess( session: SitebillSession ): void {
         console.log('need qr code');
         this.state = WhatsappStateTypes.wait_qr;
         this.clearInterval = setInterval(this.incrementSeconds.bind(this), 1000);
@@ -68,16 +68,16 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
                     clearInterval(this.clearInterval);
                     this.drawQrCode(result.data);
                 });
-        }, this.wait_qr_ms)
+        }, this.wait_qr_ms);
     }
 
-    incrementSeconds() {
+    incrementSeconds(): void {
         this.qr_seconds += 1;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.scrollToBottom();
-        //this.getAllChatsGroups();
+        // this.getAllChatsGroups();
 
 /*
         this.whatsAppService.isConnected(this.modelService.sitebill_session)
@@ -109,7 +109,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
 
     }
 
-    getAllChatsGroups () {
+    getAllChatsGroups(): void {
         this.whatsAppService.getGroupMembers(null)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -122,13 +122,13 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
             );
     }
 
-    receiveChatSocketSubscriber(sendCallbackBundle: SendCallbackBundle) {
+    receiveChatSocketSubscriber(sendCallbackBundle: SendCallbackBundle): void {
         this.whatsAppService.receiveChatSocket(this.modelService.sitebill_session)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (result: Message ) => {
-                    if ( result.from == this.whatsAppService.normalizeNumber(sendCallbackBundle.phone) ) {
-                        this.updateChatMessagesOnServer([result], sendCallbackBundle)
+                    if ( result.from === this.whatsAppService.normalizeNumber(sendCallbackBundle.phone) ) {
+                        this.updateChatMessagesOnServer([result], sendCallbackBundle);
                         this.dialog.push(result);
                     }
                 },
@@ -139,7 +139,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
         this.subscribed = true;
     }
 
-    drawChat (sendCallbackBundle: SendCallbackBundle) {
+    drawChat(sendCallbackBundle: SendCallbackBundle): void {
         if ( this.whatsAppService.getMailingList().length > 0 ) {
             this.state = WhatsappStateTypes.chat;
             if ( sendCallbackBundle.phone ) {
@@ -172,48 +172,48 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
         }
     }
 
-    updateChatMessagesOnServer (messages: Message[], sendCallbackBundle: SendCallbackBundle) {
+    updateChatMessagesOnServer(messages: Message[], sendCallbackBundle: SendCallbackBundle): void {
         const client_id = sendCallbackBundle.entity.get_key_value();
         messages.forEach(item => this.messagesService.message(item, client_id, sendCallbackBundle.data_id));
     }
 
-    drawQrCode ( base64Qr: string ) {
+    drawQrCode( base64Qr: string ): void {
         this.state = WhatsappStateTypes.draw_qr;
         this.qr_image = this._sanitizer.bypassSecurityTrustResourceUrl(base64Qr);
     }
 
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         this.scrollToBottom();
     }
 
     scrollToBottom(): void {
         try {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch(err) { }
+        } catch (err) { }
     }
 
 
-    OnDestroy () {
+    OnDestroy(): void {
         console.log('OnDestroy');
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         clearInterval(this.clearInterval);
     }
 
-    async update_chat(dialog_post: DialogPost) {
-        let sendCallbackBundle = this.sendCallbackBundle;
+    async update_chat(dialog_post: DialogPost): Promise<void> {
+        const sendCallbackBundle = this.sendCallbackBundle;
         let result = null;
         if ( this.whatsAppService.getMailingList().length > 0 ) {
-            let phone_cache = [];
+            const phone_cache = [];
             for (const item of this.whatsAppService.getMailingList()) {
-                let mapped = Object.keys(item);
+                const mapped = Object.keys(item);
                 for (const column_item of mapped) {
-                    if ( column_item == 'phone' ) {
+                    if ( column_item === 'phone' ) {
                         if ( phone_cache.indexOf(item[column_item].value) < 0 ) {
                             phone_cache.push(item[column_item].value);
                             sendCallbackBundle.phone = item[column_item].value;
-                            sendCallbackBundle.entity.set_key_value(item[sendCallbackBundle.entity.get_primary_key()].value)
+                            sendCallbackBundle.entity.set_key_value(item[sendCallbackBundle.entity.get_primary_key()].value);
                             result = await this.sendPost(dialog_post, sendCallbackBundle, false ).catch((err) => {
                                 this._snackService.error('Ошибка при отправке на номер ' + sendCallbackBundle.phone);
                             });
@@ -226,7 +226,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
                 }
             }
         } else {
-            result = await this.sendPost(dialog_post, sendCallbackBundle,true).catch((err) => {
+            result = await this.sendPost(dialog_post, sendCallbackBundle, true).catch((err) => {
                 this._snackService.error('Ошибка при отправке на номер ' + sendCallbackBundle.phone);
             });
             if ( result ) {
@@ -237,7 +237,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
         this.whatsAppService.clearMailingAttachList();
     }
 
-    async getAllMessagesInChat (phone: string): Promise<Message[]> {
+    async getAllMessagesInChat(phone: string): Promise<Message[]> {
         return new Promise((resolve, reject) => {
             this.whatsAppService.getAllMessagesInChat(phone)
                 .pipe(takeUntil(this._unsubscribeAll))
@@ -247,30 +247,30 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
                     },
                     error => {
                         console.log(error);
-                        reject(new Error(error))
+                        reject(new Error(error));
                     }
                 );
-        })
+        });
     }
 
-    async sendPost (dialog_post: DialogPost, sendCallbackBundle: SendCallbackBundle, update_chat = true ) {
+    async sendPost(dialog_post: DialogPost, sendCallbackBundle: SendCallbackBundle, update_chat = true ): Promise<any> { 
         if ( dialog_post.entities ) {
             for (const item of dialog_post.entities) {
-                let data_id = item['id']['value']
+                const data_id = item['id']['value'];
 
-                const apiCall = <ApiCall> {
+                const apiCall = {
                     api: 'pdfreport',
                     name: 'pdfreport',
                     method: 'get_meta',
                     anonymous: true
-                };
-                const pdf_meta = await this.modelService.api_call_async(apiCall, {data_id: data_id})
-                let recursive_dialog_post = <DialogPost> {
+                } as ApiCall;
+                const pdf_meta = await this.modelService.api_call_async(apiCall, {data_id: data_id});
+                const recursive_dialog_post = {
                     message: dialog_post.message,
                     files: [pdf_meta['data']]
-                }
+                } as DialogPost;
                 sendCallbackBundle.data_id = data_id;
-                let result = await this.sendPost(recursive_dialog_post, sendCallbackBundle, false).catch((err) => {
+                const result = await this.sendPost(recursive_dialog_post, sendCallbackBundle, false).catch((err) => {
                     this._snackService.error('Ошибка при отправке файла ' + pdf_meta['data']['normal'] + ' на номер ' + sendCallbackBundle.phone);
                 });
                 if ( result ) {
@@ -281,7 +281,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
             }
             return new Promise((resolve, reject) => {
                 resolve('ok');
-            })
+            });
         }
 
         return new Promise((resolve, reject) => {
@@ -299,7 +299,7 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
                         },
                         error => {
                             console.log(error);
-                            reject(new Error(error))
+                            reject(new Error(error));
                         }
                     );
             }
@@ -315,14 +315,14 @@ export class WhatsAppChatComponent  implements OnInit, AfterViewChecked {
                         },
                         error => {
                             console.log(error);
-                            reject(new Error(error))
+                            reject(new Error(error));
                         }
                     );
             }
-        })
+        });
     }
 
-    getProgressInPercent() {
-        return Math.round((1 - ((this.wait_qr_ms - this.qr_seconds*1000)/this.wait_qr_ms))*100);
+    getProgressInPercent(): number {
+        return Math.round((1 - ((this.wait_qr_ms - this.qr_seconds * 1000) / this.wait_qr_ms)) * 100);
     }
 }

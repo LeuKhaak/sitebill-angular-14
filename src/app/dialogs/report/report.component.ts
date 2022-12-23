@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, Input, Output, EventEmitter } from '@angular/
 import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {Model} from 'app/model';
@@ -29,14 +29,14 @@ export class ReportComponent implements OnInit {
         'Autumn',
     ];
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     formErrors: any;
     declineFormErrors: any;
     comment: any;
     declinePressed: boolean;
     declineProcessing: boolean;
 
-    declineForm: FormGroup;
+    declineForm: UntypedFormGroup;
 
     description: string;
     @Input() model: Model;
@@ -54,7 +54,7 @@ export class ReportComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<ReportComponent>,
         private _httpClient: HttpClient,
         public modelService: ModelService,

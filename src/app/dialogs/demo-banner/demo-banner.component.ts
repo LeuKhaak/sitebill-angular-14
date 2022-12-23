@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Subject} from 'rxjs';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 
 import {Model} from 'app/model';
@@ -18,7 +18,7 @@ import {Router} from '@angular/router';
     styleUrls: ['./demo-banner.component.css']
 })
 export class DemoBannerComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     dialogFormErrors: any;
     comment: any;
     description: string;
@@ -34,7 +34,7 @@ export class DemoBannerComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<DemoBannerComponent>,
         protected dialog: MatDialog,
         public modelService: ModelService,

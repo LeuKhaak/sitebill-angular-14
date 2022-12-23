@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} f
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 import {ChatService, CommentsBlockMeta} from 'app/main/apps/chat/chat.service';
 import {APP_CONFIG, AppConfig} from 'app/app.config.module';
@@ -23,7 +23,7 @@ import {StorageService} from '../../../_services/storage.service';
 })
 export class ViewModalComponent extends FormComponent implements OnInit {
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     rows: any[];
     records: any[];
     api_url: string;
@@ -38,7 +38,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
         protected _chatService: ChatService,
         protected dialogRef: MatDialogRef<FormComponent>,
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

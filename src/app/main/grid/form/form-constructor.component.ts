@@ -8,7 +8,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import {ModelService} from '../../../_services/model.service';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {SnackService} from '../../../_services/snack.service';
 import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
 import {FormType, SitebillEntity, SitebillModelItem} from '../../../_models';
@@ -53,7 +53,7 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
 
     constructor(
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
@@ -77,7 +77,7 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
         this.savedNumber = +storageService.getItem('numberOfColumns');
         this.numberOfColumns = this.savedNumber ? this.savedNumber : 3;
     }
-    form: FormGroup;
+    form: UntypedFormGroup;
     public _data: SitebillEntity;
     public error_message: string = null;
     protected _unsubscribeAll: Subject<any>;
@@ -310,7 +310,7 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.rows.length; i++) {
             if (this.records[this.rows[i]]) {
                 // console.log(this.records[this.rows[i]].type);
-                const form_control_item = new FormControl(this.records[this.rows[i]].value);
+                const form_control_item = new UntypedFormControl(this.records[this.rows[i]].value);
                 form_control_item.clearValidators();
                 this.records[this.rows[i]].required_boolean = false;
                 if (this._data.get_hidden_column_edit(this.rows[i])) {

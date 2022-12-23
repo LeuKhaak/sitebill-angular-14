@@ -8,7 +8,7 @@ import {ModelService} from 'app/_services/model.service';
 import {NgSelectConfig} from '@ng-select/ng-select';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 interface Dict {
     data: any[];
@@ -23,7 +23,7 @@ export class SelectionFilterComponent {
 
     // @Input() parentForm!: FormGroup;
     @Input() filterName;
-    formGroup: FormGroup ;
+    formGroup: UntypedFormGroup ;
     formName;
 
     options: any;

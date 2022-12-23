@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, isDevMode, ViewEncapsulation, Input, Output, 
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, Validators, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from "@angular/forms";
 import {FuseConfigService} from '@fuse/services/config.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -19,7 +19,7 @@ import { ModelService } from 'app/_services/model.service';
 })
 export class ControlElementsComponent implements OnInit {
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     formErrors: any;
     declineFormErrors: any;
     comment: any;
@@ -32,7 +32,7 @@ export class ControlElementsComponent implements OnInit {
     item: any[];
     current_active_value: any;
     
-    declineForm: FormGroup;
+    declineForm: UntypedFormGroup;
     
     description:string;
     @Input() model: Model;
@@ -50,7 +50,7 @@ export class ControlElementsComponent implements OnInit {
     
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private route: ActivatedRoute,
         private _httpClient: HttpClient,
         @Inject(APP_CONFIG) private config: AppConfig,

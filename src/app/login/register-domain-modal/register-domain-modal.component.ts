@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {ModelService} from '../../_services/model.service';
 import {SnackService} from '../../_services/snack.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {FuseNavigationService} from '../../../@fuse/components/navigation/navigation.service';
 import {AlertService, AuthenticationService} from '../../_services';
@@ -35,9 +35,9 @@ export interface Progress {
 })
 export class RegisterDomainModalComponent
 {
-    loginForm: FormGroup;
+    loginForm: UntypedFormGroup;
     loginFormErrors: any;
-    valid_domain_through_email: FormGroup;
+    valid_domain_through_email: UntypedFormGroup;
     loading = false;
     register_success = false;
     hide_domain: boolean = false;
@@ -59,7 +59,7 @@ export class RegisterDomainModalComponent
         private http: HttpClient,
         private elRef: ElementRef,
         private modelService: ModelService,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         @Inject(DOCUMENT) private document: any,
         private _fuseConfigService: FuseConfigService,
         @Inject(APP_CONFIG) private config: AppConfig,

@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 // import {Course} from "../model/course";
-import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from '@angular/forms';
 import * as moment from 'moment';
 
 import {Model} from '../model';
@@ -21,7 +21,7 @@ import { ModelService } from 'app/_services/model.service';
 })
 export class CourseDialogComponent implements OnInit {
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     description: string;
     @Input() model: Model;
     rows: any[];
@@ -37,7 +37,7 @@ export class CourseDialogComponent implements OnInit {
 
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<CourseDialogComponent>,
         private _httpClient: HttpClient,
         private modelSerivce: ModelService,

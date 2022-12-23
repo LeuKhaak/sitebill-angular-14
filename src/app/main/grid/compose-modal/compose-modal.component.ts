@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {ModelService} from '../../../_services/model.service';
 import {SnackService} from '../../../_services/snack.service';
@@ -16,12 +16,12 @@ import {ChangeContext} from 'ng5-slider';
     animations: fuseAnimations
 })
 export class ComposeModalComponent  implements OnInit {
-    valid_domain_through_email: FormGroup;
+    valid_domain_through_email: UntypedFormGroup;
     loading = false;
     show_login: boolean;
     private entity: SitebillEntity;
     form_compose_columns: any[];
-    private composeForm: FormGroup;
+    private composeForm: UntypedFormGroup;
     public compose_form_complete: boolean;
     options_storage = {};
     options_storage_type = {};
@@ -33,7 +33,7 @@ export class ComposeModalComponent  implements OnInit {
 
     constructor(
         protected modelService: ModelService,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private filterService: FilterService,
         private dialogRef: MatDialogRef<ComposeModalComponent>,
         protected cdr: ChangeDetectorRef,
@@ -135,7 +135,7 @@ export class ComposeModalComponent  implements OnInit {
                                 this.load_dictionary(compose_columns[i]);
                             }
 
-                            const form_control_item = new FormControl(compose_columns[i]);
+                            const form_control_item = new UntypedFormControl(compose_columns[i]);
                             form_control_item.clearValidators();
                             this.options_storage_type[compose_columns[i]] = 'select';
                             this.options_storage[compose_columns[i]] = [];

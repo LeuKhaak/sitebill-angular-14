@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {RouterModule} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import {SharedModule} from '../../../shared.module';
 import {AppsDataComponent} from './apps-data.component';
 import {AppsDataSidebarComponent} from './apps-data-sidebar/apps-data-sidebar.component';
@@ -8,7 +8,7 @@ import {GridModule} from '../../grid/grid.module';
 import {CommonModule} from '@angular/common';
 import {AppsDataService} from './apps-data.service';
 
-const routes = [
+const routes: Routes = [
     {path: '', redirectTo: 'my', pathMatch: 'full'},
     {
         path     : 'memorylist/:memorylist_id',

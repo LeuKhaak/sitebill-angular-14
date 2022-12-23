@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnChanges, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 
 import {ModelService} from 'app/_services/model.service';
 
@@ -31,7 +31,7 @@ export class ModelFormStaticComponent extends FormStaticComponent implements OnI
 
     constructor(
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

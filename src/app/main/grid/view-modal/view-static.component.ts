@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Outpu
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 import {ChatService} from 'app/main/apps/chat/chat.service';
 import {APP_CONFIG, AppConfig} from 'app/app.config.module';
@@ -31,7 +31,7 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
     entity: SitebillEntity;
 
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     rows: any[];
     records: any[];
     api_url: string;
@@ -45,7 +45,7 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
     constructor(
         protected _chatService: ChatService,
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

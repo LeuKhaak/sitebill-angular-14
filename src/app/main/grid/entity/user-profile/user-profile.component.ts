@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {SitebillEntity} from '../../../../_models';
@@ -28,7 +28,7 @@ export class UserProfileComponent extends ViewStaticComponent implements OnInit 
     constructor(
         protected _chatService: ChatService,
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,

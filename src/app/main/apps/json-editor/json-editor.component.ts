@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output, OnDestroy, OnInit} from '@angula
 
 import { ModelService } from 'app/_services/model.service';
 import {Subject, Subscription} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {JsonParams} from '../../../_models';
 import {takeUntil} from 'rxjs/operators';
 import {forbiddenNullValue} from '../../grid/form/form-constructor.component';
@@ -21,7 +21,7 @@ interface Preset {
 export class JsonEditorComponent implements OnInit, OnDestroy
 {
     protected _unsubscribeAll: Subject<any>;
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     @Input()
     json: JsonParams;
@@ -35,7 +35,7 @@ export class JsonEditorComponent implements OnInit, OnDestroy
 
     constructor(
         protected modelService: ModelService,
-        protected _formBuilder: FormBuilder,
+        protected _formBuilder: UntypedFormBuilder,
     ) {
         this.form = this._formBuilder.group({});
         this._unsubscribeAll = new Subject();
@@ -167,11 +167,11 @@ export class JsonEditorComponent implements OnInit, OnDestroy
         this.unsubscribeForm();
         this.form = this._formBuilder.group({});
         for (const [key_obj, value_obj] of Object.entries(json)) {
-            let form_control_item = new FormControl(key_obj);
+            let form_control_item = new UntypedFormControl(key_obj);
             form_control_item.setValidators(forbiddenNullValue());
             this.form.addControl(this.getKeyName(i), form_control_item);
 
-            form_control_item = new FormControl(value_obj);
+            form_control_item = new UntypedFormControl(value_obj);
             form_control_item.setValidators(forbiddenNullValue());
             this.form.addControl(this.getValueName(i), form_control_item);
             i++;

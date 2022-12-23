@@ -34,7 +34,7 @@ import {ConfirmComponent} from 'app/dialogs/confirm/confirm.component';
 import {SnackService} from 'app/_services/snack.service';
 
 import localeRu from '@angular/common/locales/ru';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {GalleryModalComponent} from '../gallery/modal/gallery-modal.component';
 import * as moment from 'moment';
 import {CommonTemplateComponent} from './common-template/common-template.component';
@@ -103,7 +103,7 @@ export class GridComponent implements OnInit, OnDestroy
     page = new Page();
     entity: SitebillEntity;
     refresh_complete = false;
-    searchInput: FormControl;
+    searchInput: UntypedFormControl;
     error = false;
     error_message: string;
     selectionType = '';
@@ -407,7 +407,7 @@ export class GridComponent implements OnInit, OnDestroy
 
         this.page.pageNumber = 0;
         this.page.size = 0;
-        this.searchInput = new FormControl('');
+        this.searchInput = new UntypedFormControl('');
         this.disable_wild_search = false;
 
 
@@ -474,7 +474,7 @@ export class GridComponent implements OnInit, OnDestroy
 
         if (this.filterService.get_share_array(this.entity.get_app_name()) != null) {
             if (this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search'] != null) {
-                this.searchInput = new FormControl(this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search']);
+                this.searchInput = new UntypedFormControl(this.filterService.get_share_array(this.entity.get_app_name())['concatenate_search']);
             }
 
             if (this.filterService.get_share_array(this.entity.get_app_name())[this.date_range_key] != null) {

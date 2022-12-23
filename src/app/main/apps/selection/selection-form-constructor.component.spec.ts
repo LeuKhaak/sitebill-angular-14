@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SelectionFormConstructorComponent } from './selection-form-constructor.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModelService } from 'app/_services/model.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import { SnackService } from 'app/_services/snack.service';
 import { FilterService } from 'app/_services/filter.service';
 import { Bitrix24Service } from 'app/integrations/bitrix24/bitrix24.service';
@@ -38,7 +38,7 @@ xdescribe('FormConstructorComponent', () => {
         ['init_input_parameters', 'is_bitrix24_inited']);
     const fakeStorageService = jasmine.createSpyObj('fakeStorageService', ['getItem', 'setItem']);
 
-    fakeFormBuilder.group.and.returnValue(new FormGroup({}));
+    fakeFormBuilder.group.and.returnValue(new UntypedFormGroup({}));
 
     beforeEach(async () => { // _unsubscribeAll
         await TestBed.configureTestingModule({
@@ -46,7 +46,7 @@ xdescribe('FormConstructorComponent', () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {provide: ModelService, useValue: fakeModelService},
-                {provide: FormBuilder, useValue: fakeFormBuilder},
+                {provide: UntypedFormBuilder, useValue: fakeFormBuilder},
                 {provide: SnackService, useValue: fakeSnackService},
                 {provide: MatDialog, useValue: fakeMatDialog},
                 {provide: FilterService, useValue: fakeFilterService},
