@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, Input, ElementRef} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, Input, ElementRef, HostBinding} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {PlatformLocation } from '@angular/common';
@@ -34,6 +34,8 @@ export class AppComponent implements OnInit, OnDestroy
     fuseConfig: any;
     navigation: any;
     @Input() hero: any;
+
+    @HostBinding('class') hostClass: string;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -73,13 +75,13 @@ export class AppComponent implements OnInit, OnDestroy
     {
         this.firstRun = true;
         /*
-        const conf = {
-            layout: {
-                sidepanel: {
-                    hidden: true,
-                }
-            }
-        }
+         const conf = {
+         layout: {
+         sidepanel: {
+         hidden: true,
+         }
+         }
+         }
          */
         // this._fuseConfigService.setConfig(conf);
         if (this.elRef.nativeElement.getAttribute('navbar_hidden') === 'true') {
@@ -153,10 +155,10 @@ export class AppComponent implements OnInit, OnDestroy
         // been selected and there is no way to force it, so we overcome the issue by switching
         // the default language back and forth.
 
-         // setTimeout(() => {
-         //    this._translateService.setDefaultLang('en');
-         //    this._translateService.setDefaultLang('tr');
-         // });
+        // setTimeout(() => {
+        //    this._translateService.setDefaultLang('en');
+        //    this._translateService.setDefaultLang('tr');
+        // });
 
 
         /**
@@ -250,7 +252,8 @@ export class AppComponent implements OnInit, OnDestroy
             // this.fuseConfig.colorTheme = 'theme-default';
             // this.fuseConfig.colorTheme = 'theme-purple-green';
             if (theme === 'theme-red-light') {
-                require('style-loader!app/custom-theme/ng_select_red.css'); // Can't resolve 'style-loader' ???
+                // require('style-loader!app/custom-theme/ng_select_red.scss'); // Can't resolve 'style-loader' ???
+                this.hostClass = 'theme-red-light';
             }
         } else {
             this.fuseConfig.colorTheme = 'theme-default';
@@ -277,24 +280,24 @@ export class AppComponent implements OnInit, OnDestroy
 
         this.document.body.classList.add(this.fuseConfig.colorTheme);
         /*
-        this.modelService.need_reload_emitter.subscribe(
-            (result: any) => {
-                if ( result === true ) {
-                    console.log('start reload window');
-                    if ( localStorage.getItem('sitebill_reloaded')  !== 'true') {
-                        localStorage.setItem('sitebill_reloaded', 'true');
-                        //this.document.location.reload();
-                    }
-                }
-            },
-            error => {
-                console.log('error');
-                console.log(error);
-            },
-            complete => {
-                console.log('need_reload_emitter complete')
-            }
-        );
+         this.modelService.need_reload_emitter.subscribe(
+         (result: any) => {
+         if ( result === true ) {
+         console.log('start reload window');
+         if ( localStorage.getItem('sitebill_reloaded')  !== 'true') {
+         localStorage.setItem('sitebill_reloaded', 'true');
+         //this.document.location.reload();
+         }
+         }
+         },
+         error => {
+         console.log('error');
+         console.log(error);
+         },
+         complete => {
+         console.log('need_reload_emitter complete')
+         }
+         );
          */
         if ( this.modelService.getDomConfigValue('standalone_mode') ) {
         } else {
