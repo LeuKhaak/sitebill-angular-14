@@ -24,6 +24,7 @@
         <!--    <div [ngClass]="{rectangle: calendarHidden}"></div>-->
             <ng-template #clearDatepicker>
                 <mat-icon class="toolbar__daterange-clear" matSuffix
+                          matTooltip="Очистить интервал выбора дат"
                           (click)="clear_selected_date_filter(date_range_key)">close
                 </mat-icon>
             </ng-template>

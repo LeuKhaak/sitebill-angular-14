@@ -1,4 +1,4 @@
-@import "src/@fuse/scss/fuse";
+@import "../../../../@fuse/scss/fuse";
 
 
 .interval ::ng-deep .mat-form-field-wrapper {
@@ -9,8 +9,22 @@
 .interval ::ng-deep .mat-form-field-infix {
     padding: 0 !important;
     margin: 0 !important;
+    input {
+        font-size: 15px !important;
+    }
+}
+
+.interval ::ng-deep .mat-form-field-suffix {
+    .toolbar__daterange-clear {
+       cursor: pointer;
+    }
 }
 
 .interval ::ng-deep .mat-form-field-underline {
-    display: none;
+    // display: none;
+    position: static;
+}
+
+.interval ::ng-deep .md-drppicker {
+    left: -40px !important;
 }

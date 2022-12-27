@@ -241,38 +241,45 @@
                     <!-- TOOLBAR -->
                     <div class="angular-toolbar" fxLayout="row" fxLayoutAlign="space-between center" fxFlexOrder="3">
 
+                        <button *ngIf="!disable_refresh_button" mat-icon-button (click)="goToSelectDate()"
+                                matTooltip="Перейти к выбору дат" class="mb-4">
+                            <mat-icon>calendar_today</mat-icon>
+                        </button>
+                      <app-interval [entity]="entity" style="width: 100%" *ngIf="!calendarHidden"
+                                    [ngClass]="{calendar: !calendarHidden}" (deleteDataFilter)="deleteDataFilter()">
+                      </app-interval>
 
                         <!--                            БЕЛАЯ ЛИНИЯ см ниже -->
-                        <mat-form-field class="date-range toolbar__daterange" *ngIf="date_range_enable"
-                                        [ngClass]="{calendar: getCalendarStyle()}">
-                            <input autocomplete="off"
-                                   matTooltip="Выбрать период времени для отображения записей"
-                                   matInput
-                                   type="text"
-                                   ngxDaterangepickerMd
-                                   [ranges]="ranges"
-                                   opens="left"
-                                   [locale]="date_range_locale"
-                                   (change)="date_range_change($event, date_range_key)"
-                                   alwaysShowCalendars="true"
-                                   [(ngModel)]="selected_date_filter"
-                                   class="date-range-control"/>
-                            <mat-icon *ngIf="!selected_date_filter_has_values; else clearDatepicker" matSuffix
-                                      aria-label="Перейти к выбору дат"
-                                      matTooltip="Перейти к выбору дат"
-                                      style="cursor: pointer"
-                                      (click)="goToSelectDate()">
-                                calendar_today
-                            </mat-icon>
-<!--                            <div [ngClass]="{rectangle: calendarHidden}"></div>-->
-                            <ng-template #clearDatepicker>
-                                <mat-icon class="toolbar__daterange-clear clearSelectedDate" color="white" matSuffix
-                                          aria-label="Очистить поле выбора дат"
-                                          matTooltip="Очистить поле выбора дат"
-                                          (click)="clear_selected_date_filter(date_range_key)">close
-                                </mat-icon>
-                            </ng-template>
-                        </mat-form-field>
+<!--                        <mat-form-field class="date-range toolbar__daterange" *ngIf="date_range_enable"-->
+<!--                                        [ngClass]="{calendar: getCalendarStyle()}">-->
+<!--                            <input autocomplete="off"-->
+<!--                                   matTooltip="Выбрать период времени для отображения записей"-->
+<!--                                   matInput-->
+<!--                                   type="text"-->
+<!--                                   ngxDaterangepickerMd-->
+<!--                                   [ranges]="ranges"-->
+<!--                                   opens="left"-->
+<!--                                   [locale]="date_range_locale"-->
+<!--                                   (change)="date_range_change($event, date_range_key)"-->
+<!--                                   alwaysShowCalendars="true"-->
+<!--                                   [(ngModel)]="selected_date_filter"-->
+<!--                                   class="date-range-control"/>-->
+<!--                            <mat-icon *ngIf="!selected_date_filter_has_values; else clearDatepicker" matSuffix-->
+<!--                                      aria-label="Перейти к выбору дат"-->
+<!--                                      matTooltip="Перейти к выбору дат"-->
+<!--                                      style="cursor: pointer"-->
+<!--                                      (click)="goToSelectDate()">-->
+<!--                                calendar_today-->
+<!--                            </mat-icon>                            -->
+<!--&lt;!&ndash;                            <div [ngClass]="{rectangle: calendarHidden}"></div>&ndash;&gt;-->
+<!--                            <ng-template #clearDatepicker>-->
+<!--                                <mat-icon class="toolbar__daterange-clear clearSelectedDate" color="white" matSuffix-->
+<!--                                          aria-label="Очистить поле выбора дат"-->
+<!--                                          matTooltip="Очистить поле выбора дат"-->
+<!--                                          (click)="clear_selected_date_filter(date_range_key)">close-->
+<!--                                </mat-icon>-->
+<!--                            </ng-template>-->
+<!--                        </mat-form-field>-->
                         <!--                    <button *ngIf="selected_date_filter_has_values" mat-icon-button matTooltip="Очистить фильтр по дате"-->
                         <!--                            (click)="clear_selected_date_filter(date_range_key)">-->
                         <!--                        <mat-icon color="white" matSuffix (click)="clear_selected_date_filter(date_range_key)">close</mat-icon>-->

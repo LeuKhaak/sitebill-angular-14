@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Inject,
+    OnInit,
+    Output
+} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
 
@@ -27,6 +35,8 @@ import {LocaleConfig} from 'ngx-daterangepicker-material';
 })
 export class SelectionFormComponent extends SelectionFormConstructorComponent implements OnInit {
 
+    // @Output() deleteDataFilter = new EventEmitter();
+
     constructor(
         protected dialogRef: MatDialogRef<SelectionFormComponent>,
         protected modelService: ModelService,
@@ -36,7 +46,7 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
         @Inject(APP_CONFIG) protected config: AppConfig,
-        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean},
+        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean, deleteDataFilter: any},
         protected cdr: ChangeDetectorRef,
         protected storageService: StorageService
     ) {
@@ -88,5 +98,12 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
             this._snackService.message('Нет доступа к добавлению/редактированию ' + entity.get_title(), 5000);
         }
     }
+
+    deleteDataFilter(): void {
+        console.log(this._data);
+        this._data.deleteDataFilter();
+
+    }
+
 }
 

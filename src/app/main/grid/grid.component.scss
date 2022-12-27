@@ -1,7 +1,14 @@
 @use '@angular/material' as mat;
-@import "src/@fuse/scss/fuse";
+@import "../../../@fuse/scss/fuse";
 
 mat-sidenav-container {
+    //.first {
+    //    font-size: 60px;
+    //    color: red;
+    //    top: 220px;
+    //    position: absolute;
+    //    z-index: 4;
+    //}
     width: 100%;
     height: 100%;
     // position: relative;
@@ -176,6 +183,8 @@ mat-sidenav-container {
 
 #ngx-datatable {
     .header-standalone-wrapper {
+        position: relative;
+        z-index: 5;
         .header-standalone-top {
             .select-button-wrapper {
                 display: flex;
@@ -221,9 +230,13 @@ mat-sidenav-container {
         }
 
         .header-standalone {
+            position: relative;
+            z-index: 5;
             .header-content {
+                // background-color: #2E7D32; // TMP
                 justify-content: space-between;
                 position: relative;
+                z-index: 100;
 
                 .hidden-lt-md,
                 .amber {
@@ -383,17 +396,17 @@ mat-sidenav-container {
                     }
 
                     ::ng-deep .md-drppicker {
-                        width: 290px !important;
-                        position: fixed;
-                        left: 50% !important;
-                        top: 50% !important;
-                        max-height: 98vh;
-                        overflow: auto;
-                        margin: 0;
-
-                        &.shown {
-                            transform: translate(-50%, -50%);
-                        }
+                        //width: 290px !important;
+                        //position: fixed;
+                        //left: 50% !important;
+                        //top: 50% !important;
+                        //max-height: 98vh;
+                        //overflow: auto;
+                        //margin: 0;
+                        //
+                        //&.shown {
+                        //    transform: translate(-50%, -50%);
+                        //}
 
                         .ranges {
                             overflow-x: auto;
@@ -484,16 +497,50 @@ mat-sidenav-container {
         max-height: calc(60vh);
     }
 }
-
+//.angular-toolbar ::ng-deep  {
+//    border: solid 3px orange;
+//    z-index: 110;
+//    position: relative;
+//    .mat-form-field {
+//        border: solid 3px green;
+//        top: 40px !important;
+//        left: 30px !important;
+//        z-index: 400 !important;
+//        position: relative !important;
+//        .mat-form-field-wrapper {
+//            border: solid 3px red;
+//            z-index: 500 !important;
+//            position: relative !important;
+//            top: 20px;
+//            left: 10px;
+//            .mat-form-field-flex {
+//                z-index: 100 !important;
+//                position: relative !important;
+//                .mat-form-field-infix {
+//                    // z-index: 140;
+//                    // position: relative;
+//                    .ng-star-inserted {
+//                        z-index: 150 !important;
+//                        position: relative !important;
+//                        .md-drppicker {
+//                            z-index: 1000 !important;
+//                            position: absolute !important;
+//                            top: 200px;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 .angular-toolbar {
-    position: relative;
     @include media-breakpoint('lt-md') {
         padding-left: 15px;
     }
     // margin: 0 0 0 auto;
     .date-range {
-        z-index: 10;
+        z-index: 100;
         position: relative;
         top: 11px;
         left: 0;
@@ -522,6 +569,11 @@ mat-sidenav-container {
 
 .date-range ::ng-deep .mat-form-field-wrapper {
     max-width: 190px;
+}
+
+.date-range ::ng-deep .md-drppicker {
+    //left: -100px !important;
+    //z-index: 2000 !important;
 }
 
 .date-range ::ng-deep .mat-form-field-flex {

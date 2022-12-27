@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
 import {LocaleConfig} from 'ngx-daterangepicker-material';
 import {FilterService} from '../../../_services/filter.service';
@@ -13,6 +13,8 @@ export class IntervalComponent implements OnInit {
 
   // @Input() filterName;
   @Input() entity: SitebillEntity;
+
+  @Output() deleteDataFilter = new EventEmitter();
   calendarHidden = false;
   date_range_enable = true;
   date_range_key: string;
@@ -57,6 +59,8 @@ export class IntervalComponent implements OnInit {
     clear_selected_date_filter(key) {
       this.selected_date_filter = null;
       this.selected_date_filter_has_values = false;
+      this.deleteDataFilter.emit();
+      console.log('DEL-INTERVAL');
     }
 
     selectItem(value): void {
