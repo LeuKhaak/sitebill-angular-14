@@ -664,6 +664,11 @@ export class GridComponent implements OnInit, OnDestroy
         this.clear_selected_date_filter(this.date_range_key);
     }
 
+    // deleteDataFilterForSelection(arg): void {
+    //     console.log('SSSS');
+    //     this.clear_selected_date_filter(arg);
+    // }
+
     selectMy(): void {
         if (!this.activeMy) {
             this.appsDataService.setActiveMenuItem(this.my);
@@ -1205,7 +1210,7 @@ export class GridComponent implements OnInit, OnDestroy
         dialogConfig.data =  {
             entity: this.entity,
             selectionMode: true,
-            deleteDataFilter: this.deleteDataFilter
+            date_range_key: this.date_range_key
         };
         dialogConfig.panelClass = 'regular-modal';
         // console.log(dialogConfig.data);

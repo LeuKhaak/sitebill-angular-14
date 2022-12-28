@@ -35,8 +35,6 @@ import {LocaleConfig} from 'ngx-daterangepicker-material';
 })
 export class SelectionFormComponent extends SelectionFormConstructorComponent implements OnInit {
 
-    // @Output() deleteDataFilter = new EventEmitter();
-
     constructor(
         protected dialogRef: MatDialogRef<SelectionFormComponent>,
         protected modelService: ModelService,
@@ -46,7 +44,7 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
         @Inject(APP_CONFIG) protected config: AppConfig,
-        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean, deleteDataFilter: any},
+        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean, date_range_key: string},
         protected cdr: ChangeDetectorRef,
         protected storageService: StorageService
     ) {
@@ -100,9 +98,8 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
     }
 
     deleteDataFilter(): void {
-        console.log(this._data);
-        this._data.deleteDataFilter();
-
+        const event = null;
+        this.filterService.share_data(this.entity, this._data.date_range_key, event);
     }
 
 }

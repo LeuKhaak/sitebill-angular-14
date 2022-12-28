@@ -60,7 +60,6 @@ export class IntervalComponent implements OnInit {
       this.selected_date_filter = null;
       this.selected_date_filter_has_values = false;
       this.deleteDataFilter.emit();
-      console.log('DEL-INTERVAL');
     }
 
     selectItem(value): void {
@@ -75,6 +74,7 @@ export class IntervalComponent implements OnInit {
                 this.filterService.share_data(this.entity, 'date_added', val);
             }
         }
+        console.log('INTERVAL', this.date_range_locale);
     }
 
 }
