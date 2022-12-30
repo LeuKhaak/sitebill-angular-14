@@ -18,7 +18,7 @@ export class ImageService {
         this.OnShare.emit(value);
     }
 
-    deleteImage(model_name, key_name, key_value, image_id, field_name) {
+    deleteImage(model_name, key_name, key_value, image_id, field_name): any { // any ???
         const body = {
             layer: 'native_ajax',
             action: 'dz_imagework',
@@ -37,7 +37,7 @@ export class ImageService {
         );
     }
 
-    deleteAllImages(model_name, key_name, key_value, field_name) {
+    deleteAllImages(model_name, key_name, key_value, field_name): any { // any ???
         const body = {
             layer: 'native_ajax',
             action: 'dz_imagework',
@@ -61,7 +61,7 @@ export class ImageService {
         image_id,
         direction,
         field_name
-    ) {
+    ): any { // any ???
         let body = {};
         if (direction === 'make_main') {
             body = {
@@ -102,7 +102,7 @@ export class ImageService {
         image_id,
         rot_dir,
         field_name
-    ) {
+    ): any { // any ???
         let body = {};
         body = {
             layer: 'native_ajax',

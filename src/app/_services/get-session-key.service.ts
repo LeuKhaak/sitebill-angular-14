@@ -6,9 +6,11 @@ import {Subject, timer} from 'rxjs';
 import {Router} from '@angular/router';
 import {StorageService} from './storage.service';
 import {FuseConfigService} from '../../@fuse/services/config.service';
+import {ConfigService} from './config.service';
 import {SnackService} from './snack.service';
 import {GetApiUrlService} from './get-api-url.service';
 import {UiService} from './ui.service';
+import {ModelRedirectService} from './model-redirect.service';
 
 @Injectable()
 export class GetSessionKeyService {
@@ -17,17 +19,13 @@ export class GetSessionKeyService {
     protected _unsubscribeAll: Subject<any>;
     private modelRedirect = true;
     private needReload = false;
-    private domSitebillConfig: any;
     private nobodyMode = false;
     private currentUserProfile: UserProfile;
     private nobodyFirstLogin = false;
     private sitebillConfig: any;
-    private configLoaded: boolean;
-    public initConfigComplete = false;
 
     @Output() needReloadEmitter: EventEmitter<any> = new EventEmitter();
     @Output() validUserEmitter: EventEmitter<any> = new EventEmitter();
-    @Output() configLoadedEmitter: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private http: HttpClient,
@@ -36,7 +34,9 @@ export class GetSessionKeyService {
         protected _snackService: SnackService,
         protected getApiUrlService: GetApiUrlService,
         protected uiService: UiService,
+        protected configService: ConfigService,
         protected _fuseConfigService: FuseConfigService,
+        protected modelRedirectService: ModelRedirectService,
     ) {
         this._unsubscribeAll = new Subject();
         this.currentUser = JSON.parse(this.storageService.getItem('currentUser')) || [];
@@ -44,7 +44,7 @@ export class GetSessionKeyService {
         this.currentUserProfile = new UserProfile();
     }
 
-    get_session_key_safe() {
+    get_session_key_safe(): string {
         const sessionKey = this.get_session_key();
         if (!this.is_validated_session_key()) {
             this.validateKey(sessionKey)
@@ -52,14 +52,14 @@ export class GetSessionKeyService {
                 .subscribe((result: any) => {
                     if (result.error === 'check_session_key_failed') {
                         console.log('check_session_key_failed need reload');
-                        if ( this.is_model_redirect_enabled() ) {
+                        if ( this.modelRedirectService.is_model_redirect_enabled() ) {
                             console.log('reset storage');
                             this.reset_local_user_storage();
                             const refreshUrl = this.router.url;
                             this.enable_need_reload('get_session_key_safe');
                             this.router.navigate([refreshUrl]);
                         }
-                        if ( this.getDomConfigValue('standalone_mode' ) ) {
+                        if ( this.configService.getDomConfigValue('standalone_mode' ) ) {
                             this.reset_local_user_storage();
                             this.needReloadEmitter.emit(true);
                         }
@@ -69,14 +69,14 @@ export class GetSessionKeyService {
                 });
         }
         if (sessionKey == null) {
-            if ( this.is_model_redirect_enabled() ) {
+            if ( this.modelRedirectService.is_model_redirect_enabled() ) {
                 this.logout();
             }
         }
         return sessionKey;
     }
 
-    get_session_key() {
+    get_session_key(): string {
         try {
             if (this.getApiUrlService.get_current_entity().get_app_session_key() != null) {
                 return this.getApiUrlService.get_current_entity().get_app_session_key();
@@ -94,20 +94,17 @@ export class GetSessionKeyService {
         return this.currentUser.session_key;
     }
 
-    is_validated_session_key() {
+    is_validated_session_key(): boolean {
         // console.log('is_validated_session_key');
         return this.sessionKeyValidated;
     }
 
-    validateKey(sessionKey) {
+    validateKey(sessionKey): any { // any ???
         const modelName = 'data';
         const primaryKey = 'id';
         const keyValue = 1;
         const loadDataRequest = {action: 'model', do: 'load_data', model_name: modelName, primary_key: primaryKey, key_value: keyValue, session_key: sessionKey};
         return this.http.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, loadDataRequest);
-    }
-    is_model_redirect_enabled(): boolean {
-        return this.modelRedirect;
     }
 
     reset_local_user_storage(): void {
@@ -135,7 +132,7 @@ export class GetSessionKeyService {
         this.sessionKeyValidated = true;
     }
 
-    get_oauth_user_profile() {
+    get_oauth_user_profile(): any { // any ???
         const loadDataRequest = {
             action: 'oauth',
             do: 'load_my_profile',
@@ -144,7 +141,7 @@ export class GetSessionKeyService {
         return this.http.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, loadDataRequest);
     }
 
-    load_current_user_profile() {
+    load_current_user_profile(): void {
         this.get_oauth_user_profile()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
@@ -174,7 +171,7 @@ export class GetSessionKeyService {
             });
     }
 
-    get_nobody_mode() {
+    get_nobody_mode(): boolean {
         return this.nobodyMode;
     }
 
@@ -186,7 +183,7 @@ export class GetSessionKeyService {
         this.nobodyMode = false;
     }
 
-    get_user_id() {
+    get_user_id(): number {
         if (this.currentUser == null) {
             return null;
         }
@@ -205,7 +202,7 @@ export class GetSessionKeyService {
         this.sessionKeyValidated = false;
     }
 
-    model_logout() {
+    model_logout(): any { // any ???
         this.currentUser = JSON.parse(this.storageService.getItem('currentUser')) || [];
 
         const body = {action: 'oauth', do: 'logout', session_key: this.currentUser.session_key};
@@ -236,7 +233,7 @@ export class GetSessionKeyService {
         }
     }
 
-    get_cms_session() {
+    get_cms_session(): any { // any ???
         let body = {};
         body = {layer: 'native_ajax', get_cms_session: '1'};
         return this.http.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, body);
@@ -257,62 +254,9 @@ export class GetSessionKeyService {
         // console.log('reinit complete');
     }
 
-// =========================================================================
-    is_config_loaded() { // config
-        return this.configLoaded;
-    }
-
-    getDomConfigValue( key: string ) { // config ? used here
-        return this.domSitebillConfig[key];
-    }
-
-    getConfigValue( key: string ) { // config
-        if ( this.is_config_loaded() ) {
-            return this.sitebillConfig[key];
-        }
-        return null;
-    }
-
-    setDomConfigValue( key: string, value: any ) { // config
-        return this.domSitebillConfig[key] = value;
-    }
-
-
-    setConfigValue(key, value) { // config
-        this.sitebillConfig[key] = value;
-    }
-
-    after_config_loaded(): void { // config
-        // console.log('after_config_loaded');
-        this.configLoadedEmitter.emit(true);
-        this.initConfigComplete = true;
-        // console.log('apps.realty.default_frontend_route = ' + this.getConfigValue('apps.realty.default_frontend_route'));
-        if (this.getConfigValue('apps.realty.enable_navbar') === '1') {
-            this.uiService.show_navbar();
-        }
-        if (this.getConfigValue('apps.realty.enable_toolbar') === '1') {
-            this.uiService.show_toolbar();
-        }
-
-        if ( this.getConfigValue('apps.realty.default_frontend_route') === null || this.getConfigValue('apps.realty.default_frontend_route') === undefined) {
-            // console.log('default route');
-            if ( this.is_model_redirect_enabled() ) {
-                this.router.navigate(['grid/data']);
-            }
-        } else {
-            // console.log('config route');
-            // console.log(this.getConfigValue('apps.realty.default_frontend_route'));
-            if ( this.is_model_redirect_enabled() ) {
-                this.router.navigate([this.getConfigValue('apps.realty.default_frontend_route')]);
-            }
-        }
-    }
-
-// =========================================================================
-
     enable_guest_mode(): void {
-        console.log('apps.realty.enable_guest_mode ' + this.getConfigValue('apps.realty.enable_guest_mode'));
-        if ( this.getConfigValue('apps.realty.enable_guest_mode') === '1') {
+        console.log('apps.realty.enable_guest_mode ' + this.configService.getConfigValue('apps.realty.enable_guest_mode'));
+        if ( this.configService.getConfigValue('apps.realty.enable_guest_mode') === '1') {
             if ( this.get_user_id() === null || this.get_user_id() === 0 || this.get_user_id() === undefined ) {
                 this.get_cms_session()
                     .pipe(takeUntil(this._unsubscribeAll))
@@ -325,7 +269,7 @@ export class GetSessionKeyService {
                                 console.log('cms user_id = ' + storage.user_id);
                                 this.storageService.setItem('currentUser', JSON.stringify(storage));
                                 this.reinit_currentUser();
-                                this.after_config_loaded();
+                                this.configService.after_config_loaded();
                                 return true;
                             } else {
                                 finalyNeedGuest = true;
