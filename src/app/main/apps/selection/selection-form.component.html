@@ -140,7 +140,8 @@
                 <mat-form-field appearance="{{get_appearance()}}" *ngSwitchCase="'date_added'"
                                 [hidden]="records[x].hidden">
                     <mat-label [innerHTML]="records[x].title"></mat-label>
-                    <app-interval [entity]="entity" style="width: 100%"></app-interval>
+                    <app-interval [entity]="entity" style="width: 100%"
+                                  (deleteDataFilter)="deleteDataFilter()"></app-interval>
                     <input matInput [hidden]="true">
                 </mat-form-field>
 

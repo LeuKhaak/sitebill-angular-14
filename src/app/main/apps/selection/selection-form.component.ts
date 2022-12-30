@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Inject,
+    OnInit,
+    Output
+} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
 
@@ -36,7 +44,7 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
         @Inject(APP_CONFIG) protected config: AppConfig,
-        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean},
+        @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean, date_range_key: string},
         protected cdr: ChangeDetectorRef,
         protected storageService: StorageService
     ) {
@@ -88,5 +96,11 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
             this._snackService.message('Нет доступа к добавлению/редактированию ' + entity.get_title(), 5000);
         }
     }
+
+    deleteDataFilter(): void {
+        const event = null;
+        this.filterService.share_data(this.entity, this._data.date_range_key, event);
+    }
+
 }
 
