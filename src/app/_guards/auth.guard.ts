@@ -32,26 +32,26 @@ export class AuthGuard implements CanActivate {
         // this._fuseNavigationService.removeNavigationItem('page');
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any { // any ???
         // console.log('|can activate');
-        // onsole.log(route);
+        // console.log(route);
         // console.log(state);
         // console.log('can active |');
         return this.check_session(route, state, '/grid/data/');
     }
 
-    check_session(route: ActivatedRouteSnapshot, state: RouterStateSnapshot, success_redirect: string) {
+    check_session(route: ActivatedRouteSnapshot, state: RouterStateSnapshot, success_redirect: string): any { // any ???
         // console.log(this.storageService.getItem('currentUser'));
 
         if (this.storageService.getItem('currentUser') && !this.modelService.is_need_reload()) {
-            // console.log('!check session and locaStorage not null');
+            // console.log('!check session and localStorage not null');
             // console.log(this.storageService.getItem('currentUser'));
-            // console.log('check session and locaStorage not null!');
+            // console.log('check session and localStorage not null!');
             return this.check_permissions(route, state);
         } else {
             // Попробуем получить данные от cms sitebill для текущей сессии
             // console.log('try get cms session');
-            this.modelService.get_cms_session()
+            this.getSessionKeyService.get_cms_session()
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((result: any) => {
                     // console.log(result);
@@ -60,21 +60,21 @@ export class AuthGuard implements CanActivate {
                         return false;
                     }
                     try {
-                        let storage = JSON.parse(result) || [];
+                        const storage = JSON.parse(result) || [];
                         // console.log(storage);
 
                         if (storage.user_id > 0) {
                             this.storageService.setItem('currentUser', JSON.stringify(storage));
-                            this.modelService.disable_need_reload();
+                            this.getSessionKeyService.disable_need_reload();
                             if (this.check_permissions(route, state)) {
                                 // console.log('success_redirect start');
-                                this.modelService.reinit_currentUser();
+                                this.getSessionKeyService.reinit_currentUser();
                                 this.router.navigate([success_redirect]);
                                 return true;
                             } else {
                                 this.set_public_menu();
                                 // console.log('public redirect start');
-                                this.modelService.reinit_currentUser();
+                                this.getSessionKeyService.reinit_currentUser();
                                 this.router.navigate(['/public/'], { queryParams: { returnUrl: state.url } });
                                 return true;
                             }
@@ -98,14 +98,14 @@ export class AuthGuard implements CanActivate {
         }
     }
 
-    set_public_menu() {
+    set_public_menu(): void {
         // console.log('set public menu');
         this._fuseNavigationService.unregister('main');
         this._fuseNavigationService.register('main', public_navigation.slice(0));
         this._fuseNavigationService.setCurrentNavigation('main');
     }
 
-    check_permissions(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    check_permissions(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // console.log('Activate result = ');
         // console.log('check_permissions');
         // console.log(navigation);
@@ -114,9 +114,9 @@ export class AuthGuard implements CanActivate {
         this._fuseNavigationService.register('main', navigation.slice(0));
         this._fuseNavigationService.setCurrentNavigation('main');
 
-        let navigation_origin = this._fuseNavigationService.getNavigation('main');
-        let navigtaion_clone = navigation_origin.slice(0);
-        let storage = JSON.parse(this.storageService.getItem('currentUser')) || [];
+        const navigation_origin = this._fuseNavigationService.getNavigation('main');
+        const navigation_clone = navigation_origin.slice(0);
+        const storage = JSON.parse(this.storageService.getItem('currentUser')) || [];
         // console.log(storage);
         if (storage['structure'] == null) {
             // console.log('structure null - logout');
@@ -124,7 +124,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        this.cleanUpNavigation(navigtaion_clone, storage['structure']);
+        this.cleanUpNavigation(navigation_clone, storage['structure']);
 
         // console.log('structure check start');
 
@@ -157,7 +157,7 @@ export class AuthGuard implements CanActivate {
         return true;
     }
 
-    cleanUpNavigation(navigation: any[], permission) {
+    cleanUpNavigation(nav: any[], permission): number {
         let remove_counter = 0;
         if ( this.modelService.getConfigValue('parser.disable') === true || this.modelService.getDomConfigValue('parser_disable') === true) {
             this._fuseNavigationService.removeNavigationItem('parser');
@@ -165,7 +165,7 @@ export class AuthGuard implements CanActivate {
         if (permission['group_name'] === 'admin') {
             return -1;
         }
-        navigation.forEach((row, index) => {
+        nav.forEach((row, index) => {
             let need_remove = true;
             if (permission[row.id] != null) {
                 if (permission[row.id].access != null) {
@@ -185,8 +185,8 @@ export class AuthGuard implements CanActivate {
                 // this._fuseNavigationService.addNavigationItem(row.id);
             }
             if (row.children != null) {
-                let children_clone = row.children.slice(0);
-                let current_remove = this.cleanUpNavigation(children_clone, permission);
+                const children_clone = row.children.slice(0);
+                const current_remove = this.cleanUpNavigation(children_clone, permission);
                 if (current_remove === children_clone.length) {
                     this._fuseNavigationService.removeNavigationItem(row.id);
                 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild, AfterViewChecked} from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import {Bitrix24Service} from '../../../app/integrations/bitrix24/bitrix24.servi
     styleUrls  : ['./shortcuts.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseShortcutsComponent implements OnInit, OnDestroy
+export class FuseShortcutsComponent implements OnInit, OnDestroy, AfterViewChecked
 {
     shortcutItems: any[];
     navigationItems: any[];
@@ -113,11 +113,11 @@ export class FuseShortcutsComponent implements OnInit, OnDestroy
             });
     }
 
-    clear_shortcuts () {
+    clear_shortcuts(): void {
         this.shortcutItems = [];
     }
 
-    set_default_shortcuts () {
+    set_default_shortcuts(): void {
         // console.log('apps.products.contacts_market');
         // console.log(this.modelService.getConfigValue('apps.products.contacts_market'));
         if ( this.configService.getConfigValue('apps.products.contacts_market') === 1 ) {
@@ -153,7 +153,7 @@ export class FuseShortcutsComponent implements OnInit, OnDestroy
         }
     }
 
-    reinit_shortcuts (entity: SitebillEntity) {
+    reinit_shortcuts(entity: SitebillEntity): void {
         // console.log('reinit ' + entity.get_app_name());
         this.clear_shortcuts();
         this.set_default_shortcuts();
@@ -177,7 +177,7 @@ export class FuseShortcutsComponent implements OnInit, OnDestroy
         }, 100);
     }
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         if ( this.entity === null || this.entity === undefined ) {
             this.entity = this.getApiUrlService.get_current_entity();
         }
