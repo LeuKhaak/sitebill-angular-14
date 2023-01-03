@@ -1,10 +1,10 @@
-import { Injectable, isDevMode, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
-import { ModelService } from './model.service';
+import {GetApiUrlService} from './get-api-url.service';
+import {GetSessionKeyService} from './get-session-key.service';
 
 @Injectable()
 export class CommentService implements Resolve<any>
@@ -27,11 +27,12 @@ export class CommentService implements Resolve<any>
      */
     constructor(
         private _httpClient: HttpClient,
-        private modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
         @Inject(APP_CONFIG) private config: AppConfig
     )
     {
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
         // Set the defaults
         this.timelineOnChanged = new BehaviorSubject({});
@@ -74,7 +75,7 @@ export class CommentService implements Resolve<any>
         console.log('timeline');
         console.log('object_id get ' + this.object_id);
 
-        const body = { action: 'comment', do: 'get', model_name: app_name, session_key: this.modelService.get_session_key() };
+        const body = { action: 'comment', do: 'get', model_name: app_name, session_key: this.getSessionKeyService.get_session_key() };
 
         return new Promise((resolve, reject) => {
 

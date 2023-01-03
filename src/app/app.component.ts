@@ -23,6 +23,9 @@ import {ModelService} from './_services/model.service';
 import {DemoBannerComponent} from './dialogs/demo-banner/demo-banner.component';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {SitebillAuthService} from './_services/sitebill-auth.service';
+import {UiService} from './_services/ui.service';
+import {ConfigService} from './_services/config.service';
+import {ModelRedirectService} from './_services/model-redirect.service';
 
 @Component({
     selector   : 'app',
@@ -68,6 +71,9 @@ export class AppComponent implements OnInit, OnDestroy
         private router: Router,
         private bitrix24Router: Bitrix24Router,
         public modelService: ModelService,
+        public uiService: UiService,
+        public configService: ConfigService,
+        public modelRedirectService: ModelRedirectService,
         public sitebillAuthService: SitebillAuthService,
         protected dialog: MatDialog,
         private _platform: Platform
@@ -85,13 +91,13 @@ export class AppComponent implements OnInit, OnDestroy
          */
         // this._fuseConfigService.setConfig(conf);
         if (this.elRef.nativeElement.getAttribute('navbar_hidden') === 'true') {
-            this.modelService.hide_navbar();
-            this.modelService.setDomConfigValue('navbar_hidden', true);
+            this.uiService.hide_navbar();
+            this.configService.setDomConfigValue('navbar_hidden', true);
         }
 
         if (this.elRef.nativeElement.getAttribute('toolbar_hidden') === 'true') {
-            this.modelService.hide_toolbar();
-            this.modelService.setDomConfigValue('toolbar_hidden', true);
+            this.uiService.hide_toolbar();
+            this.configService.setDomConfigValue('toolbar_hidden', true);
         }
 
 
@@ -264,16 +270,16 @@ export class AppComponent implements OnInit, OnDestroy
         }
         if (app_root_element.getAttribute('disable_default_frontend_route')) {
             // console.log('set disable_default_frontend_route');
-            this.modelService.setDomConfigValue('disable_default_frontend_route', true);
+            this.configService.setDomConfigValue('disable_default_frontend_route', true);
         }
         if (app_root_element.getAttribute('parser_disable') === 'true') {
             // console.log('set disable_default_frontend_route');
-            this.modelService.setDomConfigValue('parser_disable', true);
+            this.configService.setDomConfigValue('parser_disable', true);
         }
         if (app_root_element.getAttribute('standalone_mode') === 'true') {
             this.initAllAttributes(app_root_element);
-            this.modelService.disable_model_redirect();
-            this.modelService.setDomConfigValue('standalone_mode', true);
+            this.modelRedirectService.disable_model_redirect();
+            this.configService.setDomConfigValue('standalone_mode', true);
             this.fuseConfig.layout.style = 'standalone';
         }
 
@@ -299,11 +305,11 @@ export class AppComponent implements OnInit, OnDestroy
          }
          );
          */
-        if ( this.modelService.getDomConfigValue('standalone_mode') ) {
+        if ( this.configService.getDomConfigValue('standalone_mode') ) {
         } else {
             this.modelService.onSitebillStart();
             this.modelService.config_loaded_emitter.subscribe((result: any) => {
-                if ( this.modelService.getConfigValue('apps.complex.api.enable') !== '1' ) {
+                if ( this.configService.getConfigValue('apps.complex.api.enable') !== '1' ) {
                     this._fuseNavigationService.removeNavigationItem('complex');
                 }
 
@@ -321,7 +327,7 @@ export class AppComponent implements OnInit, OnDestroy
         if (node.getAttributeNames()) {
             node.getAttributeNames().forEach((item) => {
                 try {
-                    this.modelService.setDomConfigValue(item, node.getAttribute(item));
+                    this.configService.setDomConfigValue(item, node.getAttribute(item));
                 } catch (e){
 
                 }
@@ -356,7 +362,7 @@ export class AppComponent implements OnInit, OnDestroy
 
     switchTimer(): void {
         if (
-            this.modelService.getConfigValue('apps.realty.show_unreg_notify') === '1'
+            this.configService.getConfigValue('apps.realty.show_unreg_notify') === '1'
         ) {
             if ( this.demoTimerSubscribe ) {
                 this.demoTimerSubscribe.unsubscribe();

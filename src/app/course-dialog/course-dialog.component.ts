@@ -1,17 +1,15 @@
-import {Component, Inject, OnInit, isDevMode, ViewEncapsulation, Input } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Component, Inject, OnInit, Input } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-// import {Course} from "../model/course";
-import {UntypedFormBuilder, Validators, UntypedFormGroup} from '@angular/forms';
-import * as moment from 'moment';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 import {Model} from '../model';
 import {currentUser} from '../_models/currentuser';
 import { ChatService } from 'app/main/apps/chat/chat.service';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
-import { ModelService } from 'app/_services/model.service';
+import {GetApiUrlService} from '../_services/get-api-url.service';
 
 
 @Component({
@@ -40,7 +38,7 @@ export class CourseDialogComponent implements OnInit {
         private fb: UntypedFormBuilder,
         private dialogRef: MatDialogRef<CourseDialogComponent>,
         private _httpClient: HttpClient,
-        private modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         private _chatService: ChatService,
         @Inject(APP_CONFIG) private config: AppConfig,
         @Inject(MAT_DIALOG_DATA) private _data: any
@@ -49,7 +47,7 @@ export class CourseDialogComponent implements OnInit {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.api_url = this.modelSerivce.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
 
         this.description = '123';
@@ -59,7 +57,7 @@ export class CourseDialogComponent implements OnInit {
     ngOnInit(): void {
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(chatData => {
+            .subscribe(() => {
             });
 
         this.getModel();

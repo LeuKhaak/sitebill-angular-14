@@ -1,7 +1,9 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ModelService} from './model.service';
-import {timer} from "rxjs";
+import {GetSessionKeyService} from './get-session-key.service';
+import {GetApiUrlService} from './get-api-url.service';
+import {ConfigService} from './config.service';
 
 @Injectable()
 export class SitebillAuthService {
@@ -10,7 +12,7 @@ export class SitebillAuthService {
     @Output() init_nobody_user_emitter: EventEmitter<any> = new EventEmitter();
 
 
-    private state: string = 'zero';
+    private state = 'zero';
 
     /**
      * Constructor
@@ -18,13 +20,16 @@ export class SitebillAuthService {
     constructor(
         private http: HttpClient,
         private modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
+        protected getApiUrlService: GetApiUrlService,
+        protected configService: ConfigService,
     )
     {
         // console.log('SitebillAuthService constructor');
     }
 
-    init () {
-        if ( this.state == 'ready' || this.state == 'auth_failed' ) {
+    init(): boolean {
+        if ( this.state === 'ready' || this.state === 'auth_failed' ) {
             console.log('SitebillAuthService.init, already inited');
             return false;
         }
@@ -47,21 +52,21 @@ export class SitebillAuthService {
             }
         );
     }
-    auth_failed () {
+    auth_failed(): void {
         this.complete_emitter.emit(false);
         this.state = 'auth_failed';
     }
 
-    init_user () {
+    init_user(): void {
         // console.log('session_key = ' + this.modelService.get_session_key());
 
         if (
-            this.modelService.get_session_key() === 'nobody' &&
-            this.modelService.getConfigValue('apps.realty.enable_guest_mode') === '1'
+            this.getSessionKeyService.get_session_key() === 'nobody' &&
+            this.configService.getConfigValue('apps.realty.enable_guest_mode') === '1'
         ) {
             this.init_user_from_cms();
         } else if (
-            this.modelService.get_session_key()
+            this.getSessionKeyService.get_session_key()
         ) {
             this.init_valid_user();
         } else {
@@ -69,7 +74,7 @@ export class SitebillAuthService {
         }
     }
 
-    init_user_from_cms () {
+    init_user_from_cms(): void {
         // console.log('try init user from CMS session');
         this.init_user_from_cms_emitter.subscribe(
             (result: any) => {
@@ -93,7 +98,7 @@ export class SitebillAuthService {
         );
 
 
-        this.modelService.get_cms_session().subscribe((result: any) => {
+        this.getSessionKeyService.get_cms_session().subscribe((result: any) => {
             // console.log(result);
             try {
                 const storage = JSON.parse(result) || [];
@@ -101,7 +106,7 @@ export class SitebillAuthService {
                     // console.log('success cms user_id = ' + storage.user_id);
                     this.modelService.reinit_currentUser_standalone(storage);
                     this.init_user_from_cms_emitter.emit(true);
-                    //return true;
+                    // return true;
                 } else {
                     this.init_user_from_cms_emitter.emit(false);
                 }
@@ -111,7 +116,7 @@ export class SitebillAuthService {
         });
     }
 
-    init_nobody_user () {
+    init_nobody_user(): void {
         // console.log('try init nobody user');
         // console.log('apps.realty.enable_guest_mode ' + this.modelService.getConfigValue('apps.realty.enable_guest_mode'));
 
@@ -137,27 +142,27 @@ export class SitebillAuthService {
         );
 
 
-        if ( this.modelService.getConfigValue('apps.realty.enable_guest_mode') === '1' ) {
-            this.modelService.reset_local_user_storage();
+        if ( this.configService.getConfigValue('apps.realty.enable_guest_mode') === '1' ) {
+            this.getSessionKeyService.reset_local_user_storage();
 
-            this.modelService.init_nobody_session().subscribe((result: any) => {
+            this.getSessionKeyService.init_nobody_session().subscribe((result: any) => {
                 if ( result.error === 'check_session_key_failed' ) {
-                    this.modelService.reset_local_user_storage();
+                    this.getSessionKeyService.reset_local_user_storage();
                     this.init_nobody_user_emitter.emit(false);
                 } else {
                     this.modelService.reinit_currentUser_standalone(result);
-                    this.modelService.enable_nobody_mode();
+                    this.getSessionKeyService.enable_nobody_mode();
                     this.init_nobody_user_emitter.emit(true);
                 }
             });
         } else {
             // console.log('apps.realty.enable_guest_mode not enabled');
-            this.modelService.reset_local_user_storage();
+            this.getSessionKeyService.reset_local_user_storage();
             this.init_nobody_user_emitter.emit(false);
         }
     }
 
-    init_valid_user () {
+    init_valid_user(): void {
         // console.log('try init valid user');
         this.check_session_key_safe();
         this.modelService.valid_user_emitter.subscribe(
@@ -183,7 +188,7 @@ export class SitebillAuthService {
         );
     }
 
-    init_permissions () {
+    init_permissions(): void {
         this.modelService.init_permissions_complete_emitter.subscribe(
             (result: any) => {
                 if ( result ) {
@@ -206,31 +211,31 @@ export class SitebillAuthService {
 
     }
 
-    check_session_key_safe() {
-        const session_key = this.modelService.get_session_key();
-        if (!this.modelService.is_validated_session_key()) {
-            this.modelService.validateKey(session_key).subscribe((result: any) => {
+    check_session_key_safe(): void {
+        const session_key = this.getSessionKeyService.get_session_key();
+        if (!this.getSessionKeyService.is_validated_session_key()) {
+            this.getSessionKeyService.validateKey(session_key).subscribe((result: any) => {
                 if (result.error === 'check_session_key_failed') {
                     // console.log('check_session_key_failed need reload');
                     this.init_user_from_cms();
                 } else {
-                    this.modelService.session_key_validate();
+                    this.getSessionKeyService.session_key_validate();
                 }
             });
         }
     }
 
 
-    init_complete () {
+    init_complete(): void {
         this.complete_emitter.emit(true);
         this.state = 'ready';
     }
 
-    complete () {
+    complete(): EventEmitter<any> {
         return this.complete_emitter;
     }
 
-    get_state () {
+    get_state(): string {
         return this.state;
     }
 }
