@@ -1,20 +1,24 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormComponent} from '../../main/grid/form/form.component';
 import {ModelService} from '../../_services/model.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
+import {ConfigService} from '../../_services/config.service';
+import {ConfigSystemService} from '../../_services/config-system.service';
 import {SnackService} from '../../_services/snack.service';
 import {APP_CONFIG, AppConfig} from '../../app.config.module';
 import {SitebillEntity} from '../../_models';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {DOCUMENT} from '@angular/common';
-import {toASCII} from "punycode";
+import {toASCII} from 'punycode';
 import {navigation} from '../../navigation/navigation';
 import {FuseNavigationService} from '../../../@fuse/components/navigation/navigation.service';
 import {AlertService, AuthenticationService} from '../../_services';
 import {FilterService} from '../../_services/filter.service';
 import {FuseConfigService} from '../../../@fuse/services/config.service';
-import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from '@angular/material/snack-bar';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
     selector: 'login-modal',
@@ -31,11 +35,10 @@ export class LoginModalComponent  implements OnInit {
     registerMessage: string;
 
     valid_domain_through_email: UntypedFormGroup;
-    hide_domain: boolean = true;
+    hide_domain = true;
     loading = false;
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
-    allow_register: true;
     show_register: boolean;
     show_login: boolean;
     show_remind: boolean;
@@ -47,6 +50,10 @@ export class LoginModalComponent  implements OnInit {
     constructor(
         protected dialogRef: MatDialogRef<FormComponent>,
         public modelService: ModelService,
+        public getSessionKeyService: GetSessionKeyService,
+        public getApiUrlService: GetApiUrlService,
+        public configService: ConfigService,
+        public configSistemService: ConfigSystemService,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         private authenticationService: AuthenticationService,
@@ -80,7 +87,7 @@ export class LoginModalComponent  implements OnInit {
 
     }
 
-    init_register_form () {
+    init_register_form(): void {
         // Set the defaults
         this.registerFormErrors = {
             domain: {},
@@ -98,15 +105,15 @@ export class LoginModalComponent  implements OnInit {
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.init_input_parameters();
 
     }
 
-    convert_to_https_domain(data:string) {
+    convert_to_https_domain(data: string): string {
         let hostname;
         if ( data.match(/http/i) ) {
-            let a = this.document.createElement('a');
+            const a = this.document.createElement('a');
             a.href = data;
             hostname =  'https://' + a.hostname;
         } else {
@@ -117,14 +124,14 @@ export class LoginModalComponent  implements OnInit {
     }
 
 
-    login() {
+    login(): boolean{
         this.loading = true;
 
 
-        if (this.loginForm.value.domain != '' && this.loginForm.value.domain != null) {
+        if (this.loginForm.value.domain !== '' && this.loginForm.value.domain != null) {
             let domain = toASCII(this.loginForm.value.domain);
-            let https_replace = 'https://';
-            let http_replace = 'http://';
+            const https_replace = 'https://';
+            const http_replace = 'http://';
             domain = domain.replace(https_replace, '');
             domain = domain.replace(http_replace, '');
 
@@ -133,7 +140,7 @@ export class LoginModalComponent  implements OnInit {
                 this.loading = false;
                 return false;
             }
-            this.valid_domain_through_email.controls['domain_checker'].patchValue('test@'+domain);
+            this.valid_domain_through_email.controls['domain_checker'].patchValue('test@' + domain);
             this.valid_domain_through_email.controls['domain_checker'].updateValueAndValidity();
             if (!this.valid_domain_through_email.controls['domain_checker'].valid) {
                 this._snackService.message('Сайт указан неверно');
@@ -141,34 +148,34 @@ export class LoginModalComponent  implements OnInit {
                 return false;
             }
 
-            this.modelService.set_api_url(this.convert_to_https_domain(domain));
+            this.getApiUrlService.set_api_url(this.convert_to_https_domain(domain));
         } else {
-            this.modelService.set_api_url('');
+            this.getApiUrlService.set_api_url('');
         }
 
-        //console.log(this.loginForm.value.domain);
-        //return;
+        // console.log(this.loginForm.value.domain);
+        // return;
 
 
         this.authenticationService.login(this.loginForm.value.domain, this.loginForm.value.username, this.loginForm.value.password)
             .subscribe(
                 (data: any) => {
-                    if (data.state == 'error') {
-                        //this.alertService.error(data.error);
+                    if (data.state === 'error') {
+                        // this.alertService.error(data.error);
                         this.loading = false;
                         this._snackService.message('Логин или пароль указаны неверно');
                     } else {
-                        if (data.admin_panel_login == 1) {
+                        if (data.admin_panel_login === 1) {
 
                             this._fuseNavigationService.unregister('main');
                             this._fuseNavigationService.register('main', navigation);
                             this._fuseNavigationService.setCurrentNavigation('main');
                             this.after_success_login();
-                        } else if (data.success == 1) {
+                        } else if (data.success === 1) {
                             this.after_success_login();
                         } else {
                             console.log('Доступ запрещен');
-                            let error = 'Доступ запрещен';
+                            const error = 'Доступ запрещен';
                             this.alertService.error(error);
                             this.loading = false;
                             this.snackBar.open(error, 'ok', {
@@ -185,21 +192,21 @@ export class LoginModalComponent  implements OnInit {
                 });
     }
 
-    after_success_login () {
+    after_success_login(): void {
         this._snackService.message('Авторизация успешна!');
-        this.modelService.disable_nobody_mode();
-        this.modelService.load_current_user_profile();
-        this.modelService.init_config();
+        this.getSessionKeyService.disable_nobody_mode();
+        this.getSessionKeyService.load_current_user_profile();
+        this.configSistemService.init_config();
         this._fuseConfigService.broadcast_refresh();
         this.dialogRef.close();
     }
 
-    close_register_domain () {
+    close_register_domain(): void {
         this.dialogRef.close();
     }
 
 
-    init_input_parameters() {
+    init_input_parameters(): void {
         let app_root_element;
         if (this.document.getElementById('angular_search')) {
             app_root_element = this.document.getElementById('angular_search');
@@ -217,7 +224,7 @@ export class LoginModalComponent  implements OnInit {
 
     }
 
-    show_login_form() {
+    show_login_form(): void {
         this.auth_title = 'Авторизация';
         this.show_login = true;
         this.show_register = false;
@@ -226,7 +233,7 @@ export class LoginModalComponent  implements OnInit {
         this.hide_register_complete();
     }
 
-    show_register_form() {
+    show_register_form(): void {
         this.auth_title = 'Регистрация';
         this.show_login = false;
         this.show_register = true;
@@ -235,11 +242,11 @@ export class LoginModalComponent  implements OnInit {
         this.hide_register_complete();
     }
 
-    hide_register_complete () {
+    hide_register_complete(): void {
         this.registerMessage = null;
     }
 
-    show_remind_form() {
+    show_remind_form(): void {
         this.auth_title = 'Напомнить пароль';
         this.show_login = false;
         this.show_register = false;
@@ -247,7 +254,7 @@ export class LoginModalComponent  implements OnInit {
         this.show_remind = true;
     }
 
-    show_register_domain_form() {
+    show_register_domain_form(): void {
         this.auth_title = 'Создать новый сайт';
         this.show_login = false;
         this.show_register = false;
@@ -256,7 +263,7 @@ export class LoginModalComponent  implements OnInit {
         this.hide_register_complete();
     }
 
-    close() {
+    close(): void {
         this.dialogRef.close();
     }
 }

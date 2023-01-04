@@ -1,8 +1,8 @@
 <div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
 
     <div class="logo">
-        <img class="logo-icon" src="{{modelService.get_api_url()}}/favicon.ico">
-        <span class="logo-text secondary-text">{{replaceURL(modelService.get_api_url(), '(https://www.|https://)', '')}}</span>
+        <img class="logo-icon" src="{{getApiUrlService.get_api_url()}}/favicon.ico" alt="#">
+        <span class="logo-text secondary-text">{{replaceURL(getApiUrlService.get_api_url(), '(https://www.|https://)', '')}}</span>
     </div>
 
     <div class="buttons">

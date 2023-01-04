@@ -38,7 +38,8 @@
                     <!--mat-checkbox class="remember-me" aria-label="Remember Me">
                         Запомпнить меня
                     </mat-checkbox-->
-                    <a mat-button color="accent" (click)="show_remind_form()" *ngIf="this.modelService.getConfigValue('allow_remind_password') == 1">Забыли пароль?</a>
+                    <a mat-button color="accent" (click)="show_remind_form()"
+                       *ngIf="this.configService.getConfigValue('allow_remind_password') == 1">Забыли пароль?</a>
                 </div>
                 <button mat-raised-button color="accent" class="submit-button" aria-label="Вход"
                         [disabled]="loginForm.invalid">
@@ -59,7 +60,7 @@
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="this.modelService.getConfigValue('allow_register_account') == 1 && hide_domain">
+            <ng-container *ngIf="this.configService.getConfigValue('allow_register_account') == 1 && hide_domain">
                 <div class="register" fxLayout="column" fxLayoutAlign="center center">
                     <span class="text">Еще нет аккаунта?</span>
                     <button mat-button color="accent" (click)="show_register_form()">Зарегистрироваться</button>

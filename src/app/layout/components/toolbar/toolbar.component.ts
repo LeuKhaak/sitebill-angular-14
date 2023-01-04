@@ -10,8 +10,9 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
-import {AlertService, AuthenticationService} from '../../../_services/index';
+import { AuthenticationService } from '../../../_services';
 import {ModelService} from '../../../_services/model.service';
+import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {LoginModalComponent} from '../../../login/modal/login-modal.component';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
@@ -51,6 +52,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private route: ActivatedRoute,
         private _router: Router,
         public modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
         protected bitrix24Service: Bitrix24Service,
         protected dialog: MatDialog,
         private _translateService: TranslateService,
@@ -160,7 +162,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
 
     logout(): void {
-        this.modelService.logout();
+        this.getSessionKeyService.logout();
     }
 
     login_modal(): void {
