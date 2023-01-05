@@ -1,12 +1,12 @@
-import {Injectable, isDevMode, Inject} from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 
 import {FuseUtils} from '@fuse/utils';
-import { ModelService } from 'app/_services/model.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
+import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 
 export class CommentsBlockMeta {
     isOpened = false;
@@ -42,11 +42,12 @@ export class ChatService implements Resolve<any>
      */
     constructor(
         private _httpClient: HttpClient,
-        private modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
         @Inject(APP_CONFIG) private config: AppConfig
     ) {
 
-        this.api_url = this.modelSerivce.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
         this.open_close = false;
 
@@ -123,13 +124,14 @@ export class ChatService implements Resolve<any>
              */
         }
 
-        const body = { action: 'comment', do: 'get', model_name: model_name, primary_key: primary_key, key_value: key_value, session_key: this.modelSerivce.get_session_key() };
+        const body = { action: 'comment', do: 'get', model_name: model_name, primary_key: primary_key, key_value: key_value, session_key:
+                this.getSessionKeyService.get_session_key() };
         // const chat_id = '5725a680b3249760ea21de52';
 
 
         return new Promise((resolve, reject) => {
             // this._httpClient.get('api/chat-chats/' + chatItem.id)
-            this._httpClient.post(`${this.modelSerivce.get_api_url()}/apps/api/rest.php`, body)
+            this._httpClient.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, body)
                 .subscribe((response: any) => {
                     const chat = response;
                     const chatContact = null;
@@ -142,7 +144,7 @@ export class ChatService implements Resolve<any>
                     const chatData = {
                         chatId: contactId,
                         dialog: chat.rows,
-                        current_user_id: this.modelSerivce.get_user_id(),
+                        current_user_id: this.getSessionKeyService.get_user_id(),
                         contact: chatContact
                     };
                     // console.log(chatData);
@@ -161,7 +163,7 @@ export class ChatService implements Resolve<any>
         const chatData = {
             chatId: null,
             dialog: [],
-            current_user_id: this.modelSerivce.get_user_id(),
+            current_user_id: this.getSessionKeyService.get_user_id(),
             contact: null
         };
 
@@ -278,9 +280,9 @@ export class ChatService implements Resolve<any>
             // const comment_text = 'test';
 
             const body = { action: 'comment', do: 'add', model_name: this.model_name, primary_key: this.primary_key, key_value: this.key_value,
-                comment_text: comment_text, session_key: this.modelSerivce.get_session_key()};
+                comment_text: comment_text, session_key: this.getSessionKeyService.get_session_key()};
 
-            this._httpClient.post(`${this.modelSerivce.get_api_url()}/apps/api/rest.php`, body)
+            this._httpClient.post(`${this.getApiUrlService.get_api_url()}/apps/api/rest.php`, body)
                 .subscribe((updatedChat: any) => {
                     const currentChat = this.onChatSelected.getValue();
                     if (currentChat.chatId === chatId && currentChat.dialog && updatedChat.comment_data) {

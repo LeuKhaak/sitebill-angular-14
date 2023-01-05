@@ -11,6 +11,8 @@ import {worksheetData} from './types/worksheet-data.type';
 import {SitebillResponse} from '../../../_models/sitebill-response';
 import {StatisticsType} from './types/statistics.type';
 import {FilterService} from '../../../_services/filter.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
+import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 
 @Component({
     selector: 'excel-apps',
@@ -61,6 +63,8 @@ export class ExcelComponent  implements OnInit {
         protected modelService: ModelService,
         protected _snackService: SnackService,
         protected filterService: FilterService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
     ) {
         this._unsubscribeAll = new Subject();
 
@@ -98,7 +102,7 @@ export class ExcelComponent  implements OnInit {
             model_name: this.entity.get_table_name(),
             primary_key: this.entity.get_primary_key(),
             anonymous: false,
-            session_key: this.modelService.get_session_key_safe()
+            session_key: this.getSessionKeyService.get_session_key_safe()
         };
         this.modelService.api_request(request)
             .pipe(takeUntil(this._unsubscribeAll))
@@ -168,7 +172,7 @@ export class ExcelComponent  implements OnInit {
             anonymous: false,
             mapped_columns: this.mapped_model_keys_for_import,
             excel_header: this.start_excel_columns,
-            session_key: this.modelService.get_session_key_safe()
+            session_key: this.getSessionKeyService.get_session_key_safe()
         };
         // console.log(request);
         this.progress_page = page;
@@ -267,7 +271,7 @@ export class ExcelComponent  implements OnInit {
             model_name: this.entity.get_table_name(),
             primary_key: this.entity.get_primary_key(),
             anonymous: false,
-            session_key: this.modelService.get_session_key_safe()
+            session_key: this.getSessionKeyService.get_session_key_safe()
         };
         const params = new URLSearchParams();
         for (const key in request){
@@ -278,7 +282,7 @@ export class ExcelComponent  implements OnInit {
 
         const event: UploadInput = {
             type: 'uploadAll',
-            url: this.modelService.get_api_url() + '/apps/api/rest.php?' + params.toString(),
+            url: this.getApiUrlService.get_api_url() + '/apps/api/rest.php?' + params.toString(),
             method: 'POST',
             data: { foo: 'bar' }
         };

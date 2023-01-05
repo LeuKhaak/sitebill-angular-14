@@ -1,15 +1,16 @@
-import {Component, Inject, OnInit, isDevMode, ViewEncapsulation, Input, Output, EventEmitter }  from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Component, Inject, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {UntypedFormBuilder, Validators, UntypedFormGroup} from "@angular/forms";
+import {UntypedFormBuilder, Validators, UntypedFormGroup} from '@angular/forms';
 import {FuseConfigService} from '@fuse/services/config.service';
 import {ActivatedRoute} from '@angular/router';
 
 import {Model} from 'app/model';
-import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 import { ModelService } from 'app/_services/model.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { ModelService } from 'app/_services/model.service';
     templateUrl: './control-elements.component.html',
     styleUrls: ['./control-elements.component.css']
 })
-export class ControlElementsComponent implements OnInit {
+export class ControlElementsComponent implements OnInit, DoCheck {
 
     form: UntypedFormGroup;
     formErrors: any;
@@ -28,20 +29,18 @@ export class ControlElementsComponent implements OnInit {
     key_value: any;
     model_name: any;
     control_name: any;
-    item_model: any[];
     item: any[];
     current_active_value: any;
     
     declineForm: UntypedFormGroup;
     
-    description:string;
+    description = '';
     @Input() model: Model;
     rows: any[];
     records: any[];
     api_url: string;
     
     private _unsubscribeAll: Subject<any>;
-    private currentUser: currentUser;
     loadingIndicator: boolean;
     
     @Output() submitEvent = new EventEmitter<string>();
@@ -56,12 +55,14 @@ export class ControlElementsComponent implements OnInit {
         @Inject(APP_CONFIG) private config: AppConfig,
         private _fuseConfigService: FuseConfigService,
         protected modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
         ) {
         this.loadingIndicator = true;
         
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.api_url = this.modelSerivce.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
         this.declineFormErrors = {
             comment: {}
@@ -92,18 +93,18 @@ export class ControlElementsComponent implements OnInit {
 
     }
     
-    toggle_active () {
+    toggle_active(): void {
         this.controlProcessing = true;
         
         let active =  1;
-        if (this.item['active']['value'] == 1)  {
+        if (this.item['active']['value'] === 1)  {
             active = null;
         }
         const ql_items = { active: active };
 
         this.modelSerivce.update_only_ql(this.model_name, this.key_value, ql_items)
             .subscribe((response: any) => {
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                 } else {
                     this.load_item(this.model_name, this.key_value);
                 }
@@ -111,7 +112,7 @@ export class ControlElementsComponent implements OnInit {
         
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         // Horizontal Stepper form steps
         this.declineForm = this.fb.group({
             comment: ['', Validators.required]
@@ -127,23 +128,23 @@ export class ControlElementsComponent implements OnInit {
         
     }
     
-    load_item ( model_name, key_value ) {
-        //const body = { action: 'model', do: 'load_data', model_name: this.model_name, key_value: this.key_value, session_key: this.modelSerivce.get_session_key()};
+    load_item( model_name, key_value ): void {
+        // const body = { action: 'model', do: 'load_data', model_name: this.model_name, key_value: this.key_value, session_key: this.modelSerivce.get_session_key()};
 
         this.modelSerivce.loadById(model_name, 'id', key_value)
             .subscribe((response: any) => {
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                 } else {
-                    //console.log(this.currentUser.user_id);
+                    // console.log(this.currentUser.user_id);
                     if (response.data) {
 
-                        //Проверим что объект принадлежит пользователю
-                        if (response.data['user_id']['value'] == this.modelSerivce.get_user_id()) {
+                        // Проверим что объект принадлежит пользователю
+                        if (response.data['user_id']['value'] === this.getSessionKeyService.get_user_id()) {
                             this.item = response.data;
                             this.current_active_value = this.item['active']['value'];
                         }
-                        //console.log(this.item);
-                        //console.log(this.item['active']['value']);
+                        // console.log(this.item);
+                        // console.log(this.item['active']['value']);
                     }
                     this.controlProcessing = false;
                 }
@@ -152,12 +153,12 @@ export class ControlElementsComponent implements OnInit {
 
     }
 
-    ngDoCheck() {
+    ngDoCheck(): void {
 
         this._fuseConfigService.config
             .subscribe((config) => {
-                //this.config = config;
-                if (config.layout.navbar.hidden == false ) {
+                // this.config = config;
+                if (config.layout.navbar.hidden === false ) {
                     this._fuseConfigService.config = {
                         layout: {
                             navbar: {

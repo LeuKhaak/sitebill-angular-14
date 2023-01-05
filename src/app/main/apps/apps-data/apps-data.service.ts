@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {ModelService} from '../../../_services/model.service';
 import {ApiParams} from '../../../_models';
+import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 
 export class MenuItem {
     title: string;
@@ -15,7 +15,7 @@ export class AppsDataService {
     private active_menu_item: MenuItem;
 
     constructor(
-        private modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
     )
     {
         this.main_menu = [
@@ -23,7 +23,7 @@ export class AppsDataService {
                 title: 'Мои',
                 tag: 'my',
                 params: {
-                    user_id: this.modelService.get_user_id()
+                    user_id: this.getSessionKeyService.get_user_id()
                 }
             },
             {

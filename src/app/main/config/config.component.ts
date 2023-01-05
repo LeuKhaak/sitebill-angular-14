@@ -10,6 +10,7 @@ import {SnackService} from '../../_services/snack.service';
 import {UntypedFormControl} from '@angular/forms';
 import * as _ from 'lodash';
 import {MatSidenav} from '@angular/material/sidenav';
+import {ConfigSystemService} from '../../_services/config-system.service';
 
 @Component({
     selector: 'app-config',
@@ -34,16 +35,17 @@ export class ConfigComponent implements OnInit {
     @ViewChild(ConfigFormComponent) config_form_child: ConfigFormComponent;
     @ViewChild(MatSidenav) side_nav: MatSidenav;
 
-    @Input('light_config')
+    @Input()
     light_config: string;
 
-    @Input('config_key')
+    @Input()
     config_key: string;
 
 
     constructor(
         protected configService: ConfigService,
         protected _snackService: SnackService,
+        protected configSystemService: ConfigSystemService,
         changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
     ) {
         this._unsubscribeAll = new Subject();
@@ -65,7 +67,7 @@ export class ConfigComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.configService.system_config()
+        this.configSystemService.system_config()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
                 Object.assign(this.sitebillResponse, result);
@@ -89,7 +91,7 @@ export class ConfigComponent implements OnInit {
 
     }
 
-    filterBy(array, value = null){
+    filterBy(array, value = null): any[] {
         if (!value || value === '') {
             return array;
         }
@@ -99,7 +101,7 @@ export class ConfigComponent implements OnInit {
 
 
 
-        for (let i = 0; i < tmp_array.length; i++){
+        for (const i of tmp_array.length){
 
             const obj = Object.assign({}, tmp_array[i].data);
             const f1 = Object.keys(obj)
@@ -122,9 +124,9 @@ export class ConfigComponent implements OnInit {
 
     }
 
-    save(event) {
+    save(event): void {
         const ql_items = this.config_form_child.get_changed_items();
-        this.configService.update_system_config(ql_items)
+        this.configSystemService.update_system_config(ql_items)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: SitebillResponse) => {
                 if ( result.state === 'success' ) {
@@ -138,13 +140,13 @@ export class ConfigComponent implements OnInit {
     }
 
 
-    OnDestroy() {
+    OnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    clickMenu(index: number) {
+    clickMenu(index: number): void {
         if ( this.mobileQuery.matches ) {
             this.side_nav.toggle();
 
@@ -152,7 +154,7 @@ export class ConfigComponent implements OnInit {
         this.showAppsConfig(index);
     }
 
-    showAppsConfig(index: number, filtered_array = null) {
+    showAppsConfig(index: number, filtered_array = null): void {
         if ( this.sitebillResponse.data ) {
             if ( !filtered_array && !this.config_key) {
                 filtered_array = this.filterBy(this.sitebillResponse.data, this.searchControl.value);
@@ -166,22 +168,22 @@ export class ConfigComponent implements OnInit {
         }
     }
 
-    showSaveButton() {
+    showSaveButton(): void {
         this.saveButton = true;
     }
 
-    clear_search_text() {
+    clear_search_text(): void {
         this.searchControl.patchValue('');
     }
 
-    getSideNavContentClass() {
+    getSideNavContentClass(): string {
         if ( this.light_config ) {
             return 'mat-sidenav-content';
         }
         return 'mat-sidenav-content-70';
     }
 
-    showToolBar() {
+    showToolBar(): boolean {
         if ( this.light_config && !this.saveButton) {
             return false;
         }

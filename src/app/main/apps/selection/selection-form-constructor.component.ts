@@ -40,7 +40,7 @@ import { ChatService, CommentsBlockMeta } from '../../apps/chat/chat.service';
 import { fuseAnimations } from '../../../../@fuse/animations';
 import { StorageService } from '../../../_services/storage.service';
 import { SelectionItems } from './selection-items';
-import { objectKeys } from 'codelyzer/util/objectKeys';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
     showDelay: 1000,
@@ -74,6 +74,7 @@ export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
 
     constructor(
         protected modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         protected filterService: FilterService,
@@ -86,7 +87,7 @@ export class SelectionFormConstructorComponent implements OnInit, OnDestroy {
         this.loadingIndicator = true;
 
         // Set the private defaults
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
         this.lat_center = 55.76;
         this.lng_center = 37.64;
         this.form = this._formBuilder.group({});
