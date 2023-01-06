@@ -3,8 +3,9 @@ import {fuseAnimations} from '../../../../@fuse/animations';
 import {ModelService} from '../../../_services/model.service';
 import {SnackService} from '../../../_services/snack.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {SitebillEntity} from "../../../_models";
-import {EntityStorageService} from "../../../_services/entity-storage.service";
+import {SitebillEntity} from '../../../_models';
+import {EntityStorageService} from '../../../_services/entity-storage.service';
+import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 
 @Component({
     selector: 'collection-modal',
@@ -21,6 +22,7 @@ export class CollectionModalComponent  implements OnInit {
 
     constructor(
         protected modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
         private dialogRef: MatDialogRef<CollectionModalComponent>,
         protected _snackService: SnackService,
         private entityStorageService: EntityStorageService,
@@ -29,7 +31,7 @@ export class CollectionModalComponent  implements OnInit {
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.entity = new SitebillEntity();
         this.entity.set_app_name('memorylist');
         this.entity.set_table_name('memorylist');
@@ -43,8 +45,8 @@ export class CollectionModalComponent  implements OnInit {
         this.entity.set_default_value('deal_id', 1);
 
         this.entity.set_hidden('user_id');
-        this.entity.set_param('user_id', this.modelService.get_user_id().toString());
-        this.entity.set_default_value('user_id', this.modelService.get_user_id());
+        this.entity.set_param('user_id', this.getSessionKeyService.get_user_id().toString());
+        this.entity.set_default_value('user_id', this.getSessionKeyService.get_user_id());
 
         this.entityStorageService.set_entity('memorylist', this.entity);
 
@@ -53,24 +55,24 @@ export class CollectionModalComponent  implements OnInit {
         this.entity_memorylist_user.set_table_name('memorylist_user');
         this.entity_memorylist_user.set_primary_key('id');
         this.entity_memorylist_user.set_hidden('id');
-        //this.entity_memorylist_user.set_default_value('user_id', this.modelService.get_user_id());
+        // this.entity_memorylist_user.set_default_value('user_id', this.modelService.get_user_id());
 
-        //this.entity.set_key_value(0);
+        // this.entity.set_key_value(0);
     }
 
-    copy() {
-        //this.clipboard.copy(this.link);
+    copy(): void {
+        // this.clipboard.copy(this.link);
         this._snackService.message('Ссылка скопирована в буфер обмена');
 
 
     }
 
-    close() {
+    close(): void {
         this.dialogRef.close();
     }
 
 
-    save(event) {
+    save(event): void {
         if ( event.memorylist_id ) {
             this._snackService.message('Объект добавлен в подборку');
         }

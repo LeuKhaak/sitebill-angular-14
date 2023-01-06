@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FilterService } from 'app/_services/filter.service';
 import {ModelService} from '../../../../_services/model.service';
 import {FuseConfigService} from '../../../../../@fuse/services/config.service';
 import {SitebillEntity} from '../../../../_models';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {GetSessionKeyService} from '../../../../_services/get-session-key.service';
 
 @Component({
     selector: 'front-component',
@@ -12,26 +13,25 @@ import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} fr
     styleUrls: ['./front.component.scss'],
     animations: fuseAnimations
 })
-export class FrontComponent {
+export class FrontComponent implements OnInit, AfterViewChecked {
     form: UntypedFormGroup;
 
-    public allow_load_grid = false;
-    private disable_add_button: boolean = false;
-    private disable_edit_button: boolean = false;
-    private disable_delete_button: boolean = false;
-    private disable_activation_button: boolean = false;
-    private disable_gallery_controls: boolean = false;
-    private disable_view_button: boolean = false;
-    private sale_entity: SitebillEntity;
-    private rent_entity: SitebillEntity;
+    public disable_add_button = false;
+    public disable_edit_button = false;
+    public disable_delete_button = false;
+    public disable_activation_button = false;
+    public disable_gallery_controls = false;
+    public disable_view_button = false;
+    public sale_entity: SitebillEntity;
+    public rent_entity: SitebillEntity;
     topics: any;
     regions: any;
 
-    private dictiony_loaded: boolean = false;
+    private dictiony_loaded = false;
     reload: boolean;
-    private dayrent_entity: SitebillEntity;
-    private buy_entity: SitebillEntity;
-    private needrent_entity: SitebillEntity;
+    public dayrent_entity: SitebillEntity;
+    public buy_entity: SitebillEntity;
+    public needrent_entity: SitebillEntity;
 
     private topic_columns: any[][];
     enable_collections: boolean;
@@ -41,7 +41,8 @@ export class FrontComponent {
         protected _formBuilder: UntypedFormBuilder,
         private _fuseConfigService: FuseConfigService,
         protected cdr: ChangeDetectorRef,
-        public modelService: ModelService
+        public modelService: ModelService,
+        public getSessionKeyService: GetSessionKeyService,
     ) {
         this.disable_menu();
         this.topic_columns = [];
@@ -49,7 +50,7 @@ export class FrontComponent {
         // console.log('lead constructor');
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.form = this._formBuilder.group({
             topic_id: new UntypedFormControl('', []),
             region_id: new UntypedFormControl('', []),
@@ -70,7 +71,7 @@ export class FrontComponent {
         }
     }
 
-    init_front () {
+    init_front(): void {
         this.enable_guest_mode();
         this.reload = true;
 
@@ -106,7 +107,8 @@ export class FrontComponent {
         this.dayrent_entity.set_primary_key('id');
         // this.dayrent_entity.set_disable_comment();
         this.dayrent_entity.set_default_params({ active: 1, optype: 2 });
-        const default_columns_list_dayrent = ['address_composed', 'topic_id', 'room_count', 'floor', 'floor_count', 'square_composed', 'price', 'owner_phone', 'date_added', 'image', 'complaint_id'];
+        const default_columns_list_dayrent = ['address_composed', 'topic_id', 'room_count', 'floor', 'floor_count', 'square_composed', 'price',
+            'owner_phone', 'date_added', 'image', 'complaint_id'];
         this.dayrent_entity.set_default_columns_list(default_columns_list_dayrent);
         this.dayrent_entity.hide_column_edit('user_id');
 
@@ -134,15 +136,15 @@ export class FrontComponent {
         this.cdr.markForCheck();
     }
 
-    push_reload_event () {
+    push_reload_event(): void {
         this.reload = false;
-        this.modelService.get_cms_session().subscribe((response: any) => {
+        this.getSessionKeyService.get_cms_session().subscribe(() => {
             this.reload = true;
             this.cdr.markForCheck();
         });
     }
 
-    change_columns_list (event) {
+    change_columns_list(event): void {
         this.push_reload_event();
         let default_columns_list = ['address_composed', 'topic_id', 'room_count', 'floor', 'floor_count', 'square_composed', 'price', 'owner_phone', 'date_added', 'image'];
         try {
@@ -166,17 +168,17 @@ export class FrontComponent {
 
         this.needrent_entity.set_default_columns_list(default_columns_list);
         this.redefine_default_params(this.needrent_entity, 'topic_id', event.value);
-        //console.log(this.selectedTopic);
+        // console.log(this.selectedTopic);
     }
 
-    redefine_default_params (entity: SitebillEntity, name: string, value: string) {
+    redefine_default_params(entity: SitebillEntity, name: string, value: string): void {
         const params = entity.get_default_params();
         params[name] = value;
         entity.set_default_params(params);
         this.filterService.share_data(entity, name, value);
     }
 
-    change_region_list ( event ) {
+    change_region_list( event ): void {
         this.push_reload_event();
         // console.log(event.value);
 
@@ -187,11 +189,11 @@ export class FrontComponent {
         this.redefine_default_params(this.needrent_entity, 'region_id', event.value);
     }
 
-    set_topic_id_value (value: string) {
+    set_topic_id_value(value: string): void {
         this.form.controls['topic_id'].setValue(value);
         this.form.controls['topic_id'].patchValue(value);
     }
-    set_region_id_value (value: string) {
+    set_region_id_value(value: string): void {
         this.form.controls['region_id'].setValue(value);
         this.form.controls['region_id'].patchValue(value);
         this.filterService.share_data(this.sale_entity, 'region_id', value.toString());
@@ -202,17 +204,17 @@ export class FrontComponent {
     }
 
 
-    enable_guest_mode () {
-        if ( this.modelService.get_user_id() === null ) {
+    enable_guest_mode(): void {
+        if ( this.getSessionKeyService.get_user_id() === null ) {
             this.switch_off_grid_controls();
-            this.modelService.enable_guest_mode();
+            this.getSessionKeyService.enable_guest_mode();
         }
     }
 
-    load_topics () {
+    load_topics(): void {
         this.modelService.load_dictionary_model_all('data', 'topic_id')
             .subscribe((response: any) => {
-                response.data.forEach((row, index) => {
+                response.data.forEach((row) => {
                     if ( row.columns_list ) {
                         this.topic_columns[row.id] = row.columns_list.split(',');
                     }
@@ -223,7 +225,7 @@ export class FrontComponent {
             });
     }
 
-    load_regions () {
+    load_regions(): void {
         this.modelService.load_dictionary_model_all('data', 'region_id')
             .subscribe((response: any) => {
                 const share_region_id = this.filterService.get_share_data('sale', 'region_id');
@@ -237,15 +239,15 @@ export class FrontComponent {
             });
     }
 
-    ngAfterViewChecked () {
-        if ( this.modelService.all_checks_passes() && !this.dictiony_loaded) {
+    ngAfterViewChecked(): void {
+        if ( this.getSessionKeyService.all_checks_passes() && !this.dictiony_loaded) {
             this.load_regions();
             this.load_topics();
             this.dictiony_loaded = true;
         }
     }
 
-    switch_off_grid_controls () {
+    switch_off_grid_controls(): void {
         this.disable_add_button = false;
         this.disable_edit_button = false;
         this.disable_delete_button = false;
@@ -255,7 +257,7 @@ export class FrontComponent {
 
     }
 
-    disable_menu() {
+    disable_menu(): void {
         this._fuseConfigService.config = {
             layout: {
                 navbar: {

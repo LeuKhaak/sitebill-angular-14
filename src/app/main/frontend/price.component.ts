@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewChecked} from '@angular/core';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {FuseConfigService} from '../../../@fuse/services/config.service';
 import {FuseTranslationLoaderService} from '../../../@fuse/services/translation-loader.service';
@@ -9,8 +9,9 @@ import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {LoginModalComponent} from '../../login/modal/login-modal.component';
 import {ModelService} from '../../_services/model.service';
-import {StorageService} from "../../_services/storage.service";
-import {SnackService} from "../../_services/snack.service";
+import {StorageService} from '../../_services/storage.service';
+import {SnackService} from '../../_services/snack.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
 
 @Component({
     selector   : 'price',
@@ -19,10 +20,10 @@ import {SnackService} from "../../_services/snack.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class PriceComponent
+export class PriceComponent implements AfterViewChecked, OnInit
 {
     public products: any;
-    public currency_id: number = 1;
+    public currency_id = 1;
     private products_loaded: boolean;
     private loading_in_progress: boolean;
     public user_products_loaded: boolean;
@@ -43,6 +44,7 @@ export class PriceComponent
         protected storageService: StorageService,
         protected dialog: MatDialog,
         public modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
         protected _snackService: SnackService,
         protected cdr: ChangeDetectorRef
     )
@@ -65,15 +67,15 @@ export class PriceComponent
         };
 
     }
-    ngOnInit() {
+    ngOnInit(): void {
         this.modelService.config_loaded_emitter.subscribe((result: any) => {
             console.log('price enable guest mode');
-            this.modelService.enable_guest_mode();
+            this.getSessionKeyService.enable_guest_mode();
         });
     }
 
-    ngAfterViewChecked () {
-        if ( this.modelService.all_checks_passes() && !this.products_loaded) {
+    ngAfterViewChecked(): void {
+        if ( this.getSessionKeyService.all_checks_passes() && !this.products_loaded) {
             if ( !this.loading_in_progress ) {
                 this.billingSerivce.get_products().subscribe(
                     (products: any) => {
@@ -88,23 +90,23 @@ export class PriceComponent
         }
     }
 
-    check_user_tariff () {
+    check_user_tariff(): void {
         this.billingSerivce.get_user_products().subscribe(
             (user_products: any) => {
                 this.user_products_loaded = true;
                 if (  user_products.records != null ) {
-                    //console.log(user_products);
+                    // console.log(user_products);
                     this.total_active_products = user_products.total_active_products;
                     const mapped = Object.keys(user_products.records).map(key => ({id: key, value: user_products.records[key]}));
-                    //console.log(mapped);
-                    //const active = mapped.filter(item => item);
+                    // console.log(mapped);
+                    // const active = mapped.filter(item => item);
                     mapped.forEach(item => {
-                        if ( item.value.status.value === 'active' && item.value.billingcycle.value != 'once' ) {
+                        if ( item.value.status.value === 'active' && item.value.billingcycle.value !== 'once' ) {
                             this.has_active_tariff = true;
                         }
                     });
                     this.user_products = mapped;
-                    //console.log(this.user_products);
+                    // console.log(this.user_products);
                     this.cdr.markForCheck();
                 }
             }
@@ -112,7 +114,7 @@ export class PriceComponent
     }
 
 
-    login_modal () {
+    login_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'login-form';
@@ -121,8 +123,8 @@ export class PriceComponent
     }
 
 
-    add_to_cart(product) {
-        if ( this.modelService.get_nobody_mode() ) {
+    add_to_cart(product): void {
+        if ( this.getSessionKeyService.get_nobody_mode() ) {
             console.log('price login model');
             this.login_modal();
             return;

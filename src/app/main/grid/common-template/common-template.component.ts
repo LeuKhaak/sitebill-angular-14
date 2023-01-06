@@ -1,11 +1,10 @@
-import {Component, TemplateRef, ViewChild, Input, Output, EventEmitter, Inject} from '@angular/core';
+import {Component, TemplateRef, ViewChild, Input, Output, EventEmitter, Inject, OnInit} from '@angular/core';
 import {SitebillEntity} from 'app/_models';
 import {AppConfig, APP_CONFIG} from 'app/app.config.module';
 import {ModelService} from 'app/_services/model.service';
-import {WhatsAppService} from "../../apps/whatsapp/whatsapp.service";
-import {takeUntil} from "rxjs/operators";
-import {SitebillResponse} from "../../../_models/sitebill-response";
-import {Subject} from "rxjs";
+import {WhatsAppService} from '../../apps/whatsapp/whatsapp.service';
+import {Subject} from 'rxjs';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 interface WhatsAppCheckStorage {
     [key: string]: any;
@@ -16,7 +15,7 @@ interface WhatsAppCheckStorage {
     templateUrl: './common-template.component.html',
     styleUrls: ['./common-template.component.scss'],
 })
-export class CommonTemplateComponent {
+export class CommonTemplateComponent implements OnInit {
     api_url: string;
     protected _unsubscribeAll: Subject<any>;
 
@@ -44,34 +43,33 @@ export class CommonTemplateComponent {
     @ViewChild('select_by_query_multi_Tmpl') select_by_query_multi_Tmpl: TemplateRef<any>;
 
 
-    template_loaded: boolean;
     @Input() entity: SitebillEntity;
 
-    @Input("disable_view_button")
+    @Input()
     disable_view_button: boolean;
 
-    @Input("enable_coworker_button")
+    @Input()
     enable_coworker_button: boolean;
 
-    @Input("enable_testimonials_button")
+    @Input()
     enable_testimonials_button: boolean;
 
-    @Input("enable_building_blocks_button")
+    @Input()
     enable_building_blocks_button: boolean;
 
-    @Input("disable_edit_button")
+    @Input()
     disable_edit_button: boolean;
 
-    @Input("disable_delete_button")
+    @Input()
     disable_delete_button: boolean;
 
-    @Input("disable_activation_button")
+    @Input()
     disable_activation_button: boolean;
 
-    @Input("disable_gallery_controls")
+    @Input()
     disable_gallery_controls: boolean;
 
-    @Input("complaint_mode")
+    @Input()
     complaint_mode: boolean;
 
     @Output() viewEvent = new EventEmitter<number>();
@@ -93,48 +91,48 @@ export class CommonTemplateComponent {
     constructor(
         @Inject(APP_CONFIG) private config: AppConfig,
         public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected whatsAppService: WhatsAppService,
     ) {
         this._unsubscribeAll = new Subject();
     }
 
-    ngOnInit() {
-        this.api_url = this.modelService.get_api_url();
+    ngOnInit(): void {
+        this.api_url = this.getApiUrlService.get_api_url();
     }
 
-    view(item_id: number) {
+    view(item_id: number): void {
         this.viewEvent.next(item_id);
     }
 
-    toggle_active(row, value) {
+    toggle_active(row, value): void {
         console.log('VAL', value);
         const event = {row: row, value: value};
         this.toggle_activeEvent.next(event);
     }
 
-    toggle_collection(row, value) {
+    toggle_collection(row, value): void {
         console.log('VAL', value);
         const event = {row: row, value: value};
         this.toggle_collectionEvent.next(event);
     }
 
-    view_injector(row, value) {
+    view_injector(row, value): void {
         console.log('VAL', value);
         const event = {row: row, value: value};
         this.view_injectorEvent.next(event);
     }
 
-    valid_link(value) {
+    valid_link(value): boolean {
         // console.log('VAL', value);
         const reg = '^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
         if (value.match(reg)) {
             return true;
         }
-        return false;
     }
 
 
-    view_gallery(row, column, images, disable_gallery_controls) {
+    view_gallery(row, column, images, disable_gallery_controls): void {
         console.log('IMG', images);
         console.log('COL', column);
         console.log('DIS', disable_gallery_controls);
@@ -142,45 +140,45 @@ export class CommonTemplateComponent {
         this.view_galleryEvent.next(event);
     }
 
-    view_whatsapp(row, column, value, history = false) {
+    view_whatsapp(row, column, value, history = false): void {
         console.log('VAL', value);
         console.log('COL', column);
         const event = {row: row, column: column, value: value, history: history};
         this.view_whatsappEvent.next(event);
     }
 
-    edit_form(item_id: number) {
+    edit_form(item_id: number): void {
         this.edit_formEvent.next(item_id);
     }
 
-    delete(item_id: number) {
+    delete(item_id: number): void {
         this.deleteEvent.next(item_id);
     }
 
-    report(item_id: number) {
+    report(item_id: number): void {
         this.reportEvent.next(item_id);
     }
 
-    coworkers(item_id: number) {
+    coworkers(item_id: number): void {
         this.coworkersEvent.next(item_id);
     }
 
-    testimonials(item_id: number) {
+    testimonials(item_id: number): void {
         this.testimonialsEvent.next(item_id);
     }
 
-    building_blocks(item_id: number) {
+    building_blocks(item_id: number): void {
         this.building_blocksEvent.next(item_id);
     }
 
-    get_status_class(row) {
+    get_status_class(row): string {
         try {
-            if (row.active.value != '1') {
+            if (row.active.value !== '1') {
                 return 'red-100';
             } else if (row.active.value === '1') {
                 return 'light-green-100';
             }
-            if (row.hot.value == 1) {
+            if (row.hot.value === 1) {
                 return 'amber-100';
             }
         } catch {
@@ -188,29 +186,27 @@ export class CommonTemplateComponent {
         return '';
     }
 
-    get_permission(row, action) {
+    get_permission(row, action): boolean {
         if (row[this.entity.get_primary_key()] && row[this.entity.get_primary_key()].permissions != null && row[this.entity.get_primary_key()].permissions !== undefined) {
             if (row[this.entity.get_primary_key()].permissions[action] === true) {
                 return true;
             }
-            return false;
         }
         return true;
     }
 
-    isWhatsAppAvailable(value: any) {
+    isWhatsAppAvailable(value: any): boolean {
         console.log('W-A-VAL', value);
-        if ( localStorage.getItem(value) != undefined ) {
+        if ( localStorage.getItem(value) !== undefined ) {
             if (localStorage.getItem(value) === '1') {
                 return true;
             }
-            return false;
         }
 
         if (!this.whatsAppService.readyState) {
             return false;
         }
-        if (this.whatsAppCheckStorage[value] != undefined) {
+        if (this.whatsAppCheckStorage[value] !== undefined) {
             return this.whatsAppCheckStorage[value];
         }
         this.whatsAppCheckStorage[value] = false;
@@ -235,7 +231,7 @@ export class CommonTemplateComponent {
         return false;
     }
 
-    OnDestroy() {
+    OnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

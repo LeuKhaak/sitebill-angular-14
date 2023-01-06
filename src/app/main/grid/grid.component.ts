@@ -1,4 +1,5 @@
 import {
+    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -7,7 +8,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output,
+    Output, TemplateRef,
     ViewChild
 } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
@@ -41,24 +42,27 @@ import {CommonTemplateComponent} from './common-template/common-template.compone
 import {ActivatedRoute, Router} from '@angular/router';
 import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
 import {BillingService} from '../../_services/billing.service';
-import {ReportComponent} from "../../dialogs/report/report.component";
+import {ReportComponent} from '../../dialogs/report/report.component';
 import * as localization from 'moment/locale/ru';
-import {LocaleConfig} from "ngx-daterangepicker-material";
-import {SaveSearchComponent} from "../../dialogs/save-search/save-search.component";
-import {LoginModalComponent} from "../../login/modal/login-modal.component";
-import {StringParserService} from "../../_services/string-parser.service";
-import {ShareModalComponent} from "./share-modal/share-modal.component";
-import {CollectionModalComponent} from "./collection-modal/collection-modal.component";
-import {CoworkerModalComponent} from "./coworker-modal/coworker-modal.component";
-import {BuildingBlocksModalComponent} from "./building-blocks-modal/building-blocks-modal.component";
-import {TestimonialsModalComponent} from "./testimonials-modal/testimonials-modal.component";
-import {GridSettingsSidenavComponent} from "./sidenavs/settings/settings.component";
-import {ExcelModalComponent} from "../apps/excel/modal/excel-modal.component";
-import {WhatsappModalComponent} from "../apps/whatsapp/whatsapp-modal/whatsapp-modal.component";
-import {WhatsAppService} from "../apps/whatsapp/whatsapp.service";
-import {ReportType, SendCallbackBundle} from "../apps/whatsapp/types/whatsapp.types";
-import {ReportModalComponent} from "../apps/whatsapp/report-modal/report-modal.component";
+import {LocaleConfig} from 'ngx-daterangepicker-material';
+import {SaveSearchComponent} from '../../dialogs/save-search/save-search.component';
+import {LoginModalComponent} from '../../login/modal/login-modal.component';
+import {StringParserService} from '../../_services/string-parser.service';
+import {ShareModalComponent} from './share-modal/share-modal.component';
+import {CollectionModalComponent} from './collection-modal/collection-modal.component';
+import {CoworkerModalComponent} from './coworker-modal/coworker-modal.component';
+import {BuildingBlocksModalComponent} from './building-blocks-modal/building-blocks-modal.component';
+import {TestimonialsModalComponent} from './testimonials-modal/testimonials-modal.component';
+import {GridSettingsSidenavComponent} from './sidenavs/settings/settings.component';
+import {ExcelModalComponent} from '../apps/excel/modal/excel-modal.component';
+import {WhatsappModalComponent} from '../apps/whatsapp/whatsapp-modal/whatsapp-modal.component';
+import {WhatsAppService} from '../apps/whatsapp/whatsapp.service';
+import {ReportType, SendCallbackBundle} from '../apps/whatsapp/types/whatsapp.types';
+import {ReportModalComponent} from '../apps/whatsapp/report-modal/report-modal.component';
 import {AppsDataService, MenuItem} from '../apps/apps-data/apps-data.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
+import {ConfigService} from '../../_services/config.service';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -70,7 +74,7 @@ moment.locale('ru', localization);
     styleUrls: ['./grid.component.scss'],
     animations: fuseAnimations
 })
-export class GridComponent implements OnInit, OnDestroy
+export class GridComponent implements OnInit, OnDestroy, AfterViewChecked
 {
     rows = [];
     ngxHeaderHeight: any;
@@ -197,95 +201,95 @@ export class GridComponent implements OnInit, OnDestroy
     @ViewChild(CommonTemplateComponent)
     public commonTemplate: CommonTemplateComponent;
 
-    @Input('enable_collections')
+    @Input()
     enable_collections: boolean;
 
-    @Input('only_collections')
+    @Input()
     only_collections: boolean;
 
-    @Input('memorylist_id')
+    @Input()
     memorylist_id: number;
 
-    @Input('disable_menu')
+    @Input()
     disable_menu: boolean;
 
-    @Input('disable_add_button')
+    @Input()
     disable_add_button: boolean;
 
-    @Input('disable_header')
+    @Input()
     disable_header: boolean;
 
-    @Input('disable_wild_search')
+    @Input()
     disable_wild_search: boolean;
 
-    @Input('disable_view_button')
+    @Input()
     disable_view_button: boolean;
 
-    @Input('enable_coworker_button')
+    @Input()
     enable_coworker_button: boolean;
 
-    @Input('enable_testimonials_button')
+    @Input()
     enable_testimonials_button: boolean;
 
 
-    @Input('enable_building_blocks_button')
+    @Input()
     enable_building_blocks_button: boolean;
 
-    @Input('disable_edit_button')
+    @Input()
     disable_edit_button: boolean;
 
-    @Input('disable_delete_button')
+    @Input()
     disable_delete_button: boolean;
 
-    @Input('disable_refresh_button')
+    @Input()
     disable_refresh_button: boolean;
 
-    @Input('disable_activation_button')
+    @Input()
     disable_activation_button: boolean;
 
-    @Input('disable_gallery_controls')
+    @Input()
     disable_gallery_controls: boolean;
 
-    @Input('freeze_default_columns_list')
+    @Input()
     freeze_default_columns_list = false;
 
-    @Input('input_entity')
+    @Input()
     input_entity: SitebillEntity;
 
-    @Input('enable_select_rows')
+    @Input()
     enable_select_rows = true;
 
-    @Input('complaint_mode')
+    @Input()
     complaint_mode = false;
 
-    @Input('disable_fix_table_height')
+    @Input()
     disable_fix_table_height = false;
 
-    @Input('header_top_panel')
+    @Input()
     header_top_panel = false;
 
-    @Input('showFilterAllButton')
+    @Input()
     showFilterAllButton = false;
 
-    @Input('showFilterFilButton')
+    @Input()
     showFilterFilButton = false;
 
-    @Input('showFilterMyButton')
+    @Input()
     showFilterMyButton = false;
 
-    @Input('showFilterArhButton')
+    @Input()
     showFilterArhButton = false;
 
-    @Input('showFilterNewButton')
+    @Input()
     showFilterNewButton = false;
 
-    @Input('showFilterExButton')
+    @Input()
     showFilterExButton = false;
 
-    @Input('showFilterTemporarilyButton')
+    @Input()
     showFilterTemporarilyButton = false;
 
-    @Input('showSelectionButton')
+    @Input()
     showSelectionButton = false;
 
     @Output() total_counterEvent = new EventEmitter<number>();
@@ -316,6 +320,9 @@ export class GridComponent implements OnInit, OnDestroy
         protected dialog: MatDialog,
         private _fuseConfigService: FuseConfigService,
         public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
+        protected configService: ConfigService,
         protected billingService: BillingService,
         protected bitrix24Service: Bitrix24Service,
         protected _snackService: SnackService,
@@ -391,7 +398,7 @@ export class GridComponent implements OnInit, OnDestroy
         };
         this.my = {
             params: {
-                user_id: this.modelService.get_user_id()
+                user_id: this.getSessionKeyService.get_user_id()
             },
             tag: 'my',
             title: 'Мои',
@@ -411,13 +418,13 @@ export class GridComponent implements OnInit, OnDestroy
         this.disable_wild_search = false;
 
 
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
         this.compose_complete = false;
         this.after_compose_complete_checked = false;
         this.loadingIndicator = true;
     }
 
-    initFooterHeight () {
+    initFooterHeight(): void {
         if ( window.innerWidth < 959 ) {
             this.footerHeight = 100;
         } else {
@@ -425,7 +432,7 @@ export class GridComponent implements OnInit, OnDestroy
         }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.initFooterHeight();
         this.entity.set_app_url(null);
         if (this.disable_menu) {
@@ -460,11 +467,11 @@ export class GridComponent implements OnInit, OnDestroy
         // console.log('init');
         this.params_filter = this.route.snapshot.paramMap.get('params_filter');
 
-        if ( this.modelService.getConfigValue('apps.realty.data.global_freeze_default_columns_list') === '1' ) {
+        if ( this.configService.getConfigValue('apps.realty.data.global_freeze_default_columns_list') === '1' ) {
             this.freeze_default_columns_list = true;
         }
 
-        if ( this.modelService.getConfigValue('apps.realty.data.global_disable_refresh_button') === '1' ) {
+        if ( this.configService.getConfigValue('apps.realty.data.global_disable_refresh_button') === '1' ) {
             this.disable_refresh_button = true;
         }
 
@@ -692,7 +699,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.calendarHidden = false;
     }
 
-    getFiltersCount() {
+    getFiltersCount(): string | number {
         if (this.filterService.count_share_array(this.entity.get_app_name()) <= 9 ) {
             return this.filterService.count_share_array(this.entity.get_app_name());
         } else {
@@ -709,7 +716,7 @@ export class GridComponent implements OnInit, OnDestroy
     }
 
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         /*
          if ( this.compose_complete ) {
          if ( !this.after_compose_complete_checked ) {
@@ -722,7 +729,7 @@ export class GridComponent implements OnInit, OnDestroy
          */
     }
 
-    refresh() {
+    refresh(): void {
         // console.log('refresh');
         // console.log(this.refresh_complete);
         // console.log(this.entity.app_name);
@@ -740,7 +747,7 @@ export class GridComponent implements OnInit, OnDestroy
 
 
 
-    init_input_parameters () {
+    init_input_parameters(): void {
         let app_root_element;
         if (this.document.getElementById('calculator_mini_root')) {
             app_root_element = this.document.getElementById('calculator_mini_root');
@@ -751,7 +758,7 @@ export class GridComponent implements OnInit, OnDestroy
 
 
 
-    setup_apps() {
+    setup_apps(): void {
         if ( this.input_entity ) {
             this.entity = this.input_entity;
         } else {
@@ -762,10 +769,10 @@ export class GridComponent implements OnInit, OnDestroy
         }
     }
 
-    init_grid(params) {
+    init_grid(params): void {
         // console.log('init grid');
         // console.log(params);
-        let predefined_grid_fields = this.get_predefined_grid_fiels();
+        const predefined_grid_fields = this.get_predefined_grid_fiels();
         if (predefined_grid_fields != null) {
             this.load_grid_data(this.entity.get_app_name(), predefined_grid_fields, params);
         } else {
@@ -773,7 +780,7 @@ export class GridComponent implements OnInit, OnDestroy
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((result: any) => {
                         // console.log(result);
-                        if (result.state == 'error' && result.error == 'check_session_key_failed') {
+                        if (result.state === 'error' && result.error === 'check_session_key_failed') {
                             this.router.navigate(['/login']);
                             return false;
                         }
@@ -795,38 +802,38 @@ export class GridComponent implements OnInit, OnDestroy
 
 
 
-    get_grid_items(params: any) {
+    get_grid_items(params: any): string[] {
         return this.entity.columns;
     }
 
-    define_grid_fields(grid_fields: string[]) {
+    define_grid_fields(grid_fields: string[]): void {
         if (grid_fields != null) {
             this.predefined_grid_fields = grid_fields;
         }
     }
 
-    define_grid_params(params: any) {
+    define_grid_params(params: any): void {
         if (params != null) {
             this.predefined_grid_params = params;
         }
     }
 
 
-    get_predefined_grid_fiels() {
+    get_predefined_grid_fiels(): any[] {
         if (this.predefined_grid_fields.length > 0) {
             return this.predefined_grid_fields;
         }
         return null;
     }
 
-    get_predefined_grid_params() {
+    get_predefined_grid_params(): {[index: string]: any} {
         if (this.predefined_grid_params != null) {
             return this.predefined_grid_params;
         }
         return null;
     }
 
-    get_filter_params () {
+    get_filter_params(): {[index: string]: any} {
         let filter_params_json = {};
         let concatenate_search_string = null;
 
@@ -836,14 +843,14 @@ export class GridComponent implements OnInit, OnDestroy
             // console.log(this.entity.get_app_name());
             // console.log(this.filterService.share_array[this.entity.get_app_name()]);
 
-            var obj = this.filterService.get_share_array(this.entity.get_app_name());
-            var mapped = Object.keys(obj);
+            const obj = this.filterService.get_share_array(this.entity.get_app_name());
+            const mapped = Object.keys(obj);
             // console.log(mapped);
-            var self = this;
+            const self = this;
 
-            mapped.forEach(function (item, i, arr) {
+            mapped.forEach((item, i, arr) => {
                 if (
-                    self.modelService.getConfigValue('apps.realty.search_string_parser.enable') === '1' &&
+                    self.configService.getConfigValue('apps.realty.search_string_parser.enable') === '1' &&
                     item === 'concatenate_search' &&
                     self.entity.get_app_name() === 'data'
                 ) {
@@ -852,9 +859,9 @@ export class GridComponent implements OnInit, OnDestroy
                     // console.log(obj[item].length);
                     // console.log(typeof obj[item]);
                     if (obj[item] != null ) {
-                        if (obj[item].length != 0) {
+                        if (obj[item].length !== 0) {
                             filter_params_json[item] = obj[item];
-                        } else if (typeof obj[item] === 'object' && obj[item].length != 0) {
+                        } else if (typeof obj[item] === 'object' && obj[item].length !== 0) {
                             filter_params_json[item] = obj[item];
                         }
                     }
@@ -875,27 +882,27 @@ export class GridComponent implements OnInit, OnDestroy
         }
         filter_params_json = this.extended_params(filter_params_json);
         if ( concatenate_search_string !== null ) {
-            filter_params_json = {...filter_params_json, ...self.parse_params_from_string(concatenate_search_string)};
+            filter_params_json = {...filter_params_json, ...this.parse_params_from_string(concatenate_search_string)};
         }
         return filter_params_json;
     }
 
-    parse_params_from_string (input:string) {
+    parse_params_from_string(input: string): {[index: string]: any} {
         const parser_result = this.stringParserService.parse(input);
         // console.log(input);
         // console.log(parser_result);
         return parser_result.params;
     }
 
-    load_grid_data(app_name, grid_columns: string[], params: any) {
+    load_grid_data(app_name, grid_columns: string[], params: any): void {
         // console.log('load_grid_data');
-        let filter_params_json = this.get_filter_params();
+        const filter_params_json = this.get_filter_params();
 
         if (params != null) {
             Object.assign(filter_params_json, params);
         }
 
-        let page_number = this.page.pageNumber + 1;
+        const page_number = this.page.pageNumber + 1;
         // console.log(filter_params_json);
 
         let table_name = this.entity.get_table_name();
@@ -908,7 +915,7 @@ export class GridComponent implements OnInit, OnDestroy
             .subscribe((result_f1: any) => {
                 // this.loadingIndicator = true;
                 // console.log(result_f1);
-                if (result_f1.state == 'error') {
+                if (result_f1.state === 'error') {
                     this.rise_error(result_f1.message);
                 } else {
                     // this.item_model = result.rows[0];
@@ -936,7 +943,7 @@ export class GridComponent implements OnInit, OnDestroy
                     }
 
                     this.grid_meta = result_f1.grid_columns.meta;
-                    let model_compose = this.entity.model;
+                    const model_compose = this.entity.model;
                     this.compose_columns(this.grid_columns_for_compose, model_compose);
 
                     // console.log(this.item_model);
@@ -953,26 +960,26 @@ export class GridComponent implements OnInit, OnDestroy
 
     }
 
-    extended_params (params) {
+    extended_params(params): {[index: string]: any} {
         if ( this.params_filter === 'my' ) {
-            params['user_id'] = this.modelService.get_user_id();
+            params['user_id'] = this.getSessionKeyService.get_user_id();
         }
 
         return params;
     }
 
-    set_total_counter(counter: number) {
+    set_total_counter(counter: number): void {
         this.total_counterEvent.next(counter);
     }
 
 
-    rise_error(message: string) {
+    rise_error(message: string): void {
         this.error = true;
         this.error_message = message;
     }
 
-    get_control_column() {
-        let control_column = {
+    get_control_column(): {[index: string]: any} {
+        const control_column = {
             headerTemplate: this.commonTemplate.controlHdrTmpl,
             cellTemplate: this.commonTemplate.controlTmpl,
             width: 40,
@@ -985,7 +992,7 @@ export class GridComponent implements OnInit, OnDestroy
         return control_column;
     }
 
-    compose_columns(columns_list, model:SitebillModelItem[]) {
+    compose_columns(columns_list, model: SitebillModelItem[]): void {
         // console.log('compose columns');
         // console.log(model);
         // console.log(model.length);
@@ -994,7 +1001,7 @@ export class GridComponent implements OnInit, OnDestroy
         // console.log(this.columns_index);
 
         if (this.compose_complete) {
-            //return;
+            // return;
         }
         delete (this.data_columns);
         this.data_columns = [];
@@ -1098,7 +1105,7 @@ export class GridComponent implements OnInit, OnDestroy
 
             }
 
-            let column = {
+            const column = {
                 headerTemplate: this.get_header_template(),
                 cellTemplate: cellTemplate,
                 type: model[this.columns_index[row]].type,
@@ -1107,15 +1114,15 @@ export class GridComponent implements OnInit, OnDestroy
                 title: model[this.columns_index[row]].title,
                 width: width,
                 prop: prop
-            }
+            };
             this.data_columns.push(column);
         });
         this.after_compose();
-        //console.log(this.data_columns);
+        // console.log(this.data_columns);
 
     }
 
-    isMessengerEnabled ( modelItem: SitebillModelItem ) {
+    isMessengerEnabled( modelItem: SitebillModelItem ): boolean {
         if (
             modelItem.name === 'phone' ||
             (
@@ -1128,32 +1135,32 @@ export class GridComponent implements OnInit, OnDestroy
         return false;
     }
 
-    after_compose () {
+    after_compose(): void {
         this.compose_complete = true;
         this.loadingIndicator = false;
     }
 
-    get_header_template() {
+    get_header_template(): TemplateRef<any> {
         return this.commonTemplate.hdrTpl;
     }
 
 
-    clear_search_text() {
+    clear_search_text(): void {
         this.searchInput.patchValue('');
     }
 
-    date_range_change(event, column_name) {
+    date_range_change(event, column_name): void {
         if (event.startDate != null && event.endDate != null) {
             this.selected_date_filter_has_values = true;
             this.filterService.share_data(this.entity, column_name,
                 {
-                    'startDate':event.startDate.local().format('YYYY-MM-DD').toString(),
-                    'endDate':event.endDate.local().format('YYYY-MM-DD').toString()
+                    'startDate': event.startDate.local().format('YYYY-MM-DD').toString(),
+                    'endDate': event.endDate.local().format('YYYY-MM-DD').toString()
                 });
             this.activeNew = false;
         }
     }
-    clear_selected_date_filter(column_name) {
+    clear_selected_date_filter(column_name): void {
         this.selected_date_filter_has_values = false;
         const event = null;
         this.selected_date_filter = null;
@@ -1162,12 +1169,12 @@ export class GridComponent implements OnInit, OnDestroy
         this.activeNew = false;
     }
 
-    enable_date_range(key) {
+    enable_date_range(key): void {
         this.date_range_enable = true;
         this.date_range_key = key;
     }
 
-    delete(item_id: any) {
+    delete(item_id: any): void {
         this.confirmDialogRef = this.dialog.open(ConfirmComponent, {
             disableClose: false
         });
@@ -1183,7 +1190,7 @@ export class GridComponent implements OnInit, OnDestroy
                         .subscribe((response: any) => {
                             console.log(response);
 
-                            if (response.state == 'error') {
+                            if (response.state === 'error') {
                                 this._snackService.message(response.message);
                                 return null;
                             } else {
@@ -1196,7 +1203,7 @@ export class GridComponent implements OnInit, OnDestroy
             });
     }
 
-    selectObjects() {
+    selectObjects(): MatDialogRef<any> {
         this.clear_selected_date_filter(this.date_range_key);
         this.activeNew = false;
         const dialogConfig = new MatDialogConfig();
@@ -1218,7 +1225,7 @@ export class GridComponent implements OnInit, OnDestroy
         return this.dialog.open(SelectionFormComponent, dialogConfig);
     }
 
-    edit_form(item_id: any) {
+    edit_form(item_id: any): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
@@ -1237,22 +1244,21 @@ export class GridComponent implements OnInit, OnDestroy
         this.open_form_with_check_access(dialogConfig);
     }
 
-    open_form_with_check_access (dialogConfig) {
+    open_form_with_check_access(dialogConfig): MatDialogRef<any> {
         if (this.modelService.get_access(this.entity.get_table_name(), 'access')) {
             return this.dialog.open(FormComponent, dialogConfig);
         } else {
             this._snackService.message('Нет доступа к добавлению/редактированию объявлений', 5000);
         }
-        return false;
     }
 
-    view_injector (event: any) {
+    view_injector(event: any): void {
         console.log('view injector');
         console.log(event);
     }
 
 
-    view(item_id: any) {
+    view(item_id: any): void {
         // console.log('view');
         // console.log(item_id);
         const dialogConfig = new MatDialogConfig();
@@ -1270,21 +1276,21 @@ export class GridComponent implements OnInit, OnDestroy
         this.dialog.open(ViewModalComponent, dialogConfig);
     }
 
-    whatsapp_list_sender(entity: SitebillEntity) {
+    whatsapp_list_sender(entity: SitebillEntity): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = <SendCallbackBundle>{
+        dialogConfig.data = ({
             entity: entity,
-        };
+        } as SendCallbackBundle);
         dialogConfig.panelClass = 'form-ngrx-compose-dialog';
         dialogConfig.width = '99vw';
 
         this.dialog.open(WhatsappModalComponent, dialogConfig);
     }
 
-    view_whatsapp(event) {
+    view_whatsapp(event): void {
         let history = false;
         let report_type = ReportType.client;
         let client_id = null;
@@ -1312,18 +1318,18 @@ export class GridComponent implements OnInit, OnDestroy
             history = true;
         }
         const dialogConfig = new MatDialogConfig();
-        this.entity.set_key_value(event.row[this.entity.get_primary_key()].value)
+        this.entity.set_key_value(event.row[this.entity.get_primary_key()].value);
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = <SendCallbackBundle>{
+        dialogConfig.data = ({
             entity: this.entity,
             modelItems: event.row,
             phone: event.value,
             report_type: report_type,
             data_id: data_id,
             client_id: client_id,
-        };
+        } as SendCallbackBundle);
         dialogConfig.panelClass = 'form-ngrx-compose-dialog';
         dialogConfig.width = '99vw';
 
@@ -1334,15 +1340,15 @@ export class GridComponent implements OnInit, OnDestroy
         }
     }
 
-    view_gallery(event) {
-        let row = event.row;
-        let column = event.column;
+    view_gallery(event): void {
+        const row = event.row;
+        const column = event.column;
         let images = event.images;
-        let disable_gallery_controls = event.disable_gallery_controls;
-        if (column.type == 'photo' && !Array.isArray(images) && images != '') {
-            let tmp_images = [];
+        const disable_gallery_controls = event.disable_gallery_controls;
+        if (column.type === 'photo' && !Array.isArray(images) && images !== '') {
+            const tmp_images = [];
 
-            let item = {
+            const item = {
                 normal: 'user/' + images,
                 preview: 'user/' + images,
             };
@@ -1352,12 +1358,12 @@ export class GridComponent implements OnInit, OnDestroy
 
         this.entity.set_key_value(row[this.entity.primary_key].value);
 
-        let image_field = column.model_name;
-        let galleryImages = {};
+        const image_field = column.model_name;
+        const galleryImages = {};
         galleryImages[image_field] = {};
-        var self = this;
+        const self = this;
         if (images) {
-            galleryImages[image_field] = images.map(function (image: any) {
+            galleryImages[image_field] = images.map((image: any) => {
                 if (image.remote === 'true') {
                     return {
                         small: image.preview + '?' + new Date().getTime(),
@@ -1366,9 +1372,9 @@ export class GridComponent implements OnInit, OnDestroy
                     };
                 } else {
                     return {
-                        small: self.modelService.get_api_url() + '/img/data/' + image.preview + '?' + new Date().getTime(),
-                        medium: self.modelService.get_api_url() + '/img/data/' + image.normal + '?' + new Date().getTime(),
-                        big: self.modelService.get_api_url() + '/img/data/' + image.normal + '?' + new Date().getTime()
+                        small: self.getApiUrlService.get_api_url() + '/img/data/' + image.preview + '?' + new Date().getTime(),
+                        medium: self.getApiUrlService.get_api_url() + '/img/data/' + image.normal + '?' + new Date().getTime(),
+                        big: self.getApiUrlService.get_api_url() + '/img/data/' + image.normal + '?' + new Date().getTime()
                     };
                 }
 
@@ -1390,11 +1396,11 @@ export class GridComponent implements OnInit, OnDestroy
 
     }
 
-    toggle_active(event) {
-        let row = event.row;
-        let value = event.value;
-        let ql_items = {};
-        if (row.active.value == 0) {
+    toggle_active(event): void {
+        const row = event.row;
+        const value = event.value;
+        const ql_items = {};
+        if (row.active.value === 0) {
             ql_items['active'] = 1;
         } else {
             ql_items['active'] = null;
@@ -1403,7 +1409,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.modelService.update_only_ql(this.entity.get_table_name(), value, ql_items)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: any) => {
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                     this._snackService.message(response.message);
                 } else {
                     // this.cdr.markForCheck();
@@ -1413,9 +1419,9 @@ export class GridComponent implements OnInit, OnDestroy
 
     }
 
-    toggle_collection_b24(event) {
-        let data_id = event.value;
-        let title = 'bitrix deal ' + this.bitrix24Service.get_entity_id();
+    toggle_collection_b24(event): void {
+        const data_id = event.value;
+        const title = 'bitrix deal ' + this.bitrix24Service.get_entity_id();
         this.model_service_toggle_collections(
             event,
             this.bitrix24Service.get_domain(),
@@ -1425,7 +1431,7 @@ export class GridComponent implements OnInit, OnDestroy
         );
     }
 
-    toggle_collection_modal_select_list(event) {
+    toggle_collection_modal_select_list(event): void {
         const domain = this.bitrix24Service.get_domain();
         const title = '';
         const data_id = event.value;
@@ -1449,16 +1455,16 @@ export class GridComponent implements OnInit, OnDestroy
         }
     }
 
-    model_service_toggle_collections( event, domain, deal_id, title, data_id, memorylist_id = 0 ) {
+    model_service_toggle_collections( event, domain, deal_id, title, data_id, memorylist_id = 0 ): void {
         this.modelService.toggle_collections(domain, deal_id, title, data_id, memorylist_id)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: any) => {
                 console.log(response);
-                if (response.state == 'error') {
+                if (response.state === 'error') {
                     this._snackService.message(response.message);
                 } else {
                     let collections_count = this.bitrix24Service.get_collections_count();
-                    if ( response.data.operation == 'add' ) {
+                    if ( response.data.operation === 'add' ) {
                         collections_count++;
                     } else {
                         collections_count--;
@@ -1474,7 +1480,7 @@ export class GridComponent implements OnInit, OnDestroy
             });
     }
 
-    toggle_collection(event) {
+    toggle_collection(event): void {
         if ( this.bitrix24Service.get_domain() !== 'localhost' ) {
             this.toggle_collection_b24(event);
         } else {
@@ -1486,10 +1492,10 @@ export class GridComponent implements OnInit, OnDestroy
      * Populate the table with new data based on the page number
      * @param page The page to select
      */
-    setPage(pageInfo) {
+    setPage(pageInfo): void {
         this.loadingIndicator = true;
         this.page.pageNumber = pageInfo.offset;
-        //const params = { owner: true };
+        // const params = { owner: true };
         let params = {};
 
         if (this.entity.get_default_params()) {
@@ -1501,7 +1507,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.init_grid(params);
     }
 
-    onResize(event) {
+    onResize(event): void {
         const params = { width: event.newValue };
         if ( event.column !== undefined && event.column.model_name !== undefined ) {
             this.modelService.update_column_meta(this.entity.get_table_name(), event.column.model_name, 'columns', params)
@@ -1527,11 +1533,11 @@ export class GridComponent implements OnInit, OnDestroy
 
 
 
-    init_selected_rows(rows, selected) {
-        if (selected.length == 0) {
+    init_selected_rows(rows, selected): void {
+        if (selected.length === 0) {
             return;
         }
-        for (let entry of selected) {
+        for (const entry of selected) {
             rows.forEach((row, index) => {
                 if (row.id.value === entry.id.value) {
                     this.selected.push(rows[index]);
@@ -1545,18 +1551,18 @@ export class GridComponent implements OnInit, OnDestroy
     }
 
 
-    onActivate(event) {
+    onActivate(event): void {
         // console.log('onActivate');
     }
 
 
 
-    onSelect({selected}) {
+    onSelect({selected}): void {
         this.selected.splice(0, this.selected.length);
         this.selected.push(...selected);
     }
 
-    export_collections_pdf(report_type = 'client') {
+    export_collections_pdf(report_type = 'client'): void {
         const deal_id = this.bitrix24Service.get_entity_id();
         const domain = this.bitrix24Service.get_domain();
         this.modelService.export_collections_pdf(domain, deal_id, report_type, this.memorylist_id)
@@ -1566,55 +1572,53 @@ export class GridComponent implements OnInit, OnDestroy
             });
     }
 
-    saveAsExcel(content){
-        this.writeContents((<any>content), this.entity.get_table_name() + '_.xlsx', 'application/excel');
+    saveAsExcel(content): void {
+        this.writeContents((content as any), this.entity.get_table_name() + '_.xlsx', 'application/excel');
     }
 
-    saveAsProject(content){
-        this.writeContents((<any>content), 'Подборка по сделке '+ this.bitrix24Service.get_entity_id() +'.pdf', 'application/pdf');
+    saveAsProject(content): void {
+        this.writeContents((content as any), 'Подборка по сделке ' + this.bitrix24Service.get_entity_id() + '.pdf', 'application/pdf');
     }
-    writeContents(content, fileName, contentType) {
-        var a = document.createElement('a');
-        var file = new Blob([content], {type: contentType});
+    writeContents(content, fileName, contentType): void {
+        const a = document.createElement('a');
+        const file = new Blob([content], {type: contentType});
         a.href = URL.createObjectURL(file);
         a.download = fileName;
         a.click();
     }
-    switch_collections(status: boolean) {
+    switch_collections(status: boolean): void {
         this.enable_collections = status;
     }
 
-    switch_only_collections (status: boolean) {
+    switch_only_collections(status: boolean): void {
         this.only_collections = status;
     }
 
-    configure_buttons () {
+    configure_buttons(): void {
         // console.log('configure buttons ' + this.entity.get_app_name());
-        if ( this.modelService.getConfigValue(this.entity.get_app_name() + '.add.disable') === true ) {
+        if ( this.configService.getConfigValue(this.entity.get_app_name() + '.add.disable') === true ) {
             this.disable_add_button = true;
         }
-        if ( this.modelService.getConfigValue(this.entity.get_app_name() + '.edit.disable') === true ) {
+        if ( this.configService.getConfigValue(this.entity.get_app_name() + '.edit.disable') === true ) {
             this.disable_edit_button = true;
         }
-        if ( this.modelService.getConfigValue(this.entity.get_app_name() + '.delete.disable') === true ) {
+        if ( this.configService.getConfigValue(this.entity.get_app_name() + '.delete.disable') === true ) {
             this.disable_delete_button = true;
         }
-        if ( this.modelService.getConfigValue(this.entity.get_app_name() + '.activation.disable') === true ) {
+        if ( this.configService.getConfigValue(this.entity.get_app_name() + '.activation.disable') === true ) {
             this.disable_activation_button = true;
         }
     }
 
-    save_search() {
-
+    save_search(): void {
         this.saveSearchDialogRef = this.dialog.open(SaveSearchComponent, {
             disableClose: false,
             data: this.entity
         });
         this.saveSearchDialogRef.componentInstance.filter_params_json = this.get_filter_params();
-
     }
 
-    report(item_id: any) {
+    report(item_id: any): void {
         this.entity.set_key_value(item_id);
         this.reportDialogRef = this.dialog.open(ReportComponent, {
             disableClose: false,
@@ -1622,12 +1626,12 @@ export class GridComponent implements OnInit, OnDestroy
         });
     }
 
-    building_blocks (item_id: any) {
+    building_blocks(item_id: any): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = false;
         dialogConfig.panelClass = 'regular-modal';
         dialogConfig.minWidth = '400px';
-        //this.entity.set_key_value(item_id);
+        // this.entity.set_key_value(item_id);
         this.entity.set_param('object_id', item_id);
         dialogConfig.data = this.entity;
 
@@ -1640,8 +1644,7 @@ export class GridComponent implements OnInit, OnDestroy
 
     }
 
-    coworkers(item_id: any) {
-
+    coworkers(item_id: any): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = false;
         dialogConfig.panelClass = 'regular-modal';
@@ -1658,7 +1661,7 @@ export class GridComponent implements OnInit, OnDestroy
             });
     }
 
-    testimonials(item_id: any) {
+    testimonials(item_id: any): void {
 
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = false;
@@ -1677,7 +1680,7 @@ export class GridComponent implements OnInit, OnDestroy
     }
 
 
-    reset_filters () {
+    reset_filters(): void {
         this.resetToggleButtons();
         this.clear_search_text();
         this.clear_selected_date_filter(this.date_range_key);
@@ -1690,7 +1693,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.activePost = false;
     }
 
-    login_modal () {
+    login_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'login-form';
@@ -1698,14 +1701,14 @@ export class GridComponent implements OnInit, OnDestroy
         this.dialog.open(LoginModalComponent, dialogConfig);
     }
 
-    get_apps_realty_min_filter_reset_count() {
-        if ( this.modelService.getConfigValue('apps.realty.min_filter_reset_count') ) {
-            return this.modelService.getConfigValue('apps.realty.min_filter_reset_count');
+    get_apps_realty_min_filter_reset_count(): any { // any ???
+        if ( this.configService.getConfigValue('apps.realty.min_filter_reset_count') ) {
+            return this.configService.getConfigValue('apps.realty.min_filter_reset_count');
         }
         return 0;
     }
 
-    share_memorylist() {
+    share_memorylist(): void {
         const deal_id = this.bitrix24Service.get_entity_id();
         const domain = this.bitrix24Service.get_domain();
 
@@ -1719,7 +1722,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.dialog.open(ShareModalComponent, dialogConfig);
     }
 
-    settings_modal() {
+    settings_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = false;
         dialogConfig.panelClass = 'regular-modal';
@@ -1732,7 +1735,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.dialog.open(GridSettingsSidenavComponent, dialogConfig);
     }
 
-    excel_modal() {
+    excel_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'regular-modal';
@@ -1743,7 +1746,7 @@ export class GridComponent implements OnInit, OnDestroy
         this.dialog.open(ExcelModalComponent, dialogConfig);
     }
 
-    excel_export() {
+    excel_export(): void {
         this.modelService.excel_export(this.entity, this.get_filter_params())
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: any) => {
@@ -1760,17 +1763,17 @@ export class GridComponent implements OnInit, OnDestroy
 
 
 
-    toggleExpandGroup(group) {
+    toggleExpandGroup(group): void {
         console.log('Toggled Expand Group!', group);
         this.table.groupHeader.toggleExpandGroup(group);
     }
 
-    onDetailToggle(event) {
+    onDetailToggle(event): void {
         // console.log('Detail Toggled', event);
     }
 
 
-    groupBy(list, keyGetter) {
+    groupBy(list, keyGetter): any[] {
         const map = new Map();
         const result = [];
         list.forEach((item) => {
@@ -1783,15 +1786,15 @@ export class GridComponent implements OnInit, OnDestroy
             }
         });
 
-        for (let group_key of map.keys()) {
-            result.push({key:group_key, value:map.get(group_key)});
+        for (const group_key of map.keys()) {
+            result.push({key: group_key, value: map.get(group_key)});
         }
         return result;
     }
 
 
-    private group() {
-        if ( this.modelService.getConfigValue('apps.realty.grid.enable_grouping') === '1'
+    private group(): boolean {
+        if ( this.configService.getConfigValue('apps.realty.grid.enable_grouping') === '1'
             && this.entity.get_table_name() === 'data' ) {
             if ( this.get_grid_items(null).includes('complex_id') ) {
                 this.enable_grouping = true;
@@ -1807,16 +1810,16 @@ export class GridComponent implements OnInit, OnDestroy
         return false;
     }
 
-    deleteSelected($event: MouseEvent) {
+    deleteSelected($event: MouseEvent): void {
         this.confirmDialogRef = this.dialog.open(ConfirmComponent, {
             disableClose: false
         });
-        let delete_ids = [];
+        const delete_ids = [];
 
         this.confirmDialogRef.componentInstance.confirmMessage = 'Вы уверены, что хотите удалить записи?';
         this.confirmDialogRef.componentInstance.confirmMessage2 = this.selected.length + ' шт.';
         this.selected.forEach((item) => {
-            delete_ids.push(item[this.entity.get_primary_key()].value)
+            delete_ids.push(item[this.entity.get_primary_key()].value);
         });
 
 
@@ -1843,24 +1846,24 @@ export class GridComponent implements OnInit, OnDestroy
 
     }
 
-    getTableHeight() {
+    getTableHeight(): string {
         if ( this.disable_fix_table_height ) {
             return '';
         }
-        if ( this.modelService.getDomConfigValue('standalone_mode' ) ) {
+        if ( this.configService.getDomConfigValue('standalone_mode' ) ) {
             return ' table-height ';
         }
         return '';
     }
 
-    show_whatsapp() {
+    show_whatsapp(): boolean {
         if ( this.whatsAppService.getMailingList().length > 0 ) {
             return true;
         }
         return false;
     }
 
-    addToMailingList($event: MouseEvent) {
+    addToMailingList($event: MouseEvent): void {
         if ( this.entity.get_app_name() === 'client' ) {
             this.whatsAppService.addToMailingList(this.selected);
         } else {

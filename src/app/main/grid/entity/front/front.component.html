@@ -34,7 +34,7 @@
         </div>
         <!-- / HEADER -->
 
-        <div class="content" layout="row" *ngIf="modelService.all_checks_passes()">
+        <div class="content" layout="row" *ngIf="getSessionKeyService.all_checks_passes()">
             <mat-tab-group dynamicHeight>
                 <mat-tab label="Продам">
                     <!-- WIDGET GROUP -->

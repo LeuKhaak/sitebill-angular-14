@@ -6,7 +6,7 @@ import {
     ElementRef,
     IterableDiffers,
     DefaultIterableDiffer,
-    Output, EventEmitter
+    Output, EventEmitter, DoCheck
 } from '@angular/core';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent } from 'ngx-gallery-9';
 import { ConfirmComponent } from 'app/dialogs/confirm/confirm.component';
@@ -16,6 +16,7 @@ import { ModelService } from 'app/_services/model.service';
 import { ImageService } from 'app/_services/image.service';
 import { SitebillEntity } from 'app/_models';
 import {HouseSchemaBuilderModalComponent} from '../houseschema/builder/modal/house-schema-builder-modal.component';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
 
 @Component({
     selector: 'gallery-component',
@@ -23,7 +24,7 @@ import {HouseSchemaBuilderModalComponent} from '../houseschema/builder/modal/hou
     styleUrls: ['./gallery.component.scss'],
     animations: fuseAnimations
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, DoCheck {
     galleryOptions: NgxGalleryOptions[];
     private differ: DefaultIterableDiffer<any>;
     public previous_image_count: number;
@@ -34,32 +35,33 @@ export class GalleryComponent implements OnInit {
 
     galleryImages: NgxGalleryImage[];
 
-    @Input('galleryImages')
+    @Input()
     galleryImagesInput: NgxGalleryImage[];
 
-    @Input('entity')
+    @Input()
     entity: SitebillEntity;
 
-    @Input('image_field')
+    @Input()
     image_field: string;
 
-    @Input('disable_gallery_controls')
+    @Input()
     disable_gallery_controls: boolean;
 
-    @Output() onGalleryChange: EventEmitter<NgxGalleryImage[]> = new EventEmitter();
+    @Output() onGalleryChange: EventEmitter<NgxGalleryImage[]> = new EventEmitter(); // should not be prefixed with on (no-output-on-prefix)
 
     constructor(
         private differs: IterableDiffers,
         public _matDialog: MatDialog,
         private modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         private imageService: ImageService,
     ) {}
 
-    recalculate_options() {
+    recalculate_options(): void {
         return;
     }
 
-    replaceFileTypeIcons(galleryImages) {
+    replaceFileTypeIcons(galleryImages): any[] {
         return galleryImages;
     }
 
@@ -76,9 +78,9 @@ export class GalleryComponent implements OnInit {
         if (this.galleryImages.length === 0 && this.entity && this.entity.model && this.entity.model[this.image_field] && this.entity.model[this.image_field].value.length > 0) {
             const img_folder = this.getImgFolder(this.entity.model[this.image_field].type);
 
-            for (const prop in this.entity.model[this.image_field].value) {
+            for (const prop of Object.keys(this.entity.model[this.image_field].value)) {
 
-                let small_url = this.modelSerivce.get_api_url() +
+                let small_url = this.getApiUrlService.get_api_url() +
                     img_folder +
                     (this.entity.model[this.image_field].value[prop].preview ? this.entity.model[this.image_field].value[prop].preview
                         : this.entity.model[this.image_field].value[prop].normal) +
@@ -90,8 +92,8 @@ export class GalleryComponent implements OnInit {
 
                 const gallery_image = {
                     small: small_url,
-                    medium: this.modelSerivce.get_api_url() + img_folder + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
-                    big: this.modelSerivce.get_api_url() + img_folder + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
+                    medium: this.getApiUrlService.get_api_url() + img_folder + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
+                    big: this.getApiUrlService.get_api_url() + img_folder + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
                 };
                 this.galleryImages.push(gallery_image);
             }
@@ -190,14 +192,14 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    getImgFolder(type: string) {
+    getImgFolder(type: string): string {
         if ( type === 'docuploads' ) {
             return '/img/mediadocs/';
         }
         return '/img/data/';
     }
 
-    deleteImage(event, index) {
+    deleteImage(event, index): void {
         this.confirmDialogRef = this._matDialog.open(ConfirmComponent, {
             disableClose: false
         });
@@ -207,7 +209,7 @@ export class GalleryComponent implements OnInit {
         this.confirmDialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.imageService.deleteImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, this.image_field)
-                    .subscribe((result: any) => {
+                    .subscribe(() => {
                         this.galleryImages.splice(index, 1);
                         this.recalculate_options();
                     });
@@ -217,7 +219,7 @@ export class GalleryComponent implements OnInit {
         });
     }
 
-    openOptions(event, index) {
+    openOptions(event, index): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
@@ -235,52 +237,52 @@ export class GalleryComponent implements OnInit {
         this._matDialog.open(HouseSchemaBuilderModalComponent, dialogConfig);
     }
 
-    moveRight(event, index) {
+    moveRight(event, index): void {
         this.imageService.reorderImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, 'down', this.image_field)
-            .subscribe((result: any) => {
+            .subscribe(() => {
                 const tmp_images = this.array_move(this.galleryImages, index, index + 1);
                 this.galleryImages = [];
                 this.reorder(tmp_images);
             });
     }
 
-    moveLeft(event, index) {
+    moveLeft(event, index): void {
         this.imageService.reorderImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, 'up', this.image_field)
-            .subscribe((result: any) => {
+            .subscribe(() => {
                 const tmp_images = this.array_move(this.galleryImages, index, index - 1);
                 this.galleryImages = [];
                 this.reorder(tmp_images);
             });
     }
-    moveToStart(event, index) {
+    moveToStart(event, index): void {
         this.imageService.reorderImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, 'make_main', this.image_field)
-            .subscribe((result: any) => {
+            .subscribe(() => {
                 const tmp_images = this.array_move(this.galleryImages, index, 0);
                 this.galleryImages = [];
                 this.reorder(tmp_images);
             });
     }
 
-    rotateLeft(event, index) {
+    rotateLeft(event, index): void {
         this.imageService.rotateImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, 'acw', this.image_field)
-            .subscribe((result: any) => {
+            .subscribe(() => {
                 const tmp_images = this.add_timestamp_prefix(this.galleryImagesInput[this.image_field]);
                 this.reorder(tmp_images);
             });
     }
 
-    rotateRight(event, index) {
+    rotateRight(event, index): void {
         this.imageService.rotateImage(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, index, 'ccw', this.image_field)
-            .subscribe((result: any) => {
+            .subscribe(() => {
                 const tmp_images = this.add_timestamp_prefix(this.galleryImagesInput[this.image_field]);
                 this.reorder(tmp_images);
             });
     }
 
-    add_timestamp_prefix(images) {
+    add_timestamp_prefix(images): any[] {
         if (images) {
             // console.log ('add_time', images);
-            return images.map(function(image: any) {
+            return images.map((image: any) => {
 
                 return {
                     small: image.small + '?' + new Date().getTime(),
@@ -292,7 +294,7 @@ export class GalleryComponent implements OnInit {
         return [];
     }
 
-    reorder(tmp_images = []) {
+    reorder(tmp_images = []): void {
         setTimeout(() => {
             if (tmp_images.length) {
                 this.galleryImages = tmp_images;
@@ -301,7 +303,7 @@ export class GalleryComponent implements OnInit {
         }, 10);
     }
 
-    array_move(arr, old_index, new_index) {
+    array_move(arr, old_index, new_index): any[] {
         if (new_index < 0) {
             return arr;
         }
@@ -325,7 +327,7 @@ export class GalleryComponent implements OnInit {
         return arr; // for testing purposes
     }
 
-    ngDoCheck() {
+    ngDoCheck(): void {
         if (this.galleryImages ) {
             const changes = this.differ.diff(this.galleryImages);
             if (changes != null && this.previous_image_count < changes.length) {
@@ -336,7 +338,7 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    moveToEnd() {
+    moveToEnd(): void {
         if (this.gallery_object instanceof NgxGalleryComponent) {
             while (this.gallery_object.canMoveThumbnailsRight()) {
                 this.gallery_object.moveThumbnailsRight();
