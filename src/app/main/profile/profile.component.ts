@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FuseConfigService} from '@fuse/services/config.service';
 import {DOCUMENT} from '@angular/common';
@@ -8,18 +8,17 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { locale as english } from './i18n/en';
 import { locale as russian } from './i18n/ru';
-import { ModelService } from 'app/_services/model.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FilterService} from '../../_services/filter.service';
 import {BillingService} from '../../_services/billing.service';
 import {SitebillEntity} from '../../_models';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
 
 @Component({
     selector   : 'profile',
     templateUrl: './profile.component.html',
     styleUrls  : ['./profile.component.scss']
 })
-export class ProfileComponent
+export class ProfileComponent implements OnInit
 {
     entity: SitebillEntity;
     edit_mode: boolean;
@@ -33,10 +32,10 @@ export class ProfileComponent
         private elRef: ElementRef,
         private route: ActivatedRoute,
         private router: Router,
-        private modelSerivce: ModelService,
         @Inject(DOCUMENT) private document: any,
         private _fuseConfigService: FuseConfigService,
         private billingSerivce: BillingService,
+        protected getSessionKeyService: GetSessionKeyService,
         @Inject(APP_CONFIG) private config: AppConfig,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService
     )
@@ -59,19 +58,19 @@ export class ProfileComponent
         this.entity.set_app_name('profile');
         this.entity.set_table_name('user');
         this.entity.primary_key = 'user_id';
-        this.entity.set_key_value(this.modelSerivce.get_user_id());
+        this.entity.set_key_value(this.getSessionKeyService.get_user_id());
 
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.edit_mode = false;
     }
 
-    edit() {
+    edit(): void {
         this.edit_mode = true;
     }
-    close_edit() {
-        this.modelSerivce.load_current_user_profile();
+    close_edit(): void {
+        this.getSessionKeyService.load_current_user_profile();
         this.edit_mode = false;
     }
 }

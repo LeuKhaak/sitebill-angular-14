@@ -1,16 +1,13 @@
-import {Component, OnDestroy, isDevMode, OnInit, ViewEncapsulation, Inject, Input} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation, Inject, Input} from '@angular/core';
 
 import { fuseAnimations } from '@fuse/animations';
-
-import { CommentService } from 'app/_services/comment.service';
 import { ChatService } from 'app/main/apps/chat/chat.service';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {currentUser} from 'app/_models/currentuser';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
-import { ModelService } from 'app/_services/model.service';
 import {SitebillEntity} from '../../../_models';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
@@ -27,7 +24,6 @@ export class ProfileTimelineComponent implements OnInit, OnDestroy
 
     // Private
     private _unsubscribeAll: Subject<any>;
-    private currentUser: currentUser;
     api_url: string;
 
     @Input()
@@ -41,14 +37,14 @@ export class ProfileTimelineComponent implements OnInit, OnDestroy
      */
     constructor(
         private _chatService: ChatService,
-        private modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         @Inject(APP_CONFIG) private config: AppConfig
     )
     {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
 
-        this.api_url = this.modelSerivce.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
     }
 

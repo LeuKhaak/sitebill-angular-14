@@ -1,19 +1,17 @@
-import {ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 import {ChatService} from 'app/main/apps/chat/chat.service';
-import {APP_CONFIG, AppConfig} from 'app/app.config.module';
 import {ModelService} from 'app/_services/model.service';
-import {FormComponent} from '../form/form.component';
 import {SnackService} from '../../../_services/snack.service';
 import {FilterService} from '../../../_services/filter.service';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
 import {SitebillEntity} from '../../../_models';
 import {FormConstructorComponent} from '../form/form-constructor.component';
 import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 class CommentsBlockMeta {
     isOpened = false;
@@ -44,19 +42,21 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
 
     constructor(
         protected _chatService: ChatService,
-        protected modelService: ModelService,
+        public modelService: ModelService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
         protected filterService: FilterService,
         protected bitrix24Service: Bitrix24Service,
         protected cdr: ChangeDetectorRef,
+        protected getApiUrlService: GetApiUrlService,
         protected storageService: StorageService
 
     ) {
 
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -64,6 +64,7 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
             _matDialog,
             cdr,
             storageService,
+
         );
 
         this.loadingIndicator = true;
@@ -71,7 +72,7 @@ export class ViewStaticComponent extends FormConstructorComponent implements OnI
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
     }
 

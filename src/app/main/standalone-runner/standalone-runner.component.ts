@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FuseConfigService} from '@fuse/services/config.service';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -9,9 +9,11 @@ import { ModelService } from 'app/_services/model.service';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {SitebillAuthService} from "../../_services/sitebill-auth.service";
-import {LoginModalComponent} from "../../login/modal/login-modal.component";
-import {ConfigModalComponent} from "../config/modal/config-modal.component";
+import {SitebillAuthService} from '../../_services/sitebill-auth.service';
+import {LoginModalComponent} from '../../login/modal/login-modal.component';
+import {ConfigModalComponent} from '../config/modal/config-modal.component';
+import {ConfigService} from '../../_services/config.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
 
 @Component({
     selector   : 'standalone-runner',
@@ -19,7 +21,7 @@ import {ConfigModalComponent} from "../config/modal/config-modal.component";
     styleUrls  : ['./standalone-runner.component.scss'],
     animations: fuseAnimations
 })
-export class StandaloneRunnerComponent
+export class StandaloneRunnerComponent implements OnInit
 {
     loading = false;
     config_loaded = false;
@@ -32,6 +34,8 @@ export class StandaloneRunnerComponent
      */
     constructor(
         public modelService: ModelService,
+        public configService: ConfigService,
+        protected getSessionKeyService: GetSessionKeyService,
         public sitebillAuthService: SitebillAuthService,
         private _fuseConfigService: FuseConfigService,
         protected router: Router,
@@ -42,12 +46,12 @@ export class StandaloneRunnerComponent
         this._fuseTranslationLoaderService.loadTranslations(english, russian);
     }
 
-    run () {
+    run(): void {
         console.log('ready for standalone components');
         console.log(' - - - - - ');
         // Сначала проверим, нужно ли нам перекидывать на загружаемый модуль
-        if ( this.redirected_components.includes(this.modelService.getDomConfigValue('component')) ) {
-            this.router.navigate([this.modelService.getDomConfigValue('component')]);
+        if ( this.redirected_components.includes(this.configService.getDomConfigValue('component')) ) {
+            this.router.navigate([this.configService.getDomConfigValue('component')]);
         } else {
             // Или просто запускаем готовую упаковку (без lazyload)
             this.config_loaded = true;
@@ -55,19 +59,19 @@ export class StandaloneRunnerComponent
         this.run_component_modal();
     }
 
-    access_denied () {
+    access_denied(): void {
         console.log('access denied');
         this.access_denied_state = true;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         console.log('run standalone ...');
         
         this.sitebillAuthService.complete_emitter.subscribe(
             (result: any) => {
                 if ( result ) {
-                    console.log('sitebillAuthService.complete() result = true')
-                    console.log('user_id = ' + this.modelService.get_user_id());
+                    console.log('sitebillAuthService.complete() result = true');
+                    console.log('user_id = ' + this.getSessionKeyService.get_user_id());
                     this.run();
                 } else {
                     console.log('sitebillAuthService.complete() result = false');
@@ -88,27 +92,27 @@ export class StandaloneRunnerComponent
         console.log('run sitebillAuthService.init()');
         this.sitebillAuthService.init();
         console.log('after sitebillAuthService.init()');
-        if ( this.sitebillAuthService.get_state() == 'ready' ) {
-            console.log('sitebillAuthService has ready state')
+        if ( this.sitebillAuthService.get_state() === 'ready' ) {
+            console.log('sitebillAuthService has ready state');
             this.run();
         }
     }
 
-    run_component_modal () {
-        if ( this.modelService.getDomConfigValue('component') == 'light_config' ) {
+    run_component_modal(): void {
+        if ( this.configService.getDomConfigValue('component') === 'light_config' ) {
             const dialogConfig = new MatDialogConfig();
             dialogConfig.disableClose = true;
             dialogConfig.width = '100vw';
             dialogConfig.maxWidth = '100vw';
             dialogConfig.height = '100vh';
 
-            //dialogConfig.panelClass = 'login-form';
+            // dialogConfig.panelClass = 'login-form';
 
             this.dialog.open(ConfigModalComponent, dialogConfig);
         }
     }
 
-    login_modal() {
+    login_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'login-form';
@@ -116,7 +120,7 @@ export class StandaloneRunnerComponent
         this.dialog.open(LoginModalComponent, dialogConfig);
     }
 
-    logout() {
-        this.modelService.logout();
+    logout(): void {
+        this.getSessionKeyService.logout();
     }
 }

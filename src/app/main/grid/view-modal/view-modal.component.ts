@@ -13,6 +13,7 @@ import {FilterService} from '../../../_services/filter.service';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
 import {SitebillEntity} from '../../../_models';
 import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class ViewModalComponent extends FormComponent implements OnInit {
     constructor(
         protected _chatService: ChatService,
         protected dialogRef: MatDialogRef<FormComponent>,
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -67,7 +69,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
     }
 

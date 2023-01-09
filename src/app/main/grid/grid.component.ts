@@ -63,6 +63,7 @@ import {AppsDataService, MenuItem} from '../apps/apps-data/apps-data.service';
 import {GetSessionKeyService} from '../../_services/get-session-key.service';
 import {GetApiUrlService} from '../../_services/get-api-url.service';
 import {ConfigService} from '../../_services/config.service';
+import {DatatableComponent, SelectionType} from '@swimlane/ngx-datatable';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -335,8 +336,10 @@ export class GridComponent implements OnInit, OnDestroy, AfterViewChecked
         protected stringParserService: StringParserService,
         protected whatsAppService: WhatsAppService,
         public appsDataService: AppsDataService,
+        public selection: SelectionType,
     )
     {
+        this.selection = SelectionType.checkbox;
         this._fuseTranslationLoaderService.loadTranslations(english, russian);
         this._unsubscribeAll = new Subject();
         this.ngxHeaderHeight = 54;

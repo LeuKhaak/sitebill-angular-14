@@ -10,6 +10,7 @@ import {FilterService} from 'app/_services/filter.service';
 import {Page} from '../../page';
 import {Bitrix24Service} from '../../../../integrations/bitrix24/bitrix24.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {GetSessionKeyService} from '../../../../_services/get-session-key.service';
 
 @Component({
     selector: 'grid-settings',
@@ -19,7 +20,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
     animations: fuseAnimations
 })
 export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
-    board: any;
     view: string;
 
     @Input() entity: SitebillEntity;
@@ -40,6 +40,7 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
 
     constructor(
         private modelService: ModelService,
+        protected getSessionKeyService: GetSessionKeyService,
         protected bitrix24Service: Bitrix24Service,
         private dialogRef: MatDialogRef<GridSettingsSidenavComponent>,
         @Inject(MAT_DIALOG_DATA) private _data: any,
@@ -95,7 +96,7 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
             tmp_model_array = Object.values(this.entity.model);
         }
 
-        grid_items.forEach((item, index) => {
+        grid_items.forEach((item) => {
             if (this.entity.columns_index[item] == null) {
                 return;
             }
@@ -107,13 +108,13 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
         });
 
         if ( Array.isArray(this.entity.model) ) {
-            this.entity.model.forEach((item, index) => {
+            this.entity.model.forEach((item) => {
                 if (grid_items.indexOf(item.name) === -1) {
                     this.not_active_columns.push(item);
                 }
             });
         } else if (typeof this.entity.model === 'object') {
-            Object.values(this.entity.model).forEach((item: SitebillModelItem, index) => {
+            Object.values(this.entity.model).forEach((item: SitebillModelItem) => {
                 if (grid_items.indexOf(item.name) === -1) {
                     this.not_active_columns.push(item);
                 }
@@ -166,7 +167,7 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
 
         this.modelService.format_grid(this.entity, new_grid_items, this.per_page)
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((result_f1: any) => {
+            .subscribe(() => {
                 if (event != null) {
                     this.filterService.empty_share(this.entity);
                 }
@@ -178,14 +179,14 @@ export class GridSettingsSidenavComponent implements OnInit, OnDestroy {
         const params = event.value;
 
         this.modelService.update_column_meta(this.entity.get_table_name(), null, 'per_page', params)
-            .subscribe((response: any) => {
+            .subscribe(() => {
                 this.filterService.empty_share(this.entity);
             });
 
     }
 
     logout(): void {
-        this.modelService.logout();
+        this.getSessionKeyService.logout();
     }
 
     /**

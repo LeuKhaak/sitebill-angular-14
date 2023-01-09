@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Inject, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Inject, Output, OnInit} from '@angular/core';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, UploadStatus } from 'ngx-uploader';
 import { NgxGalleryImage } from 'ngx-gallery-9';
 import { SitebillEntity } from 'app/_models';
@@ -9,6 +9,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from 'app/dialogs/confirm/confirm.component';
 import { SnackService } from 'app/_services/snack.service';
 import {Bitrix24Service} from '../../integrations/bitrix24/bitrix24.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
+import {GetSessionKeyService} from '../../_services/get-session-key.service';
 
 export class UploadResult {
     state: string;
@@ -21,41 +23,43 @@ export class UploadResult {
     templateUrl: 'uploader.component.html',
     styleUrls: ['uploader.component.sass']
 })
-export class UploaderComponent {
+export class UploaderComponent implements OnInit {
     url: string;
     api_url: string;
     files: UploadFile[];
     uploadInput: EventEmitter<UploadInput>;
     confirmDialogRef: MatDialogRef<ConfirmComponent>;
 
-    humanizeBytes: Function;
+    humanizeBytes: (bytes: number) => string;
     dragOver: boolean;
     options: UploaderOptions;
-    queue_size: number =  0;
+    queue_size =  0;
 
-    @Input('galleryImages')
+    @Input()
     galleryImages: NgxGalleryImage[];
 
-    @Input('entity')
+    @Input()
     entity: SitebillEntity;
 
-    @Input('image_field')
+    @Input()
     image_field: string;
 
-    @Input('max_uploads')
+    @Input()
     max_uploads: any;
 
-    @Input('disable_gallery_controls')
+    @Input()
     disable_gallery_controls: boolean;
 
     @Output() upload_complete: EventEmitter<SitebillEntity> = new EventEmitter();
 
-    @Input('uploader_title')
-    uploader_title: string = '';
+    @Input()
+    uploader_title = '';
     public show_gallery = false;
 
     constructor(
         private modelSerivce: ModelService,
+        protected getApiUrlService: GetApiUrlService,
+        protected getSessionKeyService: GetSessionKeyService,
         public _matDialog: MatDialog,
         private _snackService: SnackService,
         protected bitrix24Service: Bitrix24Service,
@@ -63,7 +67,7 @@ export class UploaderComponent {
         protected imageService: ImageService,
         @Inject(APP_CONFIG) private config: AppConfig,
     ) {
-        this.api_url = this.modelSerivce.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
 
         this.files = [];
         this.uploadInput = new EventEmitter<UploadInput>();
@@ -75,12 +79,12 @@ export class UploaderComponent {
         if (!this.galleryImages && this.entity && this.entity.model && this.entity.model[this.image_field] && this.entity.model[this.image_field].value.length > 0) {
             this.galleryImages = [];
             this.galleryImages[this.image_field] = [];
-            for (let prop in this.entity.model[this.image_field].value) {
+            for (const prop of Object.keys(this.entity.model[this.image_field].value)) {
 
-                let gallery_image = {
-                    small: this.modelSerivce.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].preview + '?' + new Date().getTime(),
-                    medium: this.modelSerivce.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
-                    big: this.modelSerivce.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
+                const gallery_image = {
+                    small: this.getApiUrlService.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].preview + '?' + new Date().getTime(),
+                    medium: this.getApiUrlService.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
+                    big: this.getApiUrlService.get_api_url() + '/img/data/' + this.entity.model[this.image_field].value[prop].normal + '?' + new Date().getTime(),
                 };
                 this.galleryImages[this.image_field].push(gallery_image);
             }
@@ -90,7 +94,7 @@ export class UploaderComponent {
             }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.getImages();
 
         this.url = this.api_url + '/apps/api/rest.php?uploader_type=dropzone&element='
@@ -100,7 +104,7 @@ export class UploaderComponent {
             + '&is_uploadify=1'
             + '&primary_key_value=' + this.entity.primary_key
             + '&primary_key=' + this.entity.key_value
-            + '&session_key=' + this.modelSerivce.get_session_key();
+            + '&session_key=' + this.getSessionKeyService.get_session_key();
         this.show_gallery = true;
     }
 
@@ -138,13 +142,13 @@ export class UploaderComponent {
                                     this.add_to_collections(this.entity.key_value);
                                 }
 
-                                let img_folder = this.getImgFolder(result.message[this.image_field]['type']);
+                                const img_folder = this.getImgFolder(result.message[this.image_field]['type']);
 
 
-                                for (let prop in result.message[this.image_field]['value']) {
+                                for (const prop of Object.keys(result.message[this.image_field]['value'])) {
                                     let small_url = this.api_url +
                                         img_folder +
-                                        (result.message[this.image_field]['value'][prop].preview?result.message[this.image_field]['value'][prop].preview:result
+                                        (result.message[this.image_field]['value'][prop].preview ? result.message[this.image_field]['value'][prop].preview : result
                                             .message[this.image_field]['value'][prop].normal) +
                                         '?' + new Date().getTime();
 
@@ -152,7 +156,7 @@ export class UploaderComponent {
                                         small_url = 'https://www.sitebill.ru/storage/icons/pdf.png';
                                     }
 
-                                    let gallery_image = {
+                                    const gallery_image = {
                                         small: small_url,
                                         medium: this.api_url + img_folder + result.message[this.image_field]['value'][prop].normal + '?' + new Date().getTime(),
                                         big: this.api_url + img_folder + result.message[this.image_field]['value'][prop].normal + '?' + new Date().getTime(),
@@ -187,22 +191,22 @@ export class UploaderComponent {
         this.files = this.files.filter(file => file.progress.status !== UploadStatus.Done);
     }
 
-    getImgFolder (type: string) {
+    getImgFolder(type: string): string {
         if ( type === 'docuploads' ) {
             return '/img/mediadocs/';
         }
         return '/img/data/';
     }
 
-    add_to_collections(data_id) {
-        let title = 'bitrix deal ' + this.bitrix24Service.get_entity_id();
+    add_to_collections(data_id): void {
+        const title = 'bitrix deal ' + this.bitrix24Service.get_entity_id();
         this.modelService.toggle_collections(this.bitrix24Service.get_domain(), this.bitrix24Service.get_entity_id(), title, data_id)
-            .subscribe((response: any) => {
+            .subscribe(() => {
             });
     }
 
 
-    uppend_uploads() {
+    uppend_uploads(): void {
         this.modelSerivce.uppend_uploads(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, this.image_field)
             .subscribe((result: UploadResult) => {
                 if ( result.state === 'error' ) {
@@ -211,12 +215,12 @@ export class UploaderComponent {
                 }
 
                 let prefix = '';
-                if (this.entity.get_table_name() == 'user') {
+                if (this.entity.get_table_name() === 'user') {
                     prefix = 'user/';
                 }
 
-                for (let prop in result.data) {
-                    let gallery_image = {
+                for (const prop of Object.keys(result.data)) {
+                    const gallery_image = {
                         small: this.api_url + '/img/data/' + prefix + result.data[prop].preview + '?' + new Date().getTime(),
                         medium: this.api_url + '/img/data/' + prefix + result.data[prop].normal + '?' + new Date().getTime(),
                         big: this.api_url + '/img/data/' + prefix + result.data[prop].normal + '?' + new Date().getTime(),
@@ -227,7 +231,7 @@ export class UploaderComponent {
             });
     }
 
-    delete_all_images() {
+    delete_all_images(): void {
         this.confirmDialogRef = this._matDialog.open(ConfirmComponent, {
             disableClose: false
         });
@@ -237,7 +241,7 @@ export class UploaderComponent {
         this.confirmDialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.imageService.deleteAllImages(this.entity.get_table_name(), this.entity.primary_key, this.entity.key_value, this.image_field)
-                    .subscribe((result: any) => {
+                    .subscribe(() => {
                         this.galleryImages[this.image_field] = [];
                         this.upload_complete.emit(this.entity);
                     });

@@ -10,10 +10,11 @@
     <div class="control_hover">
         <span *ngIf="row.active">
             <button mat-icon-button *ngIf="row.active.value == '0'" color="accent">
-                <mat-icon (click)="toggle_active(row, value)" aria-label="Включить" matTooltip="Включить">power_settings_new</mat-icon>
+                <mat-icon (click)="toggle_active(row)" aria-label="Включить" matTooltip="Включить">power_settings_new
+                </mat-icon>
             </button>
             <button mat-icon-button *ngIf="row.active.value == '1'" color="warn">
-                <mat-icon (click)="toggle_active(row, value)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
+                <mat-icon (click)="toggle_active(row)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
             </button>
         </span>
 
@@ -35,10 +36,10 @@
         </button>
         <span *ngIf="row.active">
             <button mat-icon-button *ngIf="row.active.value == '0'" color="accent">
-                <mat-icon (click)="toggle_active(row, value)" aria-label="Включить" matTooltip="Включить">power_settings_new</mat-icon>
+                <mat-icon (click)="toggle_active(row)" aria-label="Включить" matTooltip="Включить">power_settings_new</mat-icon>
             </button>
             <button mat-icon-button *ngIf="row.active.value == '1'" color="warn">
-                <mat-icon (click)="toggle_active(row, value)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
+                <mat-icon (click)="toggle_active(row)" aria-label="Выключить" matTooltip="Выключить">power_settings_new</mat-icon>
             </button>
         </span>
 
@@ -123,7 +124,7 @@
                                        [count]="page.totalElements"
                                        [offset]="page.pageNumber"
                                        [limit]="page.size"
-                                       [selectionType]="'checkbox'"
+                                       [selectionType]="selection"
                                        [rowClass]="getRowClass"
                                        (activate)="onActivate($event)"
                                        (resize)="onResize($event)"

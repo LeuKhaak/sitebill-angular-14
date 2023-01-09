@@ -20,9 +20,10 @@ import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material/tooltip';
 import {SitebillResponse} from '../../../_models/sitebill-response';
-import {ChatService, CommentsBlockMeta} from '../../apps/chat/chat.service';
+import { CommentsBlockMeta} from '../../apps/chat/chat.service';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
     showDelay: 1000,
@@ -52,7 +53,8 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
 
 
     constructor(
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         protected filterService: FilterService,
@@ -65,7 +67,7 @@ export class FormConstructorComponent implements OnInit, OnDestroy {
         this.loadingIndicator = true;
 
         // Set the private defaults
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
         this.lat_center = 55.76;
         this.lng_center = 37.64;
         this.form = this._formBuilder.group({});

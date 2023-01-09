@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, ViewChild, OnInit} from '@angular/core';
-// import { ModelService } from 'app/_services/model.service';
-import { ConfigService } from 'app/_services/config.service';
+import { ConfigSystemService } from '../../_services/config-system.service';
 import {Subject} from 'rxjs';
 import {SitebillResponse} from '../../_models/sitebill-response';
 import {SitebillEntity} from '../../_models';
@@ -39,7 +38,7 @@ export class ModelsEditorComponent implements OnInit
 
     constructor(
         // protected modelService: ModelService,
-        protected configService: ConfigService,
+        protected configSystemService: ConfigSystemService,
         protected _snackService: SnackService,
         public _modelsEditorService: ModelsEditorService,
         changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
@@ -94,7 +93,7 @@ export class ModelsEditorComponent implements OnInit
                     || obj[key].hint.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0
                     || (obj[key].value && obj[key].value.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0)
                 )
-                .reduce( (res, key) => (res[key] = obj[key], res), {} );
+                .reduce( (res, key) => (res[key] = obj[key].res), {} );
             if ( Object.keys(f1).length !== 0 ) {
                 // console.log(f1);
                 tmp_array[i].data = f1;
@@ -104,9 +103,9 @@ export class ModelsEditorComponent implements OnInit
         return filtered;
     }
 
-    save(event): void {
+    save(): void {
         const ql_items = this.config_form_child.get_changed_items();
-        this.configService.update_system_config(ql_items)
+        this.configSystemService.update_system_config(ql_items)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: SitebillResponse) => {
                 if ( result.state === 'success' ) {

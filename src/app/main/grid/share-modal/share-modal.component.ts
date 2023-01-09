@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {fuseAnimations} from '../../../../@fuse/animations';
-import {ModelService} from '../../../_services/model.service';
 import {SnackService} from '../../../_services/snack.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 @Component({
     selector: 'share-modal',
@@ -14,7 +14,7 @@ export class ShareModalComponent  implements OnInit {
     public link: string;
 
     constructor(
-        protected modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         private dialogRef: MatDialogRef<ShareModalComponent>,
         protected _snackService: SnackService,
         @Inject(MAT_DIALOG_DATA) private _data: any
@@ -22,20 +22,16 @@ export class ShareModalComponent  implements OnInit {
     }
 
 
-    ngOnInit() {
-        this.link = this.modelService.get_api_url() + '/memorylist/grid/123';
+    ngOnInit(): void {
+        this.link = this.getApiUrlService.get_api_url() + '/memorylist/grid/123';
     }
 
-    copy() {
-        //this.clipboard.copy(this.link);
+    copy(): void {
+        // this.clipboard.copy(this.link);
         this._snackService.message('Ссылка скопирована в буфер обмена');
-
-
     }
 
-    close() {
+    close(): void {
         this.dialogRef.close();
     }
-
-
 }

@@ -1,7 +1,6 @@
-import {Component, isDevMode, ElementRef, Inject} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FuseConfigService} from '@fuse/services/config.service';
-import {currentUser} from 'app/_models/currentuser';
 import {DOCUMENT} from '@angular/common';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
 
@@ -10,15 +9,15 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { locale as english } from './i18n/en';
 import { locale as russian } from './i18n/ru';
 import { ModelService } from 'app/_services/model.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
 
 @Component({
     selector   : 'sample',
     templateUrl: './sample.component.html',
     styleUrls  : ['./sample.component.scss']
 })
-export class SampleComponent
+export class SampleComponent implements OnInit
 {
-    private currentUser: currentUser;
     private api_url: string;
 
     /**
@@ -29,6 +28,7 @@ export class SampleComponent
         private _httpClient: HttpClient,
         private elRef: ElementRef,
         private modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         @Inject(DOCUMENT) private document: any,
         private _fuseConfigService: FuseConfigService,
         @Inject(APP_CONFIG) private config: AppConfig,
@@ -36,7 +36,7 @@ export class SampleComponent
     )
     {
         this._fuseTranslationLoaderService.loadTranslations(english, russian);
-        this.api_url = this.modelService.get_api_url();
+        this.api_url = this.getApiUrlService.get_api_url();
         this._fuseConfigService.config = {
             layout: {
                 navbar: {
@@ -51,10 +51,10 @@ export class SampleComponent
             }
         };
     }
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
-    init_input_parameters () {
+    init_input_parameters(): void {
         let app_root_element;
         if (this.document.getElementById('calculator_mini_root')) {
             app_root_element = this.document.getElementById('calculator_mini_root');
@@ -62,6 +62,4 @@ export class SampleComponent
             app_root_element = this.document.getElementById('app_root');
         }
     }
-
-
 }
