@@ -4,7 +4,8 @@
 
         <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
             <button mat-icon-button class="navbar-toggle-button"
-                    *ngIf="!hiddenNavbar && !rightNavbar && !modelService.getDomConfigValue('navbar_hidden')" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                    *ngIf="!hiddenNavbar && !rightNavbar && !configService.getDomConfigValue('navbar_hidden')"
+                    (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
                 <mat-icon class="secondary-text">menu</mat-icon>
             </button>
 
@@ -22,8 +23,8 @@
         </div>
 
         <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
-            <ng-container *ngIf="modelService.getConfigValue('external_links') !== null">
-                <ng-container *ngFor="let button of modelService.getConfigValue('external_links')">
+            <ng-container *ngIf="configService.getConfigValue('external_links') !== null">
+                <ng-container *ngFor="let button of configService.getConfigValue('external_links')">
                     <button mat-button class="user-button">
                         <div fxLayout="row" fxLayoutAlign="center center" (click)="goto_link(button.url)">
                             <img class="avatar mr-0 mr-sm-16" src="{{button.img}}">
@@ -61,8 +62,8 @@
                 </div>
             </button>
             <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
-                <ng-container *ngIf="modelService.getConfigValue('user_menu') !== null">
-                    <ng-container *ngFor="let button of modelService.getConfigValue('user_menu')">
+                <ng-container *ngIf="configService.getConfigValue('user_menu') !== null">
+                    <ng-container *ngFor="let button of configService.getConfigValue('user_menu')">
                         <button mat-menu-item (click)="goto(button.url)">
                             <mat-icon>{{button.icon}}</mat-icon>
                             <span>{{button.title}}</span>

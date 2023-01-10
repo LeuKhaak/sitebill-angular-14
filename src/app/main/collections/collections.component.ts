@@ -5,9 +5,9 @@ import {FuseConfigService} from '@fuse/services/config.service';
 import { ModelService } from 'app/_services/model.service';
 import { fuseAnimations } from '@fuse/animations';
 import { Bitrix24Service } from 'app/integrations/bitrix24/bitrix24.service';
-import { takeUntil } from 'rxjs/operators';
 import {SitebillEntity} from '../../_models';
 import {FilterService} from '../../_services/filter.service';
+import {ConfigService} from '../../_services/config.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ import {FilterService} from '../../_services/filter.service';
 export class CollectionsComponent implements OnInit, OnDestroy {
     @Output() submitEvent = new EventEmitter<string>();
     protected _unsubscribeAll: Subject<any>;
-    private collections_total_counter: number;
+    public collections_total_counter: number;
     private data_total_counter: number;
 
     response: any;
@@ -30,6 +30,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     constructor(
         private _fuseConfigService: FuseConfigService,
         public modelSerivce: ModelService,
+        public configService: ConfigService,
         protected bitrix24Service: Bitrix24Service,
         private filterService: FilterService
         ) {
@@ -65,7 +66,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     configure_menu(): void {
         if ( this.modelSerivce.is_config_loaded() ) {
             // console.log(this.modelSerivce.getConfigValue('apps.realty.enable_toolbar'));
-            if (this.modelSerivce.getConfigValue('apps.realty.enable_toolbar') === '1') {
+            if (this.configService.getConfigValue('apps.realty.enable_toolbar') === '1') {
                 this._fuseConfigService.config = {
                     layout: {
                         toolbar: {
@@ -74,7 +75,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
                     }
                 };
             }
-            if (this.modelSerivce.getConfigValue('apps.realty.enable_navbar') === '1') {
+            if (this.configService.getConfigValue('apps.realty.enable_navbar') === '1') {
                 this._fuseConfigService.config = {
                     layout: {
                         navbar: {

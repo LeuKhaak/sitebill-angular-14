@@ -13,7 +13,8 @@
         <form [formGroup]="declineForm"  fxLayout="column" fxLayoutAlign="start center"  class="flex_wrap">
 
             <mat-radio-group class="example-radio-group" formControlName="variant"  fxLayout="column" fxLayoutAlign="start start"  class="flex_wrap" required>
-                <mat-radio-button fxFlex="50" class="p-24 m-0" *ngFor="let item of modelService.getConfigValue('apps.mailbox.complaint_mode_variants') | keyvalue" [value]="item.key">
+                <mat-radio-button fxFlex="50" class="p-24 m-0" *ngFor="let item of
+                configService.getConfigValue('apps.mailbox.complaint_mode_variants') | keyvalue" [value]="item.key">
                     {{item.value}}
                 </mat-radio-button>
             </mat-radio-group>

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
 
@@ -9,14 +9,15 @@ import {FilterService} from 'app/_services/filter.service';
 import {SnackService} from 'app/_services/snack.service';
 import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
 import {SelectionFormConstructorComponent, myCustomTooltipDefaults} from './selection-form-constructor.component';
-import {SelectionFormComponent} from "./selection-form.component";
-import {EntityStorageService} from "../../../_services/entity-storage.service";
-import {MAT_TOOLTIP_DEFAULT_OPTIONS} from "@angular/material/tooltip";
-import {StorageService} from "../../../_services/storage.service";
+import {SelectionFormComponent} from './selection-form.component';
+import {EntityStorageService} from '../../../_services/entity-storage.service';
+import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
+import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
-    selector: 'form-static',
+    selector: 'selectionform-static', // WAS form-static
     templateUrl: './selection-form.component.html',
     styleUrls: ['./selection-form.component.scss'],
     providers: [
@@ -25,27 +26,27 @@ import {StorageService} from "../../../_services/storage.service";
 
 })
 export class SelectionFormStaticComponent extends SelectionFormConstructorComponent implements OnInit {
-    @Input("entity")
+    @Input()
     _data: {entity: SitebillEntity, selectionMode: boolean};
 
-    @Input("disable_delete")
+    @Input()
     disable_delete: boolean;
 
-    @Input("disable_form_title_bar")
+    @Input()
     disable_form_title_bar: boolean;
 
-    @Input("disable_save_button")
+    @Input()
     disable_save_button: boolean;
 
-    @Input("disable_cancel_button")
+    @Input()
     disable_cancel_button: boolean;
 
-    @Input("fake_save")
+    @Input()
     fake_save: boolean;
 
-    @Output() onClose = new EventEmitter();
+    @Output() onClose = new EventEmitter(); // on ???
     @Output() save_output = new EventEmitter();
-    @Output() onSave = new EventEmitter();
+    @Output() onSave = new EventEmitter(); // on ???
 
     constructor(
         protected modelService: ModelService,
@@ -56,11 +57,13 @@ export class SelectionFormStaticComponent extends SelectionFormConstructorCompon
         protected bitrix24Service: Bitrix24Service,
         protected entityStorageService: EntityStorageService,
         protected cdr: ChangeDetectorRef,
+        protected getApiUrlService: GetApiUrlService,
         protected storageService: StorageService
 
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -70,15 +73,15 @@ export class SelectionFormStaticComponent extends SelectionFormConstructorCompon
             storageService
         );
     }
-    save() {
+    save(): void {
         super.save();
     }
-    close() {
+    close(): void {
         super.close();
         this.onClose.emit(true);
     }
 
-    inline_create(record) {
+    inline_create(record): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;

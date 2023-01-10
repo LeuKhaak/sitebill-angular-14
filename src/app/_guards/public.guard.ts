@@ -8,6 +8,7 @@ import { SnackService } from 'app/_services/snack.service';
 import {StorageService} from '../_services/storage.service';
 import {GetSessionKeyService} from '../_services/get-session-key.service';
 import {UiService} from '../_services/ui.service';
+import {ConfigService} from '../_services/config.service';
 
 @Injectable()
 export class PublicGuard extends AuthGuard {
@@ -16,6 +17,7 @@ export class PublicGuard extends AuthGuard {
         protected modelService: ModelService,
         protected storageService: StorageService,
         protected getSessionKeyService: GetSessionKeyService,
+        protected configService: ConfigService,
         protected uiService: UiService,
         _fuseNavigationService: FuseNavigationService,
         _fuseConfigService: FuseConfigService,
@@ -25,6 +27,7 @@ export class PublicGuard extends AuthGuard {
             router,
             modelService,
             getSessionKeyService,
+            configService,
             uiService,
             storageService,
             _fuseNavigationService,
@@ -34,19 +37,19 @@ export class PublicGuard extends AuthGuard {
         // this._fuseNavigationService.removeNavigationItem('page');
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // console.log('public canActivate');
         return this.check_session(route, state, '/');
     }
-    check_permissions(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    check_permissions(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // @todo: Нужно проверять текущую сессию на пригодность
         // console.log('Activate result = ');
         // console.log('check permission public');
         this.set_public_menu();
 
-        let navigation_origin = this._fuseNavigationService.getNavigation('main');
-        let navigtaion_clone = navigation_origin.slice(0);
-        let storage = JSON.parse(this.storageService.getItem('currentUser')) || [];
+        const navigation_origin = this._fuseNavigationService.getNavigation('main');
+        const navigtaion_clone = navigation_origin.slice(0);
+        const storage = JSON.parse(this.storageService.getItem('currentUser')) || [];
         this.cleanUpNavigation(navigtaion_clone, storage['structure']);
 
         if (storage['structure'] == null) {

@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
-import { ModelService } from 'app/_services/model.service';
+import {ConfigService} from '../../../_services/config.service';
 
 
 @Component({
@@ -13,14 +13,14 @@ export class ConfigModalComponent implements OnInit {
 
     constructor(
         private dialogRef: MatDialogRef<ConfigModalComponent>,
-        public modelService: ModelService,
+        public configService: ConfigService,
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
-    close() {
+    close(): void {
         this.dialogRef.close();
     }
 

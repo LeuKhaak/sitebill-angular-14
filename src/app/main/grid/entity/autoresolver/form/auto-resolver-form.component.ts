@@ -1,11 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import {SitebillEntity} from "../../../../../_models";
-import {delay, takeUntil} from "rxjs/operators";
-import {labelColors} from "../../../../houseschema/models/level-location.model";
-import {FilterService} from "../../../../../_services/filter.service";
-import {Subject} from "rxjs";
-import {ModelService} from "../../../../../_services/model.service";
+import {SitebillEntity} from '../../../../../_models';
+import {delay, takeUntil} from 'rxjs/operators';
+import {FilterService} from '../../../../../_services/filter.service';
+import {Subject} from 'rxjs';
+import {ModelService} from '../../../../../_services/model.service';
+import {ConfigService} from '../../../../../_services/config.service';
 
 @Component({
     selector: 'auto-resolver-form',
@@ -13,25 +13,24 @@ import {ModelService} from "../../../../../_services/model.service";
     styleUrls: ['./auto-resolver-form.component.scss'],
     animations: fuseAnimations
 })
-export class AutoResolverFormComponent {
+export class AutoResolverFormComponent implements OnInit, OnDestroy {
     entity: SitebillEntity;
 
-    @Input('app_name')
+    @Input()
     app_name: string;
 
-    @Input('table_name')
+    @Input()
     table_name: string;
 
-    @Input('primary_key')
+    @Input()
     primary_key: string;
 
-    @Input('success_message')
-    success_message: string;
+    @Input()
 
-    @Input('entity_uri')
+    @Input()
     entity_uri: string;
 
-    @Input('only_field_name')
+    @Input()
     only_field_name: string;
 
     predefined_ql_items: any;
@@ -40,23 +39,24 @@ export class AutoResolverFormComponent {
 
 
     private _unsubscribeAll: Subject<any>;
-    show_form: boolean = true;
+    show_form = true;
 
 
     constructor(
         public filterService: FilterService,
+        protected configService: ConfigService,
         public modelService: ModelService,
     ) {
         this._unsubscribeAll = new Subject();
     }
 
 
-    ngOnInit() {
+    ngOnInit(): void {
         if ( this.entity_uri ) {
             this.modelService.loadByUri(this.app_name, this.entity_uri).pipe(
                 takeUntil(this._unsubscribeAll)
             ).subscribe( (result: any) => {
-                    if ( result.state == 'success' ) {
+                    if ( result.state === 'success' ) {
                         this.init_slice_entity(result);
                     } else {
                         console.log(result);
@@ -69,8 +69,8 @@ export class AutoResolverFormComponent {
             this.entity.set_table_name(this.table_name);
             this.entity.primary_key = this.primary_key;
             this.entity.set_hidden(this.primary_key);
-            this.entity.set_default_value('object_id', this.modelService.getDomConfigValue('object_id'));
-            this.entity.set_default_value('object_type', this.modelService.getDomConfigValue('object_type'));
+            this.entity.set_default_value('object_id', this.configService.getDomConfigValue('object_id'));
+            this.entity.set_default_value('object_type', this.configService.getDomConfigValue('object_type'));
         }
 
 
@@ -81,7 +81,7 @@ export class AutoResolverFormComponent {
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe((entity: SitebillEntity) => {
-                if (entity.get_app_name() == this.entity.get_app_name()) {
+                if (entity.get_app_name() === this.entity.get_app_name()) {
                     // console.log(entity);
                     // console.log(entity.get_ql_items());
                     if (entity.get_hook() === 'afterSuccessCreate' && entity.get_key_value()) {
@@ -92,7 +92,7 @@ export class AutoResolverFormComponent {
 
     }
 
-    init_slice_entity ( data:any ) {
+    init_slice_entity( data: any ): void {
         this.predefined_ql_items = {};
         this.predefined_ql_items[this.only_field_name] = true;
         this.entity = new SitebillEntity();
@@ -104,7 +104,7 @@ export class AutoResolverFormComponent {
 
     }
 
-    ngOnDestroy () {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

@@ -12,7 +12,8 @@
         <div fxLayout="row" fxLayoutAlign="space-between center" fxFlex="0 1 auto">
 
             <div fxLayout="row" fxLayoutAlign="start center">
-                <div class=" h-40 p-4" fxLayout="row" fxLayoutAlign="center center" *ngIf="modelService.getConfigValue('apps.realty.show_home_icon') === '1'">
+                <div class=" h-40 p-4" fxLayout="row" fxLayoutAlign="center center"
+                     *ngIf="configService.getConfigValue('apps.realty.show_home_icon') === '1'">
 
                     <a mat-icon-button href="/">
                         <mat-icon class="secondary-text">home</mat-icon>

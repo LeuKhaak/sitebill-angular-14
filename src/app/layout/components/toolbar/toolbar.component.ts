@@ -16,6 +16,7 @@ import {GetSessionKeyService} from '../../../_services/get-session-key.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {LoginModalComponent} from '../../../login/modal/login-modal.component';
 import {Bitrix24Service} from '../../../integrations/bitrix24/bitrix24.service';
+import {ConfigService} from '../../../_services/config.service';
 
 
 @Component({
@@ -52,6 +53,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private route: ActivatedRoute,
         private _router: Router,
         public modelService: ModelService,
+        public configService: ConfigService,
         protected getSessionKeyService: GetSessionKeyService,
         protected bitrix24Service: Bitrix24Service,
         protected dialog: MatDialog,

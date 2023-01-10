@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FuseConfigService} from '@fuse/services/config.service';
 import { APP_CONFIG, AppConfig } from 'app/app.config.module';
@@ -12,8 +20,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {BillingService} from '../../_services/billing.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {LoginModalComponent} from '../../login/modal/login-modal.component';
 import {GatewaysModalComponent} from '../gateways/modal/gateways-modal.component';
+import {ConfigService} from '../../_services/config.service';
 
 @Component({
     selector   : 'dashboard',
@@ -23,10 +31,10 @@ import {GatewaysModalComponent} from '../gateways/modal/gateways-modal.component
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations   : fuseAnimations
 })
-export class DashboardComponent
+export class DashboardComponent implements OnInit
 {
     username: string;
-    public invoices:  { id: string; value: any }[];
+    public invoices: { id: string; value: any }[];
     public user_products: { id: string; value: any }[];
     public user_products_loaded: boolean;
     public invoices_loaded: boolean;
@@ -42,6 +50,7 @@ export class DashboardComponent
         private route: ActivatedRoute,
         private router: Router,
         public modelService: ModelService,
+        public configService: ConfigService,
         protected dialog: MatDialog,
         private billingService: BillingService,
         private _fuseConfigService: FuseConfigService,
@@ -67,19 +76,18 @@ export class DashboardComponent
 
 
     }
-    ngOnInit() {
+    ngOnInit(): void {
         this.username = 'test';
         this.load_invoices();
         this.load_user_products();
         this.load_user_limits();
     }
 
-    load_invoices () {
+    load_invoices(): void {
         this.billingService.get_invoices().subscribe(
             (invoices: any) => {
                 this.invoices_loaded = true;
-                const mapped = Object.keys(invoices).map(key => ({id: key, value: invoices[key]}));
-                this.invoices = mapped;
+                this.invoices = Object.keys(invoices).map(key => ({id: key, value: invoices[key]}));
                 this.cdr.markForCheck();
 
                 if ( invoices.length > 0 ) {
@@ -88,8 +96,8 @@ export class DashboardComponent
         );
     }
 
-    load_user_limits () {
-        if ( this.modelService.getConfigValue('apps.products.limit_add_data') === '1') {
+    load_user_limits(): void {
+        if ( this.configService.getConfigValue('apps.products.limit_add_data') === '1') {
             this.billingService.get_user_limit('exclusive').subscribe(
                 (limit: any) => {
                     this.exclusive_limit =  limit.data;
@@ -100,22 +108,21 @@ export class DashboardComponent
         }
     }
 
-    load_user_products () {
+    load_user_products(): void {
         this.billingService.get_user_products().subscribe(
             (user_products: any) => {
                 this.user_products_loaded = true;
                 if (  user_products.records != null ) {
                     // console.log(user_products);
                     this.total_active_products = user_products.total_active_products;
-                    const mapped = Object.keys(user_products.records).map(key => ({id: key, value: user_products.records[key]}));
-                    this.user_products = mapped;
+                    this.user_products = Object.keys(user_products.records).map(key => ({id: key, value: user_products.records[key]}));
                     this.cdr.markForCheck();
                 }
             }
         );
     }
 
-    pay_invoice(invoice: any) {
+    pay_invoice(invoice: any): void {
         console.log(invoice);
         const dialogConfig = new MatDialogConfig();
         dialogConfig.data = {invoice: invoice};

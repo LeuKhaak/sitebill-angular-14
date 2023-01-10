@@ -20,6 +20,7 @@ import {takeUntil} from 'rxjs/operators';
 import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
 import {myCustomTooltipDefaults} from '../../grid/form/form-constructor.component';
 import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
@@ -30,15 +31,16 @@ import {StorageService} from '../../../_services/storage.service';
         {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
     ],
 })
-export class ConfigFormComponent extends FormStaticComponent implements OnInit,OnChanges  {
-    @Input("config_items")
+export class ConfigFormComponent extends FormStaticComponent implements OnInit, OnChanges  {
+    @Input()
     config_items: any;
     @Output() formChanged = new EventEmitter<boolean>();
-    private form_reloading_in_progress: boolean = false;
-    private changed_items: {};
+    private form_reloading_in_progress = false;
+    private changed_items: {[index: string]: any};
 
     constructor(
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -50,6 +52,7 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             _matDialog,
@@ -64,8 +67,7 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
     getModel(): void {
         const primary_key = this._data.primary_key;
         const key_value = this._data.get_key_value();
-        const model_name = this._data.get_table_name();
-        //console.log(this.modelService.entity);
+        // console.log(this.modelService.entity);
         this.modelService.entity.set_app_name(this._data.get_app_name());
         this.modelService.entity.set_table_name(this._data.get_table_name());
         this.modelService.entity.primary_key = primary_key;
@@ -77,11 +79,11 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
         this.updateForm();
     }
 
-    get_changed_items () {
+    get_changed_items(): {[index: string]: any} {
         return this.changed_items;
     }
 
-    initSubscribers() {
+    initSubscribers(): void {
         super.initSubscribers();
         this.form.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -93,7 +95,7 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
             });
     }
 
-    updateForm() {
+    updateForm(): void {
         this.form_reloading_in_progress = true;
         this.records = null;
         this.rows = null;
@@ -102,23 +104,22 @@ export class ConfigFormComponent extends FormStaticComponent implements OnInit,O
 
         this.records = this.config_items;
         this.rows = Object.keys(this.config_items);
-        this.tabs = {'Основное':this.rows};
+        this.tabs = {'Основное': this.rows};
         this.tabs_keys = ['Основное'];
         this.init_form();
         this.form_reloading_in_progress = false;
     }
 
-    ngOnChanges (changes) {
+    ngOnChanges(changes): void {
         if ( changes.config_items ) {
             this.updateForm();
-
         }
     }
 
 
 
 
-    close() {
+    close(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

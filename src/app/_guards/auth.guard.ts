@@ -11,6 +11,7 @@ import { public_navigation } from 'app/navigation/public.navigation';
 import {StorageService} from '../_services/storage.service';
 import {GetSessionKeyService} from '../_services/get-session-key.service';
 import {UiService} from '../_services/ui.service';
+import {ConfigService} from '../_services/config.service';
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export class AuthGuard implements CanActivate {
         protected router: Router,
         protected modelService: ModelService,
         protected getSessionKeyService: GetSessionKeyService,
+        protected configService: ConfigService,
         protected uiService: UiService,
         protected storageService: StorageService,
         protected _fuseNavigationService: FuseNavigationService,
@@ -40,7 +42,7 @@ export class AuthGuard implements CanActivate {
         return this.check_session(route, state, '/grid/data/');
     }
 
-    check_session(route: ActivatedRouteSnapshot, state: RouterStateSnapshot, success_redirect: string): any { // any ???
+    check_session(route: ActivatedRouteSnapshot, state: RouterStateSnapshot, success_redirect: string): boolean {
         // console.log(this.storageService.getItem('currentUser'));
 
         if (this.storageService.getItem('currentUser') && !this.modelService.is_need_reload()) {
@@ -159,13 +161,13 @@ export class AuthGuard implements CanActivate {
 
     cleanUpNavigation(nav: any[], permission): number {
         let remove_counter = 0;
-        if ( this.modelService.getConfigValue('parser.disable') === true || this.modelService.getDomConfigValue('parser_disable') === true) {
+        if ( this.configService.getConfigValue('parser.disable') === true || this.configService.getDomConfigValue('parser_disable') === true) {
             this._fuseNavigationService.removeNavigationItem('parser');
         }
         if (permission['group_name'] === 'admin') {
             return -1;
         }
-        nav.forEach((row, index) => {
+        nav.forEach((row) => {
             let need_remove = true;
             if (permission[row.id] != null) {
                 if (permission[row.id].access != null) {

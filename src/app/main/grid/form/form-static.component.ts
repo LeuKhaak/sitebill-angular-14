@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
 
@@ -9,10 +9,11 @@ import {FilterService} from 'app/_services/filter.service';
 import {SnackService} from 'app/_services/snack.service';
 import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
 import {FormConstructorComponent, myCustomTooltipDefaults} from './form-constructor.component';
-import {FormComponent} from "./form.component";
-import {EntityStorageService} from "../../../_services/entity-storage.service";
-import {MAT_TOOLTIP_DEFAULT_OPTIONS} from "@angular/material/tooltip";
-import {StorageService} from "../../../_services/storage.service";
+import {FormComponent} from './form.component';
+import {EntityStorageService} from '../../../_services/entity-storage.service';
+import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
+import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
@@ -25,22 +26,22 @@ import {StorageService} from "../../../_services/storage.service";
 
 })
 export class FormStaticComponent extends FormConstructorComponent implements OnInit {
-    @Input("entity")
+    @Input('entity')
     _data: SitebillEntity;
 
-    @Input("disable_delete")
+    @Input()
     disable_delete: boolean;
 
-    @Input("disable_form_title_bar")
+    @Input()
     disable_form_title_bar: boolean;
 
-    @Input("disable_save_button")
+    @Input()
     disable_save_button: boolean;
 
-    @Input("disable_cancel_button")
+    @Input()
     disable_cancel_button: boolean;
 
-    @Input("fake_save")
+    @Input()
     fake_save: boolean;
 
     @Output() onClose = new EventEmitter();
@@ -48,7 +49,8 @@ export class FormStaticComponent extends FormConstructorComponent implements OnI
     @Output() onSave = new EventEmitter();
 
     constructor(
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -61,6 +63,7 @@ export class FormStaticComponent extends FormConstructorComponent implements OnI
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -70,22 +73,22 @@ export class FormStaticComponent extends FormConstructorComponent implements OnI
             storageService
         );
     }
-    save() {
+    save(): void {
         super.save();
     }
-    close() {
+    close(): void {
         super.close();
         this.onClose.emit(true);
     }
 
-    inline_create(record) {
+    inline_create(record): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
         dialogConfig.autoFocus = true;
-        //dialogConfig.width = '99vw';
-        //dialogConfig.maxWidth = '99vw';
-        //dialogConfig.height = '99vh';
+        // dialogConfig.width = '99vw';
+        // dialogConfig.maxWidth = '99vw';
+        // dialogConfig.height = '99vh';
 
         let entity = new SitebillEntity();
         if ( this.entityStorageService.get_entity(record.primary_key_table) ) {
@@ -100,11 +103,11 @@ export class FormStaticComponent extends FormConstructorComponent implements OnI
 
         dialogConfig.data = entity;
         dialogConfig.panelClass = 'regular-modal';
-        //console.log(model_name);
+        // console.log(model_name);
 
         if (this.modelService.get_access(entity.get_table_name(), 'access')) {
             const modalRef = this._matDialog.open(FormComponent, dialogConfig);
-            modalRef.componentInstance.afterSave.subscribe((result:SitebillEntity) => {
+            modalRef.componentInstance.afterSave.subscribe((result: SitebillEntity) => {
                 this.init_select_by_query_options(record.name);
                 this.form.controls[record.name].patchValue(result.get_key_value());
             });

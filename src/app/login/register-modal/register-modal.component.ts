@@ -1,16 +1,17 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ModelService} from '../../_services/model.service';
 import {SnackService} from '../../_services/snack.service';
-import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../@fuse/animations';
 import {FuseNavigationService} from '../../../@fuse/components/navigation/navigation.service';
 import {AuthenticationService} from '../../_services';
-import {forbiddenNullValue, FormConstructorComponent} from '../../main/grid/form/form-constructor.component';
+import { FormConstructorComponent} from '../../main/grid/form/form-constructor.component';
 import {FilterService} from '../../_services/filter.service';
 import {Bitrix24Service} from '../../integrations/bitrix24/bitrix24.service';
 import {MatDialog} from '@angular/material/dialog';
 import {SitebillEntity} from '../../_models';
-import {StorageService} from "../../_services/storage.service";
+import {StorageService} from '../../_services/storage.service';
+import {GetApiUrlService} from '../../_services/get-api-url.service';
 
 @Component({
     selector: 'register-modal',
@@ -20,7 +21,6 @@ import {StorageService} from "../../_services/storage.service";
     animations: fuseAnimations
 })
 export class RegisterModalComponent extends FormConstructorComponent implements OnInit {
-    registerForm: UntypedFormGroup;
     registerFormErrors: any;
     registerMessage: string;
 
@@ -30,7 +30,8 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
     show_login: boolean;
 
     constructor(
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _snackService: SnackService,
         private authenticationService: AuthenticationService,
         protected _formBuilder: UntypedFormBuilder,
@@ -43,6 +44,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -60,7 +62,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
 
     }
 
-    init_register_form () {
+    init_register_form(): void {
         // Set the defaults
         this.registerFormErrors = {
             domain: {},
@@ -78,7 +80,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this._data = new SitebillEntity();
         this._data.set_app_name('user');
         this._data.set_table_name('user');
@@ -89,11 +91,11 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
 
         // Получить модель юзера
         // if ( this.modelService.get_nobody_mode() ) {
-            this.get_user_model();
+        this.get_user_model();
         // }
     }
 
-    get_user_model () {
+    get_user_model(): void {
         // console.log('get_user_model');
         this.modelService.load_only_model('user', true)
             .subscribe((result: any) => {
@@ -109,16 +111,15 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
                     // console.log(this.tabs);
                     this.init_form();
                     // console.log(this.form);
-
                 }
             });
     }
 
-    cleanup_columns ( columns, columns_index ) {
+    cleanup_columns( columns, columns_index ): any[] {
         // console.log(columns_index);
         // console.log(columns);
         const result = [];
-        for (let i = 0; i < columns_index.length; i++) {
+        for (const i in columns_index.length) {
             if ( columns[columns_index[i].name].required === 'on' && columns[columns_index[i].name].name !== 'email' && columns[columns_index[i].name].name !== 'login' ) {
                 // console.log(columns[columns_index[i].name]);
                 result[columns_index[i].name] = columns[columns_index[i].name];
@@ -128,7 +129,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
         }
         return result;
     }
-    register() {
+    register(): void {
         this.loading = true;
         this.hide_register_complete();
 
@@ -139,7 +140,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
                 (data: any) => {
                     this.loading = false;
                     // console.log(data);
-                    if (data.result == '0') {
+                    if (data.result === '0') {
                         this._snackService.message(data.msg);
                     } else {
                         let register_complete_message = 'Регистрация успешна!';
@@ -156,7 +157,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
                 });
     }
 
-    show_register_complete (message: string) {
+    show_register_complete(message: string): void {
         this.show_login = false;
         this.show_register = false;
         this.registerMessage = message;
@@ -167,7 +168,7 @@ export class RegisterModalComponent extends FormConstructorComponent implements 
     }
 
 
-    hide_register_complete () {
+    hide_register_complete(): void {
         this.registerMessage = null;
     }
 

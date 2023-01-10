@@ -7,13 +7,14 @@ import {ModelService} from 'app/_services/model.service';
 import {FilterService} from 'app/_services/filter.service';
 import {SnackService} from 'app/_services/snack.service';
 import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
-import {FormStaticComponent} from "../../grid/form/form-static.component";
-import {EntityStorageService} from "../../../_services/entity-storage.service";
-import {takeUntil} from "rxjs/operators";
-import {MAT_TOOLTIP_DEFAULT_OPTIONS} from "@angular/material/tooltip";
-import {myCustomTooltipDefaults} from "../../grid/form/form-constructor.component";
-import {ApiParams} from "../../../_models";
-import {StorageService} from "../../../_services/storage.service";
+import {FormStaticComponent} from '../../grid/form/form-static.component';
+import {EntityStorageService} from '../../../_services/entity-storage.service';
+import {takeUntil} from 'rxjs/operators';
+import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
+import {myCustomTooltipDefaults} from '../../grid/form/form-constructor.component';
+import {ApiParams} from '../../../_models';
+import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 @Component({
@@ -24,13 +25,14 @@ import {StorageService} from "../../../_services/storage.service";
         {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
     ],
 })
-export class ModelFormStaticComponent extends FormStaticComponent implements OnInit,OnChanges  {
-    @Output() onChangeType: EventEmitter<string>  = new EventEmitter();
+export class ModelFormStaticComponent extends FormStaticComponent implements OnInit, OnChanges  {
+    @Output() onChangeType: EventEmitter<string>  = new EventEmitter(); // on
     private previous_type: string;
     private previous_primary_key_table: string;
 
     constructor(
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -42,6 +44,7 @@ export class ModelFormStaticComponent extends FormStaticComponent implements OnI
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             _matDialog,
@@ -53,7 +56,7 @@ export class ModelFormStaticComponent extends FormStaticComponent implements OnI
         );
     }
 
-    initSubscribers() {
+    initSubscribers(): void {
         super.initSubscribers();
         this.form.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -94,12 +97,12 @@ export class ModelFormStaticComponent extends FormStaticComponent implements OnI
             });
     }
 
-    refreshChild(child_key: string, parent_value: string) {
+    refreshChild(child_key: string, parent_value: string): void {
         this.records[child_key].api.params = {table_name: parent_value};
         this.init_select_box_options(child_key);
     }
 
-    ngOnChanges (changes) {
+    ngOnChanges(changes): void {
     }
 }
 

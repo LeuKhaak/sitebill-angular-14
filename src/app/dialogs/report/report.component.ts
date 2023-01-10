@@ -12,6 +12,7 @@ import { ModelService } from 'app/_services/model.service';
 import {SnackService} from '../../_services/snack.service';
 import {SitebillEntity} from '../../_models';
 import {FilterService} from '../../_services/filter.service';
+import {ConfigService} from '../../_services/config.service';
 
 
 @Component({
@@ -20,14 +21,6 @@ import {FilterService} from '../../_services/filter.service';
     styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
-    favoriteSeason: string;
-
-    seasons = [
-        'Winter',
-        'Spring',
-        'Summer',
-        'Autumn',
-    ];
 
     form: UntypedFormGroup;
     formErrors: any;
@@ -58,6 +51,7 @@ export class ReportComponent implements OnInit {
         private dialogRef: MatDialogRef<ReportComponent>,
         private _httpClient: HttpClient,
         public modelService: ModelService,
+        public configService: ConfigService,
         private _chatService: ChatService,
         @Inject(APP_CONFIG) private config: AppConfig,
         @Inject(MAT_DIALOG_DATA) private _data: any,

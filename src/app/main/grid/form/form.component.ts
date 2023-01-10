@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
 
@@ -12,6 +12,7 @@ import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
 import {FormConstructorComponent, myCustomTooltipDefaults} from './form-constructor.component';
 import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
 import {StorageService} from '../../../_services/storage.service';
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 
 
@@ -27,7 +28,8 @@ export class FormComponent extends FormConstructorComponent implements OnInit {
 
     constructor(
         protected dialogRef: MatDialogRef<FormComponent>,
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -40,6 +42,7 @@ export class FormComponent extends FormConstructorComponent implements OnInit {
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -51,20 +54,20 @@ export class FormComponent extends FormConstructorComponent implements OnInit {
     }
 
 
-    close() {
+    close(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
     }
-    inline_create(record) {
+    inline_create(record): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
         dialogConfig.autoFocus = true;
-        //dialogConfig.width = '99vw';
-        //dialogConfig.maxWidth = '99vw';
-        //dialogConfig.height = '99vh';
-        let entity = new SitebillEntity();
+        // dialogConfig.width = '99vw';
+        // dialogConfig.maxWidth = '99vw';
+        // dialogConfig.height = '99vh';
+        const entity = new SitebillEntity();
         entity.set_table_name(record.primary_key_table);
         entity.set_app_name(record.primary_key_table);
         entity.set_primary_key(record.primary_key_name);
@@ -72,11 +75,11 @@ export class FormComponent extends FormConstructorComponent implements OnInit {
         entity.set_form_type(FormType.inline);
         dialogConfig.data = entity;
         dialogConfig.panelClass = 'regular-modal';
-        //console.log(model_name);
+        // console.log(model_name);
 
         if (this.modelService.get_access(entity.get_table_name(), 'access')) {
             const modalRef = this._matDialog.open(FormComponent, dialogConfig);
-            modalRef.componentInstance.afterSave.subscribe((result:SitebillEntity) => {
+            modalRef.componentInstance.afterSave.subscribe((result: SitebillEntity) => {
                 this.init_select_by_query_options(record.name);
                 this.form.controls[record.name].patchValue(result.get_key_value());
             });

@@ -54,6 +54,7 @@ export class ViewModalComponent extends FormComponent implements OnInit {
         super(
             dialogRef,
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             _matDialog,

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FuseConfigService} from '@fuse/services/config.service';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -10,6 +10,7 @@ import {fuseAnimations} from '../../../@fuse/animations';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {LoginModalComponent} from '../../login/modal/login-modal.component';
+import {ConfigService} from '../../_services/config.service';
 
 @Component({
     selector   : 'frontend',
@@ -18,7 +19,7 @@ import {LoginModalComponent} from '../../login/modal/login-modal.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class FrontendComponent
+export class FrontendComponent implements OnInit
 {
     loading = false;
 
@@ -28,6 +29,7 @@ export class FrontendComponent
      */
     constructor(
         public modelService: ModelService,
+        public configService: ConfigService,
         private _fuseConfigService: FuseConfigService,
         protected router: Router,
         protected dialog: MatDialog,
@@ -49,9 +51,9 @@ export class FrontendComponent
             }
         };
     }
-    ngOnInit() {
-        this.modelService.sitebill_loaded_complete_emitter.subscribe((result: any) => {
-            if ( this.modelService.getDomConfigValue('standalone_mode') ) {
+    ngOnInit(): void {
+        this.modelService.sitebill_loaded_complete_emitter.subscribe(() => {
+            if ( this.configService.getDomConfigValue('standalone_mode') ) {
                 // console.log('standalone');
                 this.router.navigate(['/standalone']);
             } else {
@@ -67,7 +69,7 @@ export class FrontendComponent
         // console.log(this.modelService.getConfigValue('default_frontend_route'));
     }
 
-    login_modal() {
+    login_modal(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.panelClass = 'login-form';

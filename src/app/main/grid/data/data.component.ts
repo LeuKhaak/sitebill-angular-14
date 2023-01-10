@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { GridComponent } from 'app/main/grid/grid.component';
 import { fuseAnimations } from '@fuse/animations';
-import {MatDialogConfig} from "@angular/material/dialog";
+import {MatDialogConfig} from '@angular/material/dialog';
 
 
 @Component({
@@ -11,14 +11,14 @@ import {MatDialogConfig} from "@angular/material/dialog";
     animations: fuseAnimations
 })
 export class DataComponent extends GridComponent {
-    @Input('default_params')
+    @Input()
     default_params = {};
 
-    setup_apps() {
+    setup_apps(): void {
         this.entity.set_app_name('data');
         this.entity.set_table_name('data');
         this.entity.primary_key = 'id';
-        if ( this.modelService.getConfigValue('apps.mailbox.use_complaint_mode') === '1' ) {
+        if ( this.configService.getConfigValue('apps.mailbox.use_complaint_mode') === '1' ) {
             this.complaint_mode = true;
         }
         this.switch_collections(true);
@@ -29,28 +29,28 @@ export class DataComponent extends GridComponent {
         }
     }
 
-    edit_form(item_id: any) {
+    edit_form(item_id: any): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;
         dialogConfig.autoFocus = true;
-        //dialogConfig.width = '99vw';
+        // dialogConfig.width = '99vw';
         dialogConfig.minWidth = '85vw';
-        //dialogConfig.height = '99vh';
+        // dialogConfig.height = '99vh';
 
-        //dialogConfig.data = { app_name: this.entity.get_table_name(), primary_key: this.entity.primary_key, key_value: item_id };
+        // dialogConfig.data = { app_name: this.entity.get_table_name(), primary_key: this.entity.primary_key, key_value: item_id };
         this.entity.set_key_value(item_id);
         if (this.only_collections) {
             this.entity.set_hook('add_to_collections');
         }
         dialogConfig.data = this.entity;
         dialogConfig.panelClass = 'regular-modal';
-        if ( this.modelService.getConfigValue('apps.products.limit_add_data') === '1') {
+        if ( this.configService.getConfigValue('apps.products.limit_add_data') === '1') {
             this.billingService.get_user_limit('exclusive').subscribe(
                 (limit: any) => {
                     if ( limit.data > 0 ) {
                         this.open_form_with_check_access(dialogConfig);
-                        //this.dialog.open(SelectionFormComponent, dialogConfig);
+                        // this.dialog.open(SelectionFormComponent, dialogConfig);
                     } else {
                         this._snackService.message('Закончился лимит добавления эксклюзивных вариантов', 5000);
                     }
@@ -58,7 +58,7 @@ export class DataComponent extends GridComponent {
             );
         } else {
             this.open_form_with_check_access(dialogConfig);
-            //this.dialog.open(SelectionFormComponent, dialogConfig);
+            // this.dialog.open(SelectionFormComponent, dialogConfig);
         }
 
     }
@@ -73,10 +73,10 @@ export class DataComponent extends GridComponent {
         }
 
         try {
-            if (row.active.value != 1) {
+            if (row.active.value !== 1) {
                 return 'red-100-bg';
             }
-            if (row.hot.value == 1) {
+            if (row.hot.value === 1) {
                 return 'amber-100-bg';
             }
         } catch {

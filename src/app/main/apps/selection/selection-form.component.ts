@@ -1,11 +1,8 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Inject,
     OnInit,
-    Output
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {UntypedFormBuilder} from '@angular/forms';
@@ -20,10 +17,7 @@ import {Bitrix24Service} from 'app/integrations/bitrix24/bitrix24.service';
 import {SelectionFormConstructorComponent, myCustomTooltipDefaults} from './selection-form-constructor.component';
 import {MAT_TOOLTIP_DEFAULT_OPTIONS} from '@angular/material/tooltip';
 import {StorageService} from '../../../_services/storage.service';
-import * as moment from 'moment';
-import {LocaleConfig} from 'ngx-daterangepicker-material';
-
-
+import {GetApiUrlService} from '../../../_services/get-api-url.service';
 
 @Component({
     selector: 'form-selector',
@@ -37,7 +31,7 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
 
     constructor(
         protected dialogRef: MatDialogRef<SelectionFormComponent>,
-        protected modelService: ModelService,
+        public modelService: ModelService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -46,10 +40,12 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
         @Inject(APP_CONFIG) protected config: AppConfig,
         @Inject(MAT_DIALOG_DATA) public _data: {entity: SitebillEntity, selectionMode: boolean, date_range_key: string},
         protected cdr: ChangeDetectorRef,
+        protected getApiUrlService: GetApiUrlService,
         protected storageService: StorageService
     ) {
         super(
             modelService,
+            getApiUrlService,
             _formBuilder,
             _snackService,
             filterService,
@@ -60,12 +56,12 @@ export class SelectionFormComponent extends SelectionFormConstructorComponent im
         );
     }
 
-    close() {
+    close(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.dialogRef.close();
     }
-    inline_create(record) {
+    inline_create(record): void {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = false;

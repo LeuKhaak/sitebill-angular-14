@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { navigation } from 'app/navigation/navigation';
 import {ModelService} from '../../../_services/model.service';
+import {ConfigService} from '../../../_services/config.service';
 
 @Component({
     selector     : 'standalone',
@@ -28,6 +29,7 @@ export class StandaloneComponent implements OnInit, OnDestroy
     constructor(
         private _fuseConfigService: FuseConfigService,
         public modelService: ModelService,
+        protected configService: ConfigService,
     )
     {
         // Set the defaults
@@ -64,8 +66,8 @@ export class StandaloneComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    get_max_height_class() {
-        if ( this.modelService.getDomConfigValue('form_mode') !== 'true' ) {
+    get_max_height_class(): string {
+        if ( this.configService.getDomConfigValue('form_mode') !== 'true' ) {
             return 'max-vh-85';
         }
         return '';

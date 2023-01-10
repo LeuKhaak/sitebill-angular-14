@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../@fuse/animations';
@@ -10,7 +10,8 @@ import {ChatService} from '../../../apps/chat/chat.service';
 import {SnackService} from '../../../../_services/snack.service';
 import {Bitrix24Service} from '../../../../integrations/bitrix24/bitrix24.service';
 import {takeUntil} from 'rxjs/operators';
-import {StorageService} from "../../../../_services/storage.service";
+import {StorageService} from '../../../../_services/storage.service';
+import {GetApiUrlService} from '../../../../_services/get-api-url.service';
 
 @Component({
     selector: 'contact-injector',
@@ -21,13 +22,14 @@ import {StorageService} from "../../../../_services/storage.service";
 })
 export class ContactInjectorComponent extends ViewStaticComponent implements OnInit {
 
-    @Input('contact_id')
+    @Input()
     contact_id: number;
 
 
     constructor(
         protected _chatService: ChatService,
-        protected modelService: ModelService,
+        public modelService: ModelService,
+        protected getApiUrlService: GetApiUrlService,
         protected _formBuilder: UntypedFormBuilder,
         protected _snackService: SnackService,
         public _matDialog: MatDialog,
@@ -46,6 +48,7 @@ export class ContactInjectorComponent extends ViewStaticComponent implements OnI
             filterService,
             bitrix24Service,
             cdr,
+            getApiUrlService,
             storageService,
         );
         this._data = new SitebillEntity();

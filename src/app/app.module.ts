@@ -68,6 +68,8 @@ import {ConfigService} from './_services/config.service';
 import {GetApiUrlService} from './_services/get-api-url.service';
 import {GetSessionKeyService} from './_services/get-session-key.service';
 import {UiService} from './_services/ui.service';
+import {ModelRedirectService} from './_services/model-redirect.service';
+import {ConfigSystemService} from './_services/config-system.service';
 
 
 let appRoutes: Routes = [
@@ -233,6 +235,8 @@ if ( detect_mode() === SitebillModes.standalone ) {
         MessageService,
         AuthGuard,
         UiService,
+        ModelRedirectService,
+        ConfigSystemService,
         ModelService,
         ImageService,
         ConfigService,
